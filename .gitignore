@@ -1,0 +1,36 @@
+# Python / ambiente
+__pycache__/
+*.py[cod]
+.venv
+.venv/
+*.egg-info/
+.ipynb_checkpoints/
+.pytest_cache/
+.ruff_cache/
+
+# Credenciais: NUNCA versionar
+.env
+*service-account*.json
+*-key.json
+credentials/
+
+# Dados locais (baixados do Kaggle ou gerados pelo pipeline)
+data/raw/*
+data/processed/*
+!data/raw/.gitkeep
+!data/processed/.gitkeep
+
+# Índices gerados (vetorial + BM25): reconstruídos com `voc build`
+index/
+
+# Cache de chamadas ao LLM (reprodutibilidade local da avaliação)
+.cache/
+
+# Modelos treinados
+*.joblib
+*.pkl
+
+# OS
+.DS_Store
+Thumbs.db
+desktop.ini
