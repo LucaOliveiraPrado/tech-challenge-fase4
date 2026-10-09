@@ -88,6 +88,7 @@ class LLMClient:
                          if m.strip()]
         self.fallbacks = [m for m in fallbacks if m != self.model]
         self._esgotados: set[str] = set()
+        self.ultimo_modelo: str | None = None
         self.cache_dir = cache_dir
         self.usar_cache = usar_cache
         self.min_intervalo = 60.0 / float(rpm or os.getenv("VOC_LLM_RPM", "10"))
@@ -118,9 +119,18 @@ class LLMClient:
         return None
 
     def _grava_cache(self, chave: str, dado: dict) -> None:
+        """Falha ao gravar o cache (pasta sincronizada, antivírus) não pode custar a
+        resposta já paga em cota: tenta de novo uma vez e, se falhar, só avisa."""
         p = self.cache_dir / chave[:2] / f"{chave}.json"
-        p.parent.mkdir(parents=True, exist_ok=True)
-        p.write_text(json.dumps(dado, ensure_ascii=False), encoding="utf-8")
+        for tentativa in range(2):
+            try:
+                p.parent.mkdir(parents=True, exist_ok=True)
+                p.write_text(json.dumps(dado, ensure_ascii=False), encoding="utf-8")
+                return
+            except OSError as e:
+                if tentativa == 1:
+                    log.warning("cache não gravado (%s): %s", p.name, e)
+                time.sleep(0.5)
 
     # ---------------------------------------------------------------- chamada
     def _espera_rpm(self) -> None:
@@ -145,7 +155,9 @@ class LLMClient:
             config.response_json_schema = schema.model_json_schema()
 
         espera = 5.0
-        for tentativa in range(6):
+        # Com fallback disponível, desiste do modelo mais cedo (sobrecarga costuma durar).
+        tentativas = 3 if self.fallbacks else 6
+        for tentativa in range(tentativas):
             self._espera_rpm()
             try:
                 resp = self.client.models.generate_content(
@@ -159,7 +171,7 @@ class LLMClient:
                 if e.code == 429 and "PerDay" in str(e):
                     raise CotaDiariaEsgotada(f"cota diária de {modelo} esgotada") from e
                 transitorio = e.code in (429, 500, 502, 503, 504)
-                if not transitorio or tentativa == 5:
+                if not transitorio or tentativa == tentativas - 1:
                     raise LLMIndisponivel(f"Gemini falhou ({e.code}): {e}") from e
                 log.warning("Gemini %s (%s), nova tentativa em %.0fs", e.code, modelo, espera)
                 time.sleep(espera)
@@ -168,7 +180,9 @@ class LLMClient:
 
     def _chama(self, system: str, prompt: str, schema: type[BaseModel] | None,
                temperatura: float, pensamento: str) -> tuple[str, int, int, str]:
-        """Tenta o modelo principal e, se a cota diária acabar, os fallbacks em ordem."""
+        """Tenta o modelo principal e, se ele falhar (cota diária esgotada ou sobrecarga
+        persistente), os fallbacks em ordem."""
+        ultimo_erro: Exception | None = None
         for modelo in [self.model, *self.fallbacks]:
             if modelo in self._esgotados:
                 continue
@@ -176,10 +190,14 @@ class LLMClient:
                 texto, tin, tout = self._chama_modelo(modelo, system, prompt, schema,
                                                       temperatura, pensamento)
                 return texto, tin, tout, modelo
-            except CotaDiariaEsgotada:
+            except CotaDiariaEsgotada as e:
                 log.warning("cota diária de %s esgotada; tentando o próximo modelo", modelo)
                 self._esgotados.add(modelo)
-        raise LLMIndisponivel("cota diária esgotada em todos os modelos configurados")
+                ultimo_erro = e
+            except LLMIndisponivel as e:
+                log.warning("%s indisponível (%s); tentando o próximo modelo", modelo, e)
+                ultimo_erro = e
+        raise LLMIndisponivel(f"todos os modelos configurados falharam: {ultimo_erro}")
 
     def generate(
         self,
@@ -199,10 +217,12 @@ class LLMClient:
         cache = self._le_cache(chave)
         if cache is not None:
             self.uso.registra(etapa, cache["tin"], cache["tout"], 0.0, cache=True)
+            self.ultimo_modelo = cache.get("modelo_usado", self.model)
             return schema.model_validate_json(cache["texto"])
 
         t0 = time.monotonic()
         texto, tin, tout, modelo = self._chama(system, prompt, schema, temperatura, pensamento)
+        self.ultimo_modelo = modelo
         seg = time.monotonic() - t0
         obj = schema.model_validate_json(texto)
         self._grava_cache(chave, {"texto": texto, "tin": tin, "tout": tout, "segundos": seg,

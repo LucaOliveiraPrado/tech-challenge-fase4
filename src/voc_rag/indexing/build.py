@@ -37,11 +37,17 @@ def build_embeddings(model_name: str, force: bool = False) -> tuple[np.ndarray, 
 def build(models: list[str] | None = None, force: bool = False) -> dict:
     models = models or [get_settings().embedding_model]
     docs = load_documents()
+    anterior = INDEX_DIR / "manifest.json"
+    modelos_anteriores = {}
+    if anterior.exists():
+        antigo = json.loads(anterior.read_text(encoding="utf-8"))
+        if antigo.get("documentos") == len(docs):
+            modelos_anteriores = antigo.get("modelos", {})
     manifest: dict = {
         "gerado_em": datetime.now().isoformat(timespec="seconds"),
         "documentos": int(len(docs)),
         "dispositivo": get_settings().device,
-        "modelos": {},
+        "modelos": modelos_anteriores,
     }
     for m in models:
         emb, seg_emb = build_embeddings(m, force)

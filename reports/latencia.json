@@ -1,0 +1,67 @@
+{
+  "n": 5,
+  "dispositivo": "cuda",
+  "modelo_llm": "gemini-3.5-flash-lite",
+  "mediana_s": {
+    "analise_s": 9.95,
+    "recuperacao_s": 0.63,
+    "geracao_s": 13.15,
+    "total_s": 22.41
+  },
+  "por_pergunta": [
+    {
+      "pergunta": "O que os clientes falam sobre o prazo de entrega dos pedidos?",
+      "status": "respondida",
+      "analise_s": 10.773,
+      "recuperacao_s": 0.669,
+      "recuperacao_denso_s": 0.251,
+      "recuperacao_bm25_s": 0.002,
+      "recuperacao_rerank_s": 0.402,
+      "geracao_s": 14.474,
+      "total_s": 25.918
+    },
+    {
+      "pergunta": "Quais problemas os compradores relatam com produtos eletrônicos?",
+      "status": "respondida",
+      "analise_s": 12.416,
+      "recuperacao_s": 0.713,
+      "recuperacao_denso_s": 0.216,
+      "recuperacao_bm25_s": 0.001,
+      "recuperacao_rerank_s": 0.484,
+      "geracao_s": 18.78,
+      "total_s": 31.93
+    },
+    {
+      "pergunta": "O que os clientes elogiam nos produtos de esporte e lazer?",
+      "status": "respondida",
+      "analise_s": 6.968,
+      "recuperacao_s": 0.561,
+      "recuperacao_denso_s": 0.248,
+      "recuperacao_bm25_s": 0.0,
+      "recuperacao_rerank_s": 0.303,
+      "geracao_s": 8.594,
+      "total_s": 16.124
+    },
+    {
+      "pergunta": "Há reclamações sobre cobrança indevida no cartão?",
+      "status": "sem_evidencia",
+      "analise_s": 8.66,
+      "recuperacao_s": 0.594,
+      "recuperacao_denso_s": 0.206,
+      "recuperacao_bm25_s": 0.0,
+      "recuperacao_rerank_s": 0.382,
+      "total_s": 9.255
+    },
+    {
+      "pergunta": "Como os clientes descrevem pedidos que chegaram com peças faltando?",
+      "status": "respondida",
+      "analise_s": 9.95,
+      "recuperacao_s": 0.634,
+      "recuperacao_denso_s": 0.204,
+      "recuperacao_bm25_s": 0.001,
+      "recuperacao_rerank_s": 0.42,
+      "geracao_s": 11.827,
+      "total_s": 22.413
+    }
+  ]
+}
