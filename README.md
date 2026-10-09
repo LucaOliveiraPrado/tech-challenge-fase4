@@ -287,6 +287,19 @@ papel, o de porteiro de relevância, onde essa tolerância não atrapalha (D12, 
 | AUC do reranker contra o juiz | 0,727 |
 <!-- /num:geracao -->
 
+**O juiz é confiável?** Com a cota gratuita, a maior parte dos julgamentos ficou com o modelo de
+reserva (`gemini-3.1-flash-lite`). Uma amostra de 6 perguntas foi rejulgada por um modelo "flash"
+independente; kappa acima de 0,8 é considerado concordância quase perfeita:
+
+<!-- num:concordancia -->
+| Concordância entre juízes (626 pares rejulgados por `gemini-3.5-flash`) | Resultado |
+|---|---|
+| Concordância exata na escala 0/1/2 | 90,4% |
+| Kappa de Cohen ponderado (0/1/2) | 0,887 |
+| Concordância em "evidência clara" (decisão usada na P@10) | 96,0% |
+| Kappa de Cohen nessa decisão | 0,916 |
+<!-- /num:concordancia -->
+
 **Classificador de aspectos** (quadro de frequências):
 <!-- num:aspectos -->
 micro-F1 0,789 e macro-F1 0,744 em 600 rótulos de teste
@@ -358,9 +371,10 @@ Registro completo (22 decisões com problema, alternativas, escolha e evidência
 
 ## 12. Limitações
 
-- **Juiz automático:** a relevância e a fidelidade foram julgadas por um LLM (diferente do gerador),
-  sem dupla anotação humana em escala; com a cota gratuita, a maior parte dos julgamentos ficou com
-  o modelo de reserva (`gemini-3.1-flash-lite`, D21).
+- **Juiz automático:** a relevância e a fidelidade foram julgadas por LLM (diferente do gerador),
+  sem dupla anotação humana em escala. A maior parte ficou com o modelo de reserva
+  (`gemini-3.1-flash-lite`); a concordância com um segundo juiz independente é quase perfeita
+  (seção 9, D21), mas os dois são LLMs e podem compartilhar vieses.
 - **Números do quadro com citação:** nos poucos insights julgados "parciais", o modelo anexou
   evidências individuais a um percentual da base completa; o juiz lê isso como extrapolação (D16).
 - **Quem comenta não é todo cliente:** menos da metade das avaliações tem texto e os insatisfeitos

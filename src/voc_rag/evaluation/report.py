@@ -140,6 +140,20 @@ def gera_tabelas_readme() -> dict[str, str]:
             f"| **Total por pergunta** | **{_n(m['total_s'], 1)}** |",
         ])
 
+    conc_path = REPORTS_DIR / "concordancia_juizes.json"
+    if conc_path.exists():
+        c = json.loads(conc_path.read_text(encoding="utf-8"))
+        t["concordancia"] = "\n".join([
+            f"| Concordância entre juízes ({c['pares']} pares rejulgados por "
+            f"`{c['segundo_juiz']}`) | Resultado |",
+            "|---|---|",
+            f"| Concordância exata na escala 0/1/2 | {_pct(c['concordancia_exata'])} |",
+            f"| Kappa de Cohen ponderado (0/1/2) | {_n(c['kappa_ponderado'])} |",
+            f"| Concordância em \"evidência clara\" (decisão usada na P@10) | "
+            f"{_pct(c['concordancia_binaria_relevante'])} |",
+            f"| Kappa de Cohen nessa decisão | {_n(c['kappa_binario_relevante'])} |",
+        ])
+
     resp_path = REPORTS_DIR / "respostas_avaliacao.json"
     if resp_path.exists():
         t["exemplo"] = exemplo_inline("Q19")

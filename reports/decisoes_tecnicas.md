@@ -303,8 +303,13 @@ cada avaliação, e os julgamentos foram refeitos.
 foram julgados pelo `gemini-3.1-flash-lite`, 292 pelo `gemini-3.8-flash` e 217 pelo
 `gemini-3.7-flash`. Como todo o pool de uma pergunta é julgado pelo mesmo modelo, a comparação
 entre configurações usa a mesma régua dentro de cada pergunta.
-**Limite:** o juiz é um LLM; não houve dupla anotação humana em escala. A concordância entre
-juízes é medida por `voc avaliar --etapa concordancia` (`reports/concordancia_juizes.json`).
+**Concordância entre juízes:** 6 perguntas (626 pares) rejulgadas pelo `gemini-3.5-flash`:
+concordância exata de 90,4% na escala 0/1/2 (kappa ponderado 0,887) e de 96,0% na decisão
+"evidência clara", a usada na P@10 (kappa 0,916). Kappa acima de 0,8 é concordância quase
+perfeita: o juiz de reserva mede o mesmo que um modelo "flash"
+(`reports/concordancia_juizes.json`).
+**Limite:** os juízes são LLMs e podem compartilhar vieses; não houve dupla anotação humana em
+escala.
 
 ### D22: Reprodutibilidade
 
