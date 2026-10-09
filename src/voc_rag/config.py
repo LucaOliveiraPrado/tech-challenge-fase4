@@ -57,8 +57,8 @@ def _device() -> str:
 @lru_cache(maxsize=1)
 def get_settings() -> Settings:
     return Settings(
-        llm_model=os.getenv("VOC_LLM_MODEL", "gemini-3.5-flash"),
-        judge_model=os.getenv("VOC_JUDGE_MODEL", "gemini-3.5-flash"),
+        llm_model=os.getenv("VOC_LLM_MODEL", "gemini-3.5-flash-lite"),
+        judge_model=os.getenv("VOC_JUDGE_MODEL", "gemini-3.6-flash"),
         embedding_model=os.getenv("VOC_EMBEDDING_MODEL", "BAAI/bge-m3"),
         reranker_model=os.getenv("VOC_RERANKER_MODEL", "BAAI/bge-reranker-v2-m3"),
         device=_device(),

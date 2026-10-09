@@ -9,10 +9,10 @@ dado agregado, enquanto as evidências [R#] continuam sustentando o conteúdo.
 """
 from __future__ import annotations
 
-import pandas as pd
-
 import json
 from functools import lru_cache
+
+import pandas as pd
 
 from voc_rag.config import PROCESSED_DIR, REPORTS_DIR
 from voc_rag.retrieval.filters import Filtros
@@ -109,8 +109,11 @@ def quadro_frequencias(
                        "pct": 100 * p})
     df = pd.DataFrame(linhas).sort_values("avaliacoes", ascending=False).reset_index(drop=True)
     df = df[df["avaliacoes"] > 0]
+    def br(x: float) -> str:
+        return f"{x:.1f}".replace(".", ",")
+
     texto = "\n".join(
-        f"- {r.rotulo}: ~{r.avaliacoes} avaliações ({r.pct:.1f}% das {n} do recorte)"
+        f"- {r.rotulo}: ~{r.avaliacoes} avaliações ({br(r.pct)}% das {n} do recorte)"
         for r in df.itertuples()
     )
     texto += (
