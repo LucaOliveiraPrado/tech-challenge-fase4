@@ -48,6 +48,35 @@ def build(
 
 
 @app.command()
+def aspectos(
+    n_amostra: int = typer.Option(3000, help="Avaliações rotuladas pelo LLM"),
+) -> None:
+    """Rotula amostra com LLM, treina o classificador de aspectos e rotula a base."""
+    _logging(True)
+    from voc_rag.themes.classifier import run
+
+    console.print_json(json.dumps(run(n_amostra), ensure_ascii=False))
+
+
+@app.command()
+def avaliar(
+    etapa: str = typer.Option("tudo", help="recuperacao | geracao | exemplos | tudo"),
+) -> None:
+    """Avaliação quantitativa (recuperação, geração, abstenção) e exemplos."""
+    _logging(True)
+    from voc_rag.evaluation import generation_eval, report, retrieval_eval
+
+    if etapa in ("recuperacao", "tudo"):
+        r = retrieval_eval.run()
+        console.print_json(json.dumps(r["configuracoes"], ensure_ascii=False))
+    if etapa in ("geracao", "tudo"):
+        console.print_json(json.dumps(generation_eval.run(), ensure_ascii=False, default=str))
+    if etapa in ("exemplos", "geracao", "tudo"):
+        report.gera_exemplos()
+        console.print("reports/exemplos_perguntas_respostas.md atualizado")
+
+
+@app.command()
 def ask(
     pergunta: str,
     como_json: bool = typer.Option(False, "--json", help="Saída completa em JSON"),

@@ -11,10 +11,14 @@ from __future__ import annotations
 
 import pandas as pd
 
-from voc_rag.config import PROCESSED_DIR
+import json
+from functools import lru_cache
+
+from voc_rag.config import PROCESSED_DIR, REPORTS_DIR
 from voc_rag.retrieval.filters import Filtros
 
 ASPECTOS_PARQUET = PROCESSED_DIR / "aspectos.parquet"
+METRICAS_JSON = REPORTS_DIR / "metricas_aspectos.json"
 
 # aspecto -> (polaridade, descrição usada no prompt de rotulagem e na tela)
 ASPECTOS: dict[str, tuple[str, str]] = {
@@ -58,37 +62,59 @@ def aspectos_da_polaridade(polaridade: str) -> list[str]:
     return [a for a, (p, _) in ASPECTOS.items() if p == polaridade]
 
 
+@lru_cache(maxsize=1)
 def load_aspectos() -> pd.DataFrame | None:
     if not ASPECTOS_PARQUET.exists():
         return None
     return pd.read_parquet(ASPECTOS_PARQUET)
 
 
+@lru_cache(maxsize=1)
+def _taxas_erro() -> dict[str, tuple[float, float]]:
+    if not METRICAS_JSON.exists():
+        return {}
+    m = json.loads(METRICAS_JSON.read_text(encoding="utf-8"))
+    return {a: (v["tpr"], v["fpr"]) for a, v in m["aspectos"].items() if "tpr" in v}
+
+
+def prevalencia_ajustada(p_prevista: float, tpr: float, fpr: float) -> float:
+    """Adjusted Classify and Count (Forman, 2008): corrige a contagem do classificador
+    pelas taxas de acerto e de falso positivo medidas no teste."""
+    if tpr - fpr <= 0.05:
+        return p_prevista
+    return float(min(max((p_prevista - fpr) / (tpr - fpr), 0.0), 1.0))
+
+
 def quadro_frequencias(
     docs: pd.DataFrame, filtros: Filtros, polaridade: str
 ) -> tuple[pd.DataFrame | None, str | None]:
-    """Frequência de cada aspecto no recorte (base completa, não a amostra)."""
+    """Frequência estimada de cada aspecto no recorte (base completa, não a amostra)."""
     asp = load_aspectos()
     if asp is None:
         return None, None
-    recorte = docs.loc[filtros.mask(docs), ["review_id"]]
+    recorte = docs.loc[filtros.mask(docs), ["review_id"]].reset_index(drop=True)
     base = recorte.merge(asp, on="review_id", how="left")
     n = len(base)
     if n == 0:
         return None, None
+    taxas = _taxas_erro()
     linhas = []
     for a in aspectos_da_polaridade(polaridade):
         if a not in base.columns:
             continue
-        k = int(base[a].fillna(False).astype(bool).sum())
-        linhas.append({"aspecto": a, "rotulo": ROTULO[a], "avaliacoes": k, "pct": 100 * k / n})
+        p = float(base[a].fillna(False).astype(bool).mean())
+        if a in taxas:
+            p = prevalencia_ajustada(p, *taxas[a])
+        linhas.append({"aspecto": a, "rotulo": ROTULO[a], "avaliacoes": round(p * n),
+                       "pct": 100 * p})
     df = pd.DataFrame(linhas).sort_values("avaliacoes", ascending=False).reset_index(drop=True)
     df = df[df["avaliacoes"] > 0]
     texto = "\n".join(
-        f"- {r.rotulo}: {r.avaliacoes} avaliações ({r.pct:.1f}% das {n} do recorte)"
+        f"- {r.rotulo}: ~{r.avaliacoes} avaliações ({r.pct:.1f}% das {n} do recorte)"
         for r in df.itertuples()
     )
     texto += (
-        "\n(Estimativa por classificador de aspectos; uma avaliação pode ter mais de um aspecto.)"
+        "\n(Estimativa de um classificador de aspectos com correção de erro; uma avaliação "
+        "pode ter mais de um aspecto. Use como ordem de grandeza, não como contagem exata.)"
     )
     return df, texto
