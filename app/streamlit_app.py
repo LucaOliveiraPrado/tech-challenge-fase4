@@ -88,7 +88,8 @@ def estrelas(n: int) -> str:
 
 
 def card(ev: pd.Series, citada: bool) -> str:
-    meta = [f"<b>{ev['rotulo']}</b>", estrelas(ev["nota"]), f"relevância {ev['relevancia']:.2f}"]
+    relev = f"{ev['relevancia']:.2f}".replace(".", ",")
+    meta = [f"<b>{ev['rotulo']}</b>", estrelas(ev["nota"]), f"relevância {relev}"]
     if isinstance(ev.get("categoria"), str):
         meta.append(ev["categoria"])
     if isinstance(ev.get("entrega_status"), str):
@@ -185,16 +186,18 @@ with col_resp:
     if r.quadro is not None and not r.quadro.empty:
         st.subheader("Frequência dos temas no recorte")
         st.caption("Base completa do recorte (classificador de aspectos), não só a amostra.")
-        q = r.quadro.head(10)
+        q = r.quadro.head(10).assign(
+            pct_txt=lambda d: d["pct"].map(lambda v: f"{v:.1f}%".replace(".", ","))
+        )
         base = alt.Chart(q).encode(
-            y=alt.Y("rotulo:N", sort="-x", title=None),
-            x=alt.X("avaliacoes:Q", title="avaliações"),
-            tooltip=["rotulo", "avaliacoes", alt.Tooltip("pct:Q", format=".1f", title="%")],
+            y=alt.Y("rotulo:N", sort="-x", title=None, axis=alt.Axis(labelLimit=260)),
+            x=alt.X("avaliacoes:Q", title="avaliações (estimativa)", axis=alt.Axis(format="d")),
+            tooltip=[alt.Tooltip("rotulo:N", title="aspecto"),
+                     alt.Tooltip("avaliacoes:Q", title="avaliações"),
+                     alt.Tooltip("pct_txt:N", title="% do recorte")],
         )
         barras = base.mark_bar(color=AZUL, cornerRadiusEnd=4, height=16)
-        rotulos = base.mark_text(align="left", dx=4, color="#52514e").encode(
-            text=alt.Text("pct:Q", format=".1f")
-        )
+        rotulos = base.mark_text(align="left", dx=4, color="#52514e").encode(text="pct_txt:N")
         st.altair_chart((barras + rotulos).properties(height=28 * len(q)),
                         use_container_width=True)
 
@@ -230,13 +233,21 @@ if mostrar_rastro and r.analise is not None:
             funil = pd.DataFrame({
                 "etapa": ["no recorte (filtros)", "candidatas (híbrido + RRF)",
                           "relevantes (reranker)", "no contexto (dedup + MMR)"],
-                "documentos": [rec.n_universo, len(rec.candidatos), rec.n_relevantes,
-                               len(rec.selecionados)],
+                "documentos": [f"{n:,}".replace(",", ".") for n in (
+                    rec.n_universo, len(rec.candidatos), rec.n_relevantes,
+                    len(rec.selecionados))],
             })
             st.dataframe(funil, hide_index=True, use_container_width=True)
             st.markdown(f"Recorte efetivo: `{rec.filtros_aplicados.descricao()}`")
-        st.markdown("**4. Tempos (s)**")
-        st.json(r.tempos, expanded=False)
+        st.markdown("**4. Tempos**")
+        etapas = {"analise_s": "análise da pergunta (LLM)", "recuperacao_s": "recuperação",
+                  "geracao_s": "geração (LLM)", "total_s": "total"}
+        st.dataframe(
+            pd.DataFrame([{"etapa": nome, "segundos": f"{r.tempos[k]:.2f}".replace(".", ",")}
+                          for k, nome in etapas.items() if k in r.tempos]),
+            hide_index=True, use_container_width=True,
+        )
+        st.caption("Respostas já feitas antes vêm do cache do LLM e aparecem quase instantâneas.")
     if r.recuperacao is not None and not r.recuperacao.candidatos.empty:
         with st.expander("Candidatas e escores (denso, BM25, RRF, reranker)"):
             cols = ["pos_rrf", "relevancia", "score_denso", "score_bm25", "rrf", "nota", "texto"]
