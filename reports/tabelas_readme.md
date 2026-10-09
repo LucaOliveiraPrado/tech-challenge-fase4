@@ -57,6 +57,14 @@
 | Geração (LLM) | 13,2 |
 | **Total por pergunta** | **22,4** |
 
+<!-- concordancia -->
+| Concordância entre juízes (626 pares rejulgados por `gemini-3.5-flash`) | Resultado |
+|---|---|
+| Concordância exata na escala 0/1/2 | 90,4% |
+| Kappa de Cohen ponderado (0/1/2) | 0,887 |
+| Concordância em "evidência clara" (decisão usada na P@10) | 96,0% |
+| Kappa de Cohen nessa decisão | 0,916 |
+
 <!-- exemplo -->
 **Pergunta:** Quais avaliações sustentam a conclusão de que existem problemas recorrentes relacionados ao prazo de entrega?
 

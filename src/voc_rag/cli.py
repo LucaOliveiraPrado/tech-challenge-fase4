@@ -3,6 +3,7 @@ from __future__ import annotations
 
 import json
 import logging
+import os
 from pathlib import Path
 
 import typer
@@ -71,7 +72,8 @@ def avaliar(
     if etapa == "concordancia":
         from voc_rag.evaluation import agreement
 
-        console.print_json(json.dumps(agreement.run(), ensure_ascii=False, default=str))
+        modelo = os.getenv("VOC_SEGUNDO_JUIZ", "gemini-3.5-flash")
+        console.print_json(json.dumps(agreement.run(modelo), ensure_ascii=False, default=str))
         return
     if etapa == "latencia":
         console.print_json(json.dumps(generation_eval.mede_latencia(), ensure_ascii=False,
