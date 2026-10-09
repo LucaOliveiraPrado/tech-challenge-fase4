@@ -1,0 +1,23 @@
+{
+  "linhas_fonte": 99224,
+  "review_ids_em_multiplos_pedidos": 789,
+  "avaliacoes_unicas": 98410,
+  "mensagem_ausente_na_fonte": 57742,
+  "titulo_ausente_na_fonte": 86891,
+  "mensagem_sem_conteudo_apos_limpeza": 186,
+  "avaliacoes_sem_pedido": 0,
+  "avaliacoes_sem_categoria": 2131,
+  "avaliacoes_com_texto": 42138,
+  "documentos": 42138,
+  "documentos_texto_repetido": 8426,
+  "palavras_por_documento": {
+    "mediana": 9.0,
+    "p90": 28.0,
+    "max": 47
+  },
+  "documentos_por_sentimento": {
+    "positivo": 27693,
+    "negativo": 10845,
+    "neutro": 3600
+  }
+}

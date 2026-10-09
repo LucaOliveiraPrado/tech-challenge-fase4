@@ -1,0 +1,18 @@
+[theme]
+base = "light"
+primaryColor = "#2a78d6"
+backgroundColor = "#fcfcfb"
+secondaryBackgroundColor = "#f3f2ee"
+textColor = "#0b0b0b"
+
+[server]
+headless = true
+# O watcher inspeciona os módulos preguiçosos do transformers e enche o log de
+# tracebacks inofensivos (torchvision ausente); o app não precisa de recarga a quente.
+fileWatcherType = "none"
+
+[browser]
+gatherUsageStats = false
+
+[client]
+toolbarMode = "viewer"

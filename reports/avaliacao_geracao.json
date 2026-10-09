@@ -1,0 +1,133 @@
+{
+  "n_perguntas": 40,
+  "abstencao": {
+    "acuracia": 1.0,
+    "precisao_abstencao": 1.0,
+    "recall_abstencao": 1.0,
+    "matriz": {
+      "abstencao_correta": 12,
+      "abstencao_indevida": 0,
+      "resposta_indevida": 0,
+      "resposta_correta": 28
+    },
+    "status_por_grupo": {
+      "atendimento": {
+        "respondida": 2
+      },
+      "elogios": {
+        "respondida": 3
+      },
+      "entrega": {
+        "respondida": 4
+      },
+      "evidencia": {
+        "respondida": 2
+      },
+      "fora_escopo": {
+        "fora_escopo": 6
+      },
+      "insatisfacao": {
+        "respondida": 2
+      },
+      "metadados": {
+        "respondida": 8
+      },
+      "qualidade": {
+        "respondida": 4
+      },
+      "reclamacoes": {
+        "respondida": 3
+      },
+      "sem_evidencia": {
+        "nao_respondida": 2,
+        "sem_evidencia": 2,
+        "fora_escopo": 1,
+        "evidencia_insuficiente": 1
+      }
+    }
+  },
+  "citacoes": {
+    "respostas_com_citacao": 30,
+    "citacoes_total": 635,
+    "citacoes_validas_pct": 1.0,
+    "insights_total": 84,
+    "insights_descartados_sem_evidencia": 0
+  },
+  "fidelidade": {
+    "insights_julgados": 84,
+    "distribuicao": {
+      "sustentado": 78,
+      "parcial": 6
+    },
+    "escore_fidelidade": 0.9643,
+    "resumos_sustentados_pct": 0.9643
+  },
+  "extracao_filtros": {
+    "perguntas": 8,
+    "acerto_pct": 1.0,
+    "por_pergunta": [
+      {
+        "id": "Q21",
+        "acerto": true
+      },
+      {
+        "id": "Q22",
+        "acerto": true
+      },
+      {
+        "id": "Q23",
+        "acerto": true
+      },
+      {
+        "id": "Q24",
+        "acerto": true
+      },
+      {
+        "id": "Q25",
+        "acerto": true
+      },
+      {
+        "id": "Q26",
+        "acerto": true
+      },
+      {
+        "id": "Q27",
+        "acerto": true
+      },
+      {
+        "id": "Q28",
+        "acerto": true
+      }
+    ]
+  },
+  "latencia": {
+    "total_mediana_s_respondidas": 0.31,
+    "recuperacao_mediana_s": 0.293,
+    "geracao_mediana_s": 0.0,
+    "analise_mediana_s": 0.0
+  },
+  "uso_llm_execucao": {
+    "chamadas": 4,
+    "chamadas_cache": 70,
+    "tokens_entrada": 9638,
+    "tokens_saida": 2661,
+    "segundos": 41.874000000000706,
+    "por_etapa": {
+      "analise_pergunta": {
+        "chamadas": 40,
+        "tokens_entrada": 56120,
+        "tokens_saida": 8852
+      },
+      "geracao": {
+        "chamadas": 30,
+        "tokens_entrada": 58002,
+        "tokens_saida": 16062
+      },
+      "geracao_reforco": {
+        "chamadas": 4,
+        "tokens_entrada": 9638,
+        "tokens_saida": 2661
+      }
+    }
+  }
+}
