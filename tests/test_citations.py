@@ -1,4 +1,19 @@
-from voc_rag.generation.answer import Insight, RespostaGerada, ids_citados, valida_citacoes
+from voc_rag.generation.answer import (
+    Insight,
+    RespostaGerada,
+    ids_citados,
+    sem_acentos,
+    valida_citacoes,
+)
+
+
+def test_detecta_resposta_sem_acentos():
+    ruim = RespostaGerada(suficiente=True, resumo="Os clientes nao recebem e as avaliacoes sao "
+                          "negativas.", insights=[], limitacoes="")
+    boa = RespostaGerada(suficiente=True, resumo="Os clientes não recebem; as avaliações são "
+                         "negativas e também citam o preço.", insights=[], limitacoes="")
+    assert sem_acentos(ruim)
+    assert not sem_acentos(boa)
 
 
 def _resp(insights, resumo="Resumo [R1].") -> RespostaGerada:

@@ -69,12 +69,13 @@ def subtitulo(ax, texto: str) -> None:
 def rotula_barras(ax, barras, fmt: str = "{:.0f}", horizontal: bool = False, pad: float = 3):
     for b in barras:
         v = b.get_width() if horizontal else b.get_height()
+        texto = fmt.format(v).replace(".", ",")  # decimal no padrão brasileiro
         if horizontal:
-            ax.annotate(fmt.format(v), (v, b.get_y() + b.get_height() / 2),
+            ax.annotate(texto, (v, b.get_y() + b.get_height() / 2),
                         xytext=(pad, 0), textcoords="offset points", va="center",
                         color=TINTA_2, fontsize=9)
         else:
-            ax.annotate(fmt.format(v), (b.get_x() + b.get_width() / 2, v),
+            ax.annotate(texto, (b.get_x() + b.get_width() / 2, v),
                         xytext=(0, pad), textcoords="offset points", ha="center",
                         color=TINTA_2, fontsize=9)
 

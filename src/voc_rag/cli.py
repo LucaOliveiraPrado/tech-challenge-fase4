@@ -60,12 +60,32 @@ def aspectos(
 
 @app.command()
 def avaliar(
-    etapa: str = typer.Option("tudo", help="recuperacao | geracao | exemplos | tudo"),
+    etapa: str = typer.Option(
+        "tudo",
+        help="recuperacao | geracao | fidelidade | exemplos | concordancia | latencia | tudo"),
 ) -> None:
     """Avaliação quantitativa (recuperação, geração, abstenção) e exemplos."""
     _logging(True)
     from voc_rag.evaluation import generation_eval, report, retrieval_eval
 
+    if etapa == "concordancia":
+        from voc_rag.evaluation import agreement
+
+        console.print_json(json.dumps(agreement.run(), ensure_ascii=False, default=str))
+        return
+    if etapa == "latencia":
+        console.print_json(json.dumps(generation_eval.mede_latencia(), ensure_ascii=False,
+                                      default=str))
+        return
+    if etapa == "fidelidade":
+        # Conclui a auditoria pendente a partir das respostas salvas (sem rodar o pipeline).
+        registros = generation_eval.carrega_registros()
+        generation_eval.completa_fidelidade(registros)
+        console.print_json(json.dumps(generation_eval.resume(registros), ensure_ascii=False,
+                                      default=str))
+        report.gera_exemplos()
+        report.gera_tabelas_readme()
+        return
     if etapa in ("recuperacao", "tudo"):
         r = retrieval_eval.run()
         console.print_json(json.dumps(r["configuracoes"], ensure_ascii=False))
@@ -73,7 +93,8 @@ def avaliar(
         console.print_json(json.dumps(generation_eval.run(), ensure_ascii=False, default=str))
     if etapa in ("exemplos", "geracao", "tudo"):
         report.gera_exemplos()
-        console.print("reports/exemplos_perguntas_respostas.md atualizado")
+        report.gera_tabelas_readme()
+        console.print("reports/exemplos_perguntas_respostas.md e tabelas_readme.md atualizados")
 
 
 @app.command()

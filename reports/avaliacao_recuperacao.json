@@ -1,0 +1,3861 @@
+{
+  "k": 10,
+  "configuracoes": {
+    "A0_denso_pergunta_crua": {
+      "p@5": 0.6,
+      "p@10": 0.6071,
+      "p@10_leniente": 0.775,
+      "ndcg@10": 0.6644,
+      "mrr": 0.722,
+      "hit@5": 0.8929,
+      "conformidade_metadado@10": 0.3375,
+      "metadados_p@10": 0.2125,
+      "metadados_conformidade@10": 0.3375
+    },
+    "A1_reescrita": {
+      "p@5": 0.8214,
+      "p@10": 0.8,
+      "p@10_leniente": 0.8286,
+      "ndcg@10": 0.8166,
+      "mrr": 0.8631,
+      "hit@5": 0.8929,
+      "conformidade_metadado@10": 0.4125,
+      "metadados_p@10": 0.3875,
+      "metadados_conformidade@10": 0.4125
+    },
+    "A2_multiquery_hyde": {
+      "p@5": 0.7429,
+      "p@10": 0.75,
+      "p@10_leniente": 0.7929,
+      "ndcg@10": 0.7658,
+      "mrr": 0.8206,
+      "hit@5": 0.8571,
+      "conformidade_metadado@10": 0.3625,
+      "metadados_p@10": 0.3375,
+      "metadados_conformidade@10": 0.3625
+    },
+    "A3_hibrido_bm25_rrf": {
+      "p@5": 0.7786,
+      "p@10": 0.775,
+      "p@10_leniente": 0.8143,
+      "ndcg@10": 0.7836,
+      "mrr": 0.8171,
+      "hit@5": 0.8571,
+      "conformidade_metadado@10": 0.4,
+      "metadados_p@10": 0.35,
+      "metadados_conformidade@10": 0.4
+    },
+    "A4_reranker": {
+      "p@5": 0.7286,
+      "p@10": 0.7071,
+      "p@10_leniente": 0.7643,
+      "ndcg@10": 0.7298,
+      "mrr": 0.7708,
+      "hit@5": 0.8571,
+      "conformidade_metadado@10": 0.25,
+      "metadados_p@10": 0.1875,
+      "metadados_conformidade@10": 0.25
+    },
+    "A5_metadados_polaridade": {
+      "p@5": 0.8643,
+      "p@10": 0.8571,
+      "p@10_leniente": 0.9464,
+      "ndcg@10": 0.882,
+      "mrr": 0.878,
+      "hit@5": 0.9643,
+      "conformidade_metadado@10": 0.8875,
+      "metadados_p@10": 0.725,
+      "metadados_conformidade@10": 0.8875
+    },
+    "V1_hibrido_so_reescrita": {
+      "p@5": 0.7857,
+      "p@10": 0.8036,
+      "p@10_leniente": 0.8321,
+      "ndcg@10": 0.8125,
+      "mrr": 0.869,
+      "hit@5": 0.8929,
+      "conformidade_metadado@10": 0.425,
+      "metadados_p@10": 0.3875,
+      "metadados_conformidade@10": 0.425
+    },
+    "V2_hibrido_sem_hyde": {
+      "p@5": 0.8,
+      "p@10": 0.7607,
+      "p@10_leniente": 0.8036,
+      "ndcg@10": 0.7773,
+      "mrr": 0.8221,
+      "hit@5": 0.8929,
+      "conformidade_metadado@10": 0.3625,
+      "metadados_p@10": 0.3125,
+      "metadados_conformidade@10": 0.3625
+    },
+    "V3_reranker_consulta_principal": {
+      "p@5": 0.7286,
+      "p@10": 0.7571,
+      "p@10_leniente": 0.8143,
+      "ndcg@10": 0.7661,
+      "mrr": 0.7827,
+      "hit@5": 0.9286,
+      "conformidade_metadado@10": 0.425,
+      "metadados_p@10": 0.375,
+      "metadados_conformidade@10": 0.425
+    },
+    "V4_reranker_media": {
+      "p@5": 0.6714,
+      "p@10": 0.6607,
+      "p@10_leniente": 0.7321,
+      "ndcg@10": 0.6822,
+      "mrr": 0.7307,
+      "hit@5": 0.8929,
+      "conformidade_metadado@10": 0.3125,
+      "metadados_p@10": 0.225,
+      "metadados_conformidade@10": 0.3125
+    },
+    "F1_final_so_reescrita": {
+      "p@5": 0.9143,
+      "p@10": 0.9393,
+      "p@10_leniente": 0.9714,
+      "ndcg@10": 0.9434,
+      "mrr": 0.9643,
+      "hit@5": 1.0,
+      "conformidade_metadado@10": 0.9125,
+      "metadados_p@10": 0.85,
+      "metadados_conformidade@10": 0.9125
+    },
+    "F2_final_multiquery": {
+      "p@5": 0.9286,
+      "p@10": 0.9143,
+      "p@10_leniente": 0.9607,
+      "ndcg@10": 0.9303,
+      "mrr": 0.9464,
+      "hit@5": 1.0,
+      "conformidade_metadado@10": 0.9125,
+      "metadados_p@10": 0.8375,
+      "metadados_conformidade@10": 0.9125
+    },
+    "E_minilm": {
+      "p@5": 0.7071,
+      "p@10": 0.7036,
+      "p@10_leniente": 0.7536,
+      "ndcg@10": 0.7132,
+      "mrr": 0.7391,
+      "hit@5": 0.9286,
+      "conformidade_metadado@10": 0.3375,
+      "metadados_p@10": 0.2875,
+      "metadados_conformidade@10": 0.3375
+    },
+    "E_e5_base": {
+      "p@5": 0.7214,
+      "p@10": 0.7107,
+      "p@10_leniente": 0.7571,
+      "ndcg@10": 0.7351,
+      "mrr": 0.7961,
+      "hit@5": 0.8571,
+      "conformidade_metadado@10": 0.325,
+      "metadados_p@10": 0.3,
+      "metadados_conformidade@10": 0.325
+    },
+    "E_bge_m3": {
+      "p@5": 0.8214,
+      "p@10": 0.8,
+      "p@10_leniente": 0.8286,
+      "ndcg@10": 0.8166,
+      "mrr": 0.8631,
+      "hit@5": 0.8929,
+      "conformidade_metadado@10": 0.4125,
+      "metadados_p@10": 0.3875,
+      "metadados_conformidade@10": 0.4125
+    }
+  },
+  "por_pergunta": {
+    "Q01": {
+      "A0_denso_pergunta_crua": {
+        "p@5": 0.8,
+        "p@10": 0.7,
+        "p@10_leniente": 1.0,
+        "ndcg@10": 0.7580753931105216,
+        "mrr": 0.5,
+        "hit@5": 1.0
+      },
+      "A1_reescrita": {
+        "p@5": 1.0,
+        "p@10": 1.0,
+        "p@10_leniente": 1.0,
+        "ndcg@10": 1.0,
+        "mrr": 1.0,
+        "hit@5": 1.0
+      },
+      "A2_multiquery_hyde": {
+        "p@5": 1.0,
+        "p@10": 1.0,
+        "p@10_leniente": 1.0,
+        "ndcg@10": 1.0,
+        "mrr": 1.0,
+        "hit@5": 1.0
+      },
+      "A3_hibrido_bm25_rrf": {
+        "p@5": 1.0,
+        "p@10": 0.9,
+        "p@10_leniente": 1.0,
+        "ndcg@10": 0.955830517697074,
+        "mrr": 1.0,
+        "hit@5": 1.0
+      },
+      "A4_reranker": {
+        "p@5": 1.0,
+        "p@10": 1.0,
+        "p@10_leniente": 1.0,
+        "ndcg@10": 1.0,
+        "mrr": 1.0,
+        "hit@5": 1.0
+      },
+      "A5_metadados_polaridade": {
+        "p@5": 1.0,
+        "p@10": 1.0,
+        "p@10_leniente": 1.0,
+        "ndcg@10": 1.0,
+        "mrr": 1.0,
+        "hit@5": 1.0
+      },
+      "V1_hibrido_so_reescrita": {
+        "p@5": 1.0,
+        "p@10": 1.0,
+        "p@10_leniente": 1.0,
+        "ndcg@10": 1.0,
+        "mrr": 1.0,
+        "hit@5": 1.0
+      },
+      "V2_hibrido_sem_hyde": {
+        "p@5": 1.0,
+        "p@10": 0.8,
+        "p@10_leniente": 1.0,
+        "ndcg@10": 0.9134166588977729,
+        "mrr": 1.0,
+        "hit@5": 1.0
+      },
+      "V3_reranker_consulta_principal": {
+        "p@5": 1.0,
+        "p@10": 1.0,
+        "p@10_leniente": 1.0,
+        "ndcg@10": 1.0,
+        "mrr": 1.0,
+        "hit@5": 1.0
+      },
+      "V4_reranker_media": {
+        "p@5": 1.0,
+        "p@10": 1.0,
+        "p@10_leniente": 1.0,
+        "ndcg@10": 1.0,
+        "mrr": 1.0,
+        "hit@5": 1.0
+      },
+      "F1_final_so_reescrita": {
+        "p@5": 1.0,
+        "p@10": 1.0,
+        "p@10_leniente": 1.0,
+        "ndcg@10": 1.0,
+        "mrr": 1.0,
+        "hit@5": 1.0
+      },
+      "F2_final_multiquery": {
+        "p@5": 1.0,
+        "p@10": 0.9,
+        "p@10_leniente": 1.0,
+        "ndcg@10": 0.955830517697074,
+        "mrr": 1.0,
+        "hit@5": 1.0
+      },
+      "E_minilm": {
+        "p@5": 0.8,
+        "p@10": 0.9,
+        "p@10_leniente": 0.9,
+        "ndcg@10": 0.7799082337019198,
+        "mrr": 0.5,
+        "hit@5": 1.0
+      },
+      "E_e5_base": {
+        "p@5": 1.0,
+        "p@10": 1.0,
+        "p@10_leniente": 1.0,
+        "ndcg@10": 1.0,
+        "mrr": 1.0,
+        "hit@5": 1.0
+      },
+      "E_bge_m3": {
+        "p@5": 1.0,
+        "p@10": 1.0,
+        "p@10_leniente": 1.0,
+        "ndcg@10": 1.0,
+        "mrr": 1.0,
+        "hit@5": 1.0
+      }
+    },
+    "Q02": {
+      "A0_denso_pergunta_crua": {
+        "p@5": 0.8,
+        "p@10": 0.8,
+        "p@10_leniente": 1.0,
+        "ndcg@10": 0.8010066431488296,
+        "mrr": 0.5,
+        "hit@5": 1.0
+      },
+      "A1_reescrita": {
+        "p@5": 1.0,
+        "p@10": 1.0,
+        "p@10_leniente": 1.0,
+        "ndcg@10": 1.0,
+        "mrr": 1.0,
+        "hit@5": 1.0
+      },
+      "A2_multiquery_hyde": {
+        "p@5": 1.0,
+        "p@10": 1.0,
+        "p@10_leniente": 1.0,
+        "ndcg@10": 1.0,
+        "mrr": 1.0,
+        "hit@5": 1.0
+      },
+      "A3_hibrido_bm25_rrf": {
+        "p@5": 1.0,
+        "p@10": 1.0,
+        "p@10_leniente": 1.0,
+        "ndcg@10": 1.0,
+        "mrr": 1.0,
+        "hit@5": 1.0
+      },
+      "A4_reranker": {
+        "p@5": 1.0,
+        "p@10": 1.0,
+        "p@10_leniente": 1.0,
+        "ndcg@10": 1.0,
+        "mrr": 1.0,
+        "hit@5": 1.0
+      },
+      "A5_metadados_polaridade": {
+        "p@5": 1.0,
+        "p@10": 1.0,
+        "p@10_leniente": 1.0,
+        "ndcg@10": 1.0,
+        "mrr": 1.0,
+        "hit@5": 1.0
+      },
+      "V1_hibrido_so_reescrita": {
+        "p@5": 1.0,
+        "p@10": 1.0,
+        "p@10_leniente": 1.0,
+        "ndcg@10": 1.0,
+        "mrr": 1.0,
+        "hit@5": 1.0
+      },
+      "V2_hibrido_sem_hyde": {
+        "p@5": 1.0,
+        "p@10": 0.9,
+        "p@10_leniente": 1.0,
+        "ndcg@10": 0.9477344873475498,
+        "mrr": 1.0,
+        "hit@5": 1.0
+      },
+      "V3_reranker_consulta_principal": {
+        "p@5": 1.0,
+        "p@10": 1.0,
+        "p@10_leniente": 1.0,
+        "ndcg@10": 1.0,
+        "mrr": 1.0,
+        "hit@5": 1.0
+      },
+      "V4_reranker_media": {
+        "p@5": 1.0,
+        "p@10": 1.0,
+        "p@10_leniente": 1.0,
+        "ndcg@10": 1.0,
+        "mrr": 1.0,
+        "hit@5": 1.0
+      },
+      "F1_final_so_reescrita": {
+        "p@5": 1.0,
+        "p@10": 1.0,
+        "p@10_leniente": 1.0,
+        "ndcg@10": 1.0,
+        "mrr": 1.0,
+        "hit@5": 1.0
+      },
+      "F2_final_multiquery": {
+        "p@5": 1.0,
+        "p@10": 1.0,
+        "p@10_leniente": 1.0,
+        "ndcg@10": 1.0,
+        "mrr": 1.0,
+        "hit@5": 1.0
+      },
+      "E_minilm": {
+        "p@5": 0.8,
+        "p@10": 0.9,
+        "p@10_leniente": 0.9,
+        "ndcg@10": 0.8899541168509598,
+        "mrr": 1.0,
+        "hit@5": 1.0
+      },
+      "E_e5_base": {
+        "p@5": 1.0,
+        "p@10": 1.0,
+        "p@10_leniente": 1.0,
+        "ndcg@10": 1.0,
+        "mrr": 1.0,
+        "hit@5": 1.0
+      },
+      "E_bge_m3": {
+        "p@5": 1.0,
+        "p@10": 1.0,
+        "p@10_leniente": 1.0,
+        "ndcg@10": 1.0,
+        "mrr": 1.0,
+        "hit@5": 1.0
+      }
+    },
+    "Q03": {
+      "A0_denso_pergunta_crua": {
+        "p@5": 0.6,
+        "p@10": 0.4,
+        "p@10_leniente": 0.6,
+        "ndcg@10": 0.5771890644354096,
+        "mrr": 1.0,
+        "hit@5": 1.0
+      },
+      "A1_reescrita": {
+        "p@5": 1.0,
+        "p@10": 1.0,
+        "p@10_leniente": 1.0,
+        "ndcg@10": 1.0,
+        "mrr": 1.0,
+        "hit@5": 1.0
+      },
+      "A2_multiquery_hyde": {
+        "p@5": 1.0,
+        "p@10": 1.0,
+        "p@10_leniente": 1.0,
+        "ndcg@10": 1.0,
+        "mrr": 1.0,
+        "hit@5": 1.0
+      },
+      "A3_hibrido_bm25_rrf": {
+        "p@5": 1.0,
+        "p@10": 1.0,
+        "p@10_leniente": 1.0,
+        "ndcg@10": 1.0,
+        "mrr": 1.0,
+        "hit@5": 1.0
+      },
+      "A4_reranker": {
+        "p@5": 1.0,
+        "p@10": 1.0,
+        "p@10_leniente": 1.0,
+        "ndcg@10": 1.0,
+        "mrr": 1.0,
+        "hit@5": 1.0
+      },
+      "A5_metadados_polaridade": {
+        "p@5": 1.0,
+        "p@10": 1.0,
+        "p@10_leniente": 1.0,
+        "ndcg@10": 1.0,
+        "mrr": 1.0,
+        "hit@5": 1.0
+      },
+      "V1_hibrido_so_reescrita": {
+        "p@5": 1.0,
+        "p@10": 1.0,
+        "p@10_leniente": 1.0,
+        "ndcg@10": 1.0,
+        "mrr": 1.0,
+        "hit@5": 1.0
+      },
+      "V2_hibrido_sem_hyde": {
+        "p@5": 1.0,
+        "p@10": 1.0,
+        "p@10_leniente": 1.0,
+        "ndcg@10": 1.0,
+        "mrr": 1.0,
+        "hit@5": 1.0
+      },
+      "V3_reranker_consulta_principal": {
+        "p@5": 1.0,
+        "p@10": 1.0,
+        "p@10_leniente": 1.0,
+        "ndcg@10": 1.0,
+        "mrr": 1.0,
+        "hit@5": 1.0
+      },
+      "V4_reranker_media": {
+        "p@5": 0.8,
+        "p@10": 0.9,
+        "p@10_leniente": 1.0,
+        "ndcg@10": 0.9432379215722527,
+        "mrr": 1.0,
+        "hit@5": 1.0
+      },
+      "F1_final_so_reescrita": {
+        "p@5": 1.0,
+        "p@10": 1.0,
+        "p@10_leniente": 1.0,
+        "ndcg@10": 1.0,
+        "mrr": 1.0,
+        "hit@5": 1.0
+      },
+      "F2_final_multiquery": {
+        "p@5": 1.0,
+        "p@10": 1.0,
+        "p@10_leniente": 1.0,
+        "ndcg@10": 1.0,
+        "mrr": 1.0,
+        "hit@5": 1.0
+      },
+      "E_minilm": {
+        "p@5": 1.0,
+        "p@10": 0.8,
+        "p@10_leniente": 0.9,
+        "ndcg@10": 0.8863992957602966,
+        "mrr": 1.0,
+        "hit@5": 1.0
+      },
+      "E_e5_base": {
+        "p@5": 1.0,
+        "p@10": 1.0,
+        "p@10_leniente": 1.0,
+        "ndcg@10": 1.0,
+        "mrr": 1.0,
+        "hit@5": 1.0
+      },
+      "E_bge_m3": {
+        "p@5": 1.0,
+        "p@10": 1.0,
+        "p@10_leniente": 1.0,
+        "ndcg@10": 1.0,
+        "mrr": 1.0,
+        "hit@5": 1.0
+      }
+    },
+    "Q04": {
+      "A0_denso_pergunta_crua": {
+        "p@5": 0.8,
+        "p@10": 0.9,
+        "p@10_leniente": 1.0,
+        "ndcg@10": 0.9432379215722527,
+        "mrr": 1.0,
+        "hit@5": 1.0
+      },
+      "A1_reescrita": {
+        "p@5": 1.0,
+        "p@10": 1.0,
+        "p@10_leniente": 1.0,
+        "ndcg@10": 1.0,
+        "mrr": 1.0,
+        "hit@5": 1.0
+      },
+      "A2_multiquery_hyde": {
+        "p@5": 1.0,
+        "p@10": 1.0,
+        "p@10_leniente": 1.0,
+        "ndcg@10": 1.0,
+        "mrr": 1.0,
+        "hit@5": 1.0
+      },
+      "A3_hibrido_bm25_rrf": {
+        "p@5": 1.0,
+        "p@10": 1.0,
+        "p@10_leniente": 1.0,
+        "ndcg@10": 1.0,
+        "mrr": 1.0,
+        "hit@5": 1.0
+      },
+      "A4_reranker": {
+        "p@5": 1.0,
+        "p@10": 1.0,
+        "p@10_leniente": 1.0,
+        "ndcg@10": 1.0,
+        "mrr": 1.0,
+        "hit@5": 1.0
+      },
+      "A5_metadados_polaridade": {
+        "p@5": 1.0,
+        "p@10": 1.0,
+        "p@10_leniente": 1.0,
+        "ndcg@10": 1.0,
+        "mrr": 1.0,
+        "hit@5": 1.0
+      },
+      "V1_hibrido_so_reescrita": {
+        "p@5": 1.0,
+        "p@10": 1.0,
+        "p@10_leniente": 1.0,
+        "ndcg@10": 1.0,
+        "mrr": 1.0,
+        "hit@5": 1.0
+      },
+      "V2_hibrido_sem_hyde": {
+        "p@5": 1.0,
+        "p@10": 1.0,
+        "p@10_leniente": 1.0,
+        "ndcg@10": 1.0,
+        "mrr": 1.0,
+        "hit@5": 1.0
+      },
+      "V3_reranker_consulta_principal": {
+        "p@5": 1.0,
+        "p@10": 1.0,
+        "p@10_leniente": 1.0,
+        "ndcg@10": 1.0,
+        "mrr": 1.0,
+        "hit@5": 1.0
+      },
+      "V4_reranker_media": {
+        "p@5": 1.0,
+        "p@10": 1.0,
+        "p@10_leniente": 1.0,
+        "ndcg@10": 1.0,
+        "mrr": 1.0,
+        "hit@5": 1.0
+      },
+      "F1_final_so_reescrita": {
+        "p@5": 1.0,
+        "p@10": 1.0,
+        "p@10_leniente": 1.0,
+        "ndcg@10": 1.0,
+        "mrr": 1.0,
+        "hit@5": 1.0
+      },
+      "F2_final_multiquery": {
+        "p@5": 1.0,
+        "p@10": 1.0,
+        "p@10_leniente": 1.0,
+        "ndcg@10": 1.0,
+        "mrr": 1.0,
+        "hit@5": 1.0
+      },
+      "E_minilm": {
+        "p@5": 0.8,
+        "p@10": 0.9,
+        "p@10_leniente": 0.9,
+        "ndcg@10": 0.9052116356304492,
+        "mrr": 1.0,
+        "hit@5": 1.0
+      },
+      "E_e5_base": {
+        "p@5": 1.0,
+        "p@10": 0.9,
+        "p@10_leniente": 0.9,
+        "ndcg@10": 0.9363792118010483,
+        "mrr": 1.0,
+        "hit@5": 1.0
+      },
+      "E_bge_m3": {
+        "p@5": 1.0,
+        "p@10": 1.0,
+        "p@10_leniente": 1.0,
+        "ndcg@10": 1.0,
+        "mrr": 1.0,
+        "hit@5": 1.0
+      }
+    },
+    "Q05": {
+      "A0_denso_pergunta_crua": {
+        "p@5": 1.0,
+        "p@10": 1.0,
+        "p@10_leniente": 1.0,
+        "ndcg@10": 1.0,
+        "mrr": 1.0,
+        "hit@5": 1.0
+      },
+      "A1_reescrita": {
+        "p@5": 1.0,
+        "p@10": 1.0,
+        "p@10_leniente": 1.0,
+        "ndcg@10": 1.0,
+        "mrr": 1.0,
+        "hit@5": 1.0
+      },
+      "A2_multiquery_hyde": {
+        "p@5": 1.0,
+        "p@10": 1.0,
+        "p@10_leniente": 1.0,
+        "ndcg@10": 1.0,
+        "mrr": 1.0,
+        "hit@5": 1.0
+      },
+      "A3_hibrido_bm25_rrf": {
+        "p@5": 1.0,
+        "p@10": 1.0,
+        "p@10_leniente": 1.0,
+        "ndcg@10": 1.0,
+        "mrr": 1.0,
+        "hit@5": 1.0
+      },
+      "A4_reranker": {
+        "p@5": 1.0,
+        "p@10": 1.0,
+        "p@10_leniente": 1.0,
+        "ndcg@10": 1.0,
+        "mrr": 1.0,
+        "hit@5": 1.0
+      },
+      "A5_metadados_polaridade": {
+        "p@5": 1.0,
+        "p@10": 1.0,
+        "p@10_leniente": 1.0,
+        "ndcg@10": 1.0,
+        "mrr": 1.0,
+        "hit@5": 1.0
+      },
+      "V1_hibrido_so_reescrita": {
+        "p@5": 1.0,
+        "p@10": 1.0,
+        "p@10_leniente": 1.0,
+        "ndcg@10": 1.0,
+        "mrr": 1.0,
+        "hit@5": 1.0
+      },
+      "V2_hibrido_sem_hyde": {
+        "p@5": 1.0,
+        "p@10": 1.0,
+        "p@10_leniente": 1.0,
+        "ndcg@10": 1.0,
+        "mrr": 1.0,
+        "hit@5": 1.0
+      },
+      "V3_reranker_consulta_principal": {
+        "p@5": 1.0,
+        "p@10": 1.0,
+        "p@10_leniente": 1.0,
+        "ndcg@10": 1.0,
+        "mrr": 1.0,
+        "hit@5": 1.0
+      },
+      "V4_reranker_media": {
+        "p@5": 1.0,
+        "p@10": 1.0,
+        "p@10_leniente": 1.0,
+        "ndcg@10": 1.0,
+        "mrr": 1.0,
+        "hit@5": 1.0
+      },
+      "F1_final_so_reescrita": {
+        "p@5": 1.0,
+        "p@10": 1.0,
+        "p@10_leniente": 1.0,
+        "ndcg@10": 1.0,
+        "mrr": 1.0,
+        "hit@5": 1.0
+      },
+      "F2_final_multiquery": {
+        "p@5": 1.0,
+        "p@10": 1.0,
+        "p@10_leniente": 1.0,
+        "ndcg@10": 1.0,
+        "mrr": 1.0,
+        "hit@5": 1.0
+      },
+      "E_minilm": {
+        "p@5": 1.0,
+        "p@10": 1.0,
+        "p@10_leniente": 1.0,
+        "ndcg@10": 1.0,
+        "mrr": 1.0,
+        "hit@5": 1.0
+      },
+      "E_e5_base": {
+        "p@5": 1.0,
+        "p@10": 1.0,
+        "p@10_leniente": 1.0,
+        "ndcg@10": 1.0,
+        "mrr": 1.0,
+        "hit@5": 1.0
+      },
+      "E_bge_m3": {
+        "p@5": 1.0,
+        "p@10": 1.0,
+        "p@10_leniente": 1.0,
+        "ndcg@10": 1.0,
+        "mrr": 1.0,
+        "hit@5": 1.0
+      }
+    },
+    "Q06": {
+      "A0_denso_pergunta_crua": {
+        "p@5": 1.0,
+        "p@10": 1.0,
+        "p@10_leniente": 1.0,
+        "ndcg@10": 1.0,
+        "mrr": 1.0,
+        "hit@5": 1.0
+      },
+      "A1_reescrita": {
+        "p@5": 1.0,
+        "p@10": 1.0,
+        "p@10_leniente": 1.0,
+        "ndcg@10": 1.0,
+        "mrr": 1.0,
+        "hit@5": 1.0
+      },
+      "A2_multiquery_hyde": {
+        "p@5": 1.0,
+        "p@10": 1.0,
+        "p@10_leniente": 1.0,
+        "ndcg@10": 1.0,
+        "mrr": 1.0,
+        "hit@5": 1.0
+      },
+      "A3_hibrido_bm25_rrf": {
+        "p@5": 1.0,
+        "p@10": 1.0,
+        "p@10_leniente": 1.0,
+        "ndcg@10": 1.0,
+        "mrr": 1.0,
+        "hit@5": 1.0
+      },
+      "A4_reranker": {
+        "p@5": 1.0,
+        "p@10": 1.0,
+        "p@10_leniente": 1.0,
+        "ndcg@10": 1.0,
+        "mrr": 1.0,
+        "hit@5": 1.0
+      },
+      "A5_metadados_polaridade": {
+        "p@5": 1.0,
+        "p@10": 1.0,
+        "p@10_leniente": 1.0,
+        "ndcg@10": 1.0,
+        "mrr": 1.0,
+        "hit@5": 1.0
+      },
+      "V1_hibrido_so_reescrita": {
+        "p@5": 1.0,
+        "p@10": 1.0,
+        "p@10_leniente": 1.0,
+        "ndcg@10": 1.0,
+        "mrr": 1.0,
+        "hit@5": 1.0
+      },
+      "V2_hibrido_sem_hyde": {
+        "p@5": 1.0,
+        "p@10": 1.0,
+        "p@10_leniente": 1.0,
+        "ndcg@10": 1.0,
+        "mrr": 1.0,
+        "hit@5": 1.0
+      },
+      "V3_reranker_consulta_principal": {
+        "p@5": 1.0,
+        "p@10": 1.0,
+        "p@10_leniente": 1.0,
+        "ndcg@10": 1.0,
+        "mrr": 1.0,
+        "hit@5": 1.0
+      },
+      "V4_reranker_media": {
+        "p@5": 1.0,
+        "p@10": 1.0,
+        "p@10_leniente": 1.0,
+        "ndcg@10": 1.0,
+        "mrr": 1.0,
+        "hit@5": 1.0
+      },
+      "F1_final_so_reescrita": {
+        "p@5": 1.0,
+        "p@10": 1.0,
+        "p@10_leniente": 1.0,
+        "ndcg@10": 1.0,
+        "mrr": 1.0,
+        "hit@5": 1.0
+      },
+      "F2_final_multiquery": {
+        "p@5": 1.0,
+        "p@10": 1.0,
+        "p@10_leniente": 1.0,
+        "ndcg@10": 1.0,
+        "mrr": 1.0,
+        "hit@5": 1.0
+      },
+      "E_minilm": {
+        "p@5": 1.0,
+        "p@10": 1.0,
+        "p@10_leniente": 1.0,
+        "ndcg@10": 1.0,
+        "mrr": 1.0,
+        "hit@5": 1.0
+      },
+      "E_e5_base": {
+        "p@5": 1.0,
+        "p@10": 1.0,
+        "p@10_leniente": 1.0,
+        "ndcg@10": 1.0,
+        "mrr": 1.0,
+        "hit@5": 1.0
+      },
+      "E_bge_m3": {
+        "p@5": 1.0,
+        "p@10": 1.0,
+        "p@10_leniente": 1.0,
+        "ndcg@10": 1.0,
+        "mrr": 1.0,
+        "hit@5": 1.0
+      }
+    },
+    "Q07": {
+      "A0_denso_pergunta_crua": {
+        "p@5": 1.0,
+        "p@10": 1.0,
+        "p@10_leniente": 1.0,
+        "ndcg@10": 1.0,
+        "mrr": 1.0,
+        "hit@5": 1.0
+      },
+      "A1_reescrita": {
+        "p@5": 1.0,
+        "p@10": 1.0,
+        "p@10_leniente": 1.0,
+        "ndcg@10": 1.0,
+        "mrr": 1.0,
+        "hit@5": 1.0
+      },
+      "A2_multiquery_hyde": {
+        "p@5": 1.0,
+        "p@10": 1.0,
+        "p@10_leniente": 1.0,
+        "ndcg@10": 1.0,
+        "mrr": 1.0,
+        "hit@5": 1.0
+      },
+      "A3_hibrido_bm25_rrf": {
+        "p@5": 1.0,
+        "p@10": 1.0,
+        "p@10_leniente": 1.0,
+        "ndcg@10": 1.0,
+        "mrr": 1.0,
+        "hit@5": 1.0
+      },
+      "A4_reranker": {
+        "p@5": 1.0,
+        "p@10": 1.0,
+        "p@10_leniente": 1.0,
+        "ndcg@10": 1.0,
+        "mrr": 1.0,
+        "hit@5": 1.0
+      },
+      "A5_metadados_polaridade": {
+        "p@5": 1.0,
+        "p@10": 1.0,
+        "p@10_leniente": 1.0,
+        "ndcg@10": 1.0,
+        "mrr": 1.0,
+        "hit@5": 1.0
+      },
+      "V1_hibrido_so_reescrita": {
+        "p@5": 1.0,
+        "p@10": 1.0,
+        "p@10_leniente": 1.0,
+        "ndcg@10": 1.0,
+        "mrr": 1.0,
+        "hit@5": 1.0
+      },
+      "V2_hibrido_sem_hyde": {
+        "p@5": 1.0,
+        "p@10": 1.0,
+        "p@10_leniente": 1.0,
+        "ndcg@10": 1.0,
+        "mrr": 1.0,
+        "hit@5": 1.0
+      },
+      "V3_reranker_consulta_principal": {
+        "p@5": 1.0,
+        "p@10": 1.0,
+        "p@10_leniente": 1.0,
+        "ndcg@10": 1.0,
+        "mrr": 1.0,
+        "hit@5": 1.0
+      },
+      "V4_reranker_media": {
+        "p@5": 1.0,
+        "p@10": 1.0,
+        "p@10_leniente": 1.0,
+        "ndcg@10": 1.0,
+        "mrr": 1.0,
+        "hit@5": 1.0
+      },
+      "F1_final_so_reescrita": {
+        "p@5": 1.0,
+        "p@10": 1.0,
+        "p@10_leniente": 1.0,
+        "ndcg@10": 1.0,
+        "mrr": 1.0,
+        "hit@5": 1.0
+      },
+      "F2_final_multiquery": {
+        "p@5": 1.0,
+        "p@10": 1.0,
+        "p@10_leniente": 1.0,
+        "ndcg@10": 1.0,
+        "mrr": 1.0,
+        "hit@5": 1.0
+      },
+      "E_minilm": {
+        "p@5": 1.0,
+        "p@10": 1.0,
+        "p@10_leniente": 1.0,
+        "ndcg@10": 1.0,
+        "mrr": 1.0,
+        "hit@5": 1.0
+      },
+      "E_e5_base": {
+        "p@5": 1.0,
+        "p@10": 1.0,
+        "p@10_leniente": 1.0,
+        "ndcg@10": 1.0,
+        "mrr": 1.0,
+        "hit@5": 1.0
+      },
+      "E_bge_m3": {
+        "p@5": 1.0,
+        "p@10": 1.0,
+        "p@10_leniente": 1.0,
+        "ndcg@10": 1.0,
+        "mrr": 1.0,
+        "hit@5": 1.0
+      }
+    },
+    "Q08": {
+      "A0_denso_pergunta_crua": {
+        "p@5": 0.2,
+        "p@10": 0.4,
+        "p@10_leniente": 1.0,
+        "ndcg@10": 0.52770603325114,
+        "mrr": 0.2,
+        "hit@5": 1.0
+      },
+      "A1_reescrita": {
+        "p@5": 1.0,
+        "p@10": 1.0,
+        "p@10_leniente": 1.0,
+        "ndcg@10": 1.0,
+        "mrr": 1.0,
+        "hit@5": 1.0
+      },
+      "A2_multiquery_hyde": {
+        "p@5": 1.0,
+        "p@10": 1.0,
+        "p@10_leniente": 1.0,
+        "ndcg@10": 1.0,
+        "mrr": 1.0,
+        "hit@5": 1.0
+      },
+      "A3_hibrido_bm25_rrf": {
+        "p@5": 1.0,
+        "p@10": 1.0,
+        "p@10_leniente": 1.0,
+        "ndcg@10": 1.0,
+        "mrr": 1.0,
+        "hit@5": 1.0
+      },
+      "A4_reranker": {
+        "p@5": 1.0,
+        "p@10": 1.0,
+        "p@10_leniente": 1.0,
+        "ndcg@10": 1.0,
+        "mrr": 1.0,
+        "hit@5": 1.0
+      },
+      "A5_metadados_polaridade": {
+        "p@5": 1.0,
+        "p@10": 1.0,
+        "p@10_leniente": 1.0,
+        "ndcg@10": 1.0,
+        "mrr": 1.0,
+        "hit@5": 1.0
+      },
+      "V1_hibrido_so_reescrita": {
+        "p@5": 1.0,
+        "p@10": 1.0,
+        "p@10_leniente": 1.0,
+        "ndcg@10": 1.0,
+        "mrr": 1.0,
+        "hit@5": 1.0
+      },
+      "V2_hibrido_sem_hyde": {
+        "p@5": 1.0,
+        "p@10": 1.0,
+        "p@10_leniente": 1.0,
+        "ndcg@10": 1.0,
+        "mrr": 1.0,
+        "hit@5": 1.0
+      },
+      "V3_reranker_consulta_principal": {
+        "p@5": 1.0,
+        "p@10": 1.0,
+        "p@10_leniente": 1.0,
+        "ndcg@10": 1.0,
+        "mrr": 1.0,
+        "hit@5": 1.0
+      },
+      "V4_reranker_media": {
+        "p@5": 1.0,
+        "p@10": 1.0,
+        "p@10_leniente": 1.0,
+        "ndcg@10": 1.0,
+        "mrr": 1.0,
+        "hit@5": 1.0
+      },
+      "F1_final_so_reescrita": {
+        "p@5": 1.0,
+        "p@10": 1.0,
+        "p@10_leniente": 1.0,
+        "ndcg@10": 1.0,
+        "mrr": 1.0,
+        "hit@5": 1.0
+      },
+      "F2_final_multiquery": {
+        "p@5": 1.0,
+        "p@10": 1.0,
+        "p@10_leniente": 1.0,
+        "ndcg@10": 1.0,
+        "mrr": 1.0,
+        "hit@5": 1.0
+      },
+      "E_minilm": {
+        "p@5": 1.0,
+        "p@10": 1.0,
+        "p@10_leniente": 1.0,
+        "ndcg@10": 1.0,
+        "mrr": 1.0,
+        "hit@5": 1.0
+      },
+      "E_e5_base": {
+        "p@5": 1.0,
+        "p@10": 1.0,
+        "p@10_leniente": 1.0,
+        "ndcg@10": 1.0,
+        "mrr": 1.0,
+        "hit@5": 1.0
+      },
+      "E_bge_m3": {
+        "p@5": 1.0,
+        "p@10": 1.0,
+        "p@10_leniente": 1.0,
+        "ndcg@10": 1.0,
+        "mrr": 1.0,
+        "hit@5": 1.0
+      }
+    },
+    "Q09": {
+      "A0_denso_pergunta_crua": {
+        "p@5": 0.4,
+        "p@10": 0.6,
+        "p@10_leniente": 1.0,
+        "ndcg@10": 0.6644504781364357,
+        "mrr": 0.5,
+        "hit@5": 1.0
+      },
+      "A1_reescrita": {
+        "p@5": 1.0,
+        "p@10": 1.0,
+        "p@10_leniente": 1.0,
+        "ndcg@10": 1.0,
+        "mrr": 1.0,
+        "hit@5": 1.0
+      },
+      "A2_multiquery_hyde": {
+        "p@5": 1.0,
+        "p@10": 1.0,
+        "p@10_leniente": 1.0,
+        "ndcg@10": 1.0,
+        "mrr": 1.0,
+        "hit@5": 1.0
+      },
+      "A3_hibrido_bm25_rrf": {
+        "p@5": 1.0,
+        "p@10": 1.0,
+        "p@10_leniente": 1.0,
+        "ndcg@10": 1.0,
+        "mrr": 1.0,
+        "hit@5": 1.0
+      },
+      "A4_reranker": {
+        "p@5": 1.0,
+        "p@10": 1.0,
+        "p@10_leniente": 1.0,
+        "ndcg@10": 1.0,
+        "mrr": 1.0,
+        "hit@5": 1.0
+      },
+      "A5_metadados_polaridade": {
+        "p@5": 1.0,
+        "p@10": 1.0,
+        "p@10_leniente": 1.0,
+        "ndcg@10": 1.0,
+        "mrr": 1.0,
+        "hit@5": 1.0
+      },
+      "V1_hibrido_so_reescrita": {
+        "p@5": 1.0,
+        "p@10": 1.0,
+        "p@10_leniente": 1.0,
+        "ndcg@10": 1.0,
+        "mrr": 1.0,
+        "hit@5": 1.0
+      },
+      "V2_hibrido_sem_hyde": {
+        "p@5": 1.0,
+        "p@10": 1.0,
+        "p@10_leniente": 1.0,
+        "ndcg@10": 1.0,
+        "mrr": 1.0,
+        "hit@5": 1.0
+      },
+      "V3_reranker_consulta_principal": {
+        "p@5": 1.0,
+        "p@10": 1.0,
+        "p@10_leniente": 1.0,
+        "ndcg@10": 1.0,
+        "mrr": 1.0,
+        "hit@5": 1.0
+      },
+      "V4_reranker_media": {
+        "p@5": 0.8,
+        "p@10": 0.8,
+        "p@10_leniente": 1.0,
+        "ndcg@10": 0.8632555551147043,
+        "mrr": 1.0,
+        "hit@5": 1.0
+      },
+      "F1_final_so_reescrita": {
+        "p@5": 1.0,
+        "p@10": 1.0,
+        "p@10_leniente": 1.0,
+        "ndcg@10": 1.0,
+        "mrr": 1.0,
+        "hit@5": 1.0
+      },
+      "F2_final_multiquery": {
+        "p@5": 1.0,
+        "p@10": 1.0,
+        "p@10_leniente": 1.0,
+        "ndcg@10": 1.0,
+        "mrr": 1.0,
+        "hit@5": 1.0
+      },
+      "E_minilm": {
+        "p@5": 1.0,
+        "p@10": 1.0,
+        "p@10_leniente": 1.0,
+        "ndcg@10": 1.0,
+        "mrr": 1.0,
+        "hit@5": 1.0
+      },
+      "E_e5_base": {
+        "p@5": 1.0,
+        "p@10": 1.0,
+        "p@10_leniente": 1.0,
+        "ndcg@10": 1.0,
+        "mrr": 1.0,
+        "hit@5": 1.0
+      },
+      "E_bge_m3": {
+        "p@5": 1.0,
+        "p@10": 1.0,
+        "p@10_leniente": 1.0,
+        "ndcg@10": 1.0,
+        "mrr": 1.0,
+        "hit@5": 1.0
+      }
+    },
+    "Q10": {
+      "A0_denso_pergunta_crua": {
+        "p@5": 0.4,
+        "p@10": 0.7,
+        "p@10_leniente": 0.8,
+        "ndcg@10": 0.7025907898990394,
+        "mrr": 1.0,
+        "hit@5": 1.0
+      },
+      "A1_reescrita": {
+        "p@5": 0.6,
+        "p@10": 0.5,
+        "p@10_leniente": 1.0,
+        "ndcg@10": 0.7262853466215677,
+        "mrr": 1.0,
+        "hit@5": 1.0
+      },
+      "A2_multiquery_hyde": {
+        "p@5": 0.6,
+        "p@10": 0.5,
+        "p@10_leniente": 0.9,
+        "ndcg@10": 0.6293255507525941,
+        "mrr": 0.5,
+        "hit@5": 1.0
+      },
+      "A3_hibrido_bm25_rrf": {
+        "p@5": 0.8,
+        "p@10": 0.7,
+        "p@10_leniente": 1.0,
+        "ndcg@10": 0.7601933920987805,
+        "mrr": 0.5,
+        "hit@5": 1.0
+      },
+      "A4_reranker": {
+        "p@5": 0.6,
+        "p@10": 0.4,
+        "p@10_leniente": 0.9,
+        "ndcg@10": 0.630856569255094,
+        "mrr": 1.0,
+        "hit@5": 1.0
+      },
+      "A5_metadados_polaridade": {
+        "p@5": 0.6,
+        "p@10": 0.4,
+        "p@10_leniente": 0.9,
+        "ndcg@10": 0.630856569255094,
+        "mrr": 1.0,
+        "hit@5": 1.0
+      },
+      "V1_hibrido_so_reescrita": {
+        "p@5": 0.4,
+        "p@10": 0.7,
+        "p@10_leniente": 1.0,
+        "ndcg@10": 0.7708688724052363,
+        "mrr": 1.0,
+        "hit@5": 1.0
+      },
+      "V2_hibrido_sem_hyde": {
+        "p@5": 0.8,
+        "p@10": 0.7,
+        "p@10_leniente": 1.0,
+        "ndcg@10": 0.7547191618576448,
+        "mrr": 0.5,
+        "hit@5": 1.0
+      },
+      "V3_reranker_consulta_principal": {
+        "p@5": 0.2,
+        "p@10": 0.5,
+        "p@10_leniente": 0.9,
+        "ndcg@10": 0.5815556433824632,
+        "mrr": 0.5,
+        "hit@5": 1.0
+      },
+      "V4_reranker_media": {
+        "p@5": 0.6,
+        "p@10": 0.4,
+        "p@10_leniente": 0.9,
+        "ndcg@10": 0.5935230441808965,
+        "mrr": 0.5,
+        "hit@5": 1.0
+      },
+      "F1_final_so_reescrita": {
+        "p@5": 0.4,
+        "p@10": 0.7,
+        "p@10_leniente": 1.0,
+        "ndcg@10": 0.7772990368905229,
+        "mrr": 1.0,
+        "hit@5": 1.0
+      },
+      "F2_final_multiquery": {
+        "p@5": 0.8,
+        "p@10": 0.7,
+        "p@10_leniente": 1.0,
+        "ndcg@10": 0.7601933920987805,
+        "mrr": 0.5,
+        "hit@5": 1.0
+      },
+      "E_minilm": {
+        "p@5": 0.4,
+        "p@10": 0.5,
+        "p@10_leniente": 0.9,
+        "ndcg@10": 0.5783056800393525,
+        "mrr": 0.3333333333333333,
+        "hit@5": 1.0
+      },
+      "E_e5_base": {
+        "p@5": 0.0,
+        "p@10": 0.2,
+        "p@10_leniente": 1.0,
+        "ndcg@10": 0.42801270478508463,
+        "mrr": 0.16666666666666666,
+        "hit@5": 0.0
+      },
+      "E_bge_m3": {
+        "p@5": 0.6,
+        "p@10": 0.5,
+        "p@10_leniente": 1.0,
+        "ndcg@10": 0.7262853466215677,
+        "mrr": 1.0,
+        "hit@5": 1.0
+      }
+    },
+    "Q11": {
+      "A0_denso_pergunta_crua": {
+        "p@5": 0.8,
+        "p@10": 0.7,
+        "p@10_leniente": 1.0,
+        "ndcg@10": 0.7666888146990526,
+        "mrr": 0.5,
+        "hit@5": 1.0
+      },
+      "A1_reescrita": {
+        "p@5": 1.0,
+        "p@10": 1.0,
+        "p@10_leniente": 1.0,
+        "ndcg@10": 1.0,
+        "mrr": 1.0,
+        "hit@5": 1.0
+      },
+      "A2_multiquery_hyde": {
+        "p@5": 1.0,
+        "p@10": 1.0,
+        "p@10_leniente": 1.0,
+        "ndcg@10": 1.0,
+        "mrr": 1.0,
+        "hit@5": 1.0
+      },
+      "A3_hibrido_bm25_rrf": {
+        "p@5": 1.0,
+        "p@10": 1.0,
+        "p@10_leniente": 1.0,
+        "ndcg@10": 1.0,
+        "mrr": 1.0,
+        "hit@5": 1.0
+      },
+      "A4_reranker": {
+        "p@5": 1.0,
+        "p@10": 0.9,
+        "p@10_leniente": 0.9,
+        "ndcg@10": 0.9216017310213247,
+        "mrr": 1.0,
+        "hit@5": 1.0
+      },
+      "A5_metadados_polaridade": {
+        "p@5": 1.0,
+        "p@10": 0.9,
+        "p@10_leniente": 1.0,
+        "ndcg@10": 0.9575861412006988,
+        "mrr": 1.0,
+        "hit@5": 1.0
+      },
+      "V1_hibrido_so_reescrita": {
+        "p@5": 1.0,
+        "p@10": 0.9,
+        "p@10_leniente": 1.0,
+        "ndcg@10": 0.9575861412006988,
+        "mrr": 1.0,
+        "hit@5": 1.0
+      },
+      "V2_hibrido_sem_hyde": {
+        "p@5": 1.0,
+        "p@10": 1.0,
+        "p@10_leniente": 1.0,
+        "ndcg@10": 1.0,
+        "mrr": 1.0,
+        "hit@5": 1.0
+      },
+      "V3_reranker_consulta_principal": {
+        "p@5": 1.0,
+        "p@10": 0.9,
+        "p@10_leniente": 1.0,
+        "ndcg@10": 0.9537125187088151,
+        "mrr": 1.0,
+        "hit@5": 1.0
+      },
+      "V4_reranker_media": {
+        "p@5": 0.8,
+        "p@10": 0.9,
+        "p@10_leniente": 0.9,
+        "ndcg@10": 0.9052116356304492,
+        "mrr": 1.0,
+        "hit@5": 1.0
+      },
+      "F1_final_so_reescrita": {
+        "p@5": 1.0,
+        "p@10": 1.0,
+        "p@10_leniente": 1.0,
+        "ndcg@10": 1.0,
+        "mrr": 1.0,
+        "hit@5": 1.0
+      },
+      "F2_final_multiquery": {
+        "p@5": 1.0,
+        "p@10": 1.0,
+        "p@10_leniente": 1.0,
+        "ndcg@10": 1.0,
+        "mrr": 1.0,
+        "hit@5": 1.0
+      },
+      "E_minilm": {
+        "p@5": 1.0,
+        "p@10": 0.8,
+        "p@10_leniente": 0.9,
+        "ndcg@10": 0.8791878722220235,
+        "mrr": 1.0,
+        "hit@5": 1.0
+      },
+      "E_e5_base": {
+        "p@5": 1.0,
+        "p@10": 1.0,
+        "p@10_leniente": 1.0,
+        "ndcg@10": 1.0,
+        "mrr": 1.0,
+        "hit@5": 1.0
+      },
+      "E_bge_m3": {
+        "p@5": 1.0,
+        "p@10": 1.0,
+        "p@10_leniente": 1.0,
+        "ndcg@10": 1.0,
+        "mrr": 1.0,
+        "hit@5": 1.0
+      }
+    },
+    "Q12": {
+      "A0_denso_pergunta_crua": {
+        "p@5": 0.2,
+        "p@10": 0.3,
+        "p@10_leniente": 0.8,
+        "ndcg@10": 0.42678962257296144,
+        "mrr": 0.25,
+        "hit@5": 1.0
+      },
+      "A1_reescrita": {
+        "p@5": 1.0,
+        "p@10": 1.0,
+        "p@10_leniente": 1.0,
+        "ndcg@10": 1.0,
+        "mrr": 1.0,
+        "hit@5": 1.0
+      },
+      "A2_multiquery_hyde": {
+        "p@5": 1.0,
+        "p@10": 1.0,
+        "p@10_leniente": 1.0,
+        "ndcg@10": 1.0,
+        "mrr": 1.0,
+        "hit@5": 1.0
+      },
+      "A3_hibrido_bm25_rrf": {
+        "p@5": 1.0,
+        "p@10": 1.0,
+        "p@10_leniente": 1.0,
+        "ndcg@10": 1.0,
+        "mrr": 1.0,
+        "hit@5": 1.0
+      },
+      "A4_reranker": {
+        "p@5": 1.0,
+        "p@10": 1.0,
+        "p@10_leniente": 1.0,
+        "ndcg@10": 1.0,
+        "mrr": 1.0,
+        "hit@5": 1.0
+      },
+      "A5_metadados_polaridade": {
+        "p@5": 1.0,
+        "p@10": 1.0,
+        "p@10_leniente": 1.0,
+        "ndcg@10": 1.0,
+        "mrr": 1.0,
+        "hit@5": 1.0
+      },
+      "V1_hibrido_so_reescrita": {
+        "p@5": 1.0,
+        "p@10": 0.9,
+        "p@10_leniente": 1.0,
+        "ndcg@10": 0.9575861412006988,
+        "mrr": 1.0,
+        "hit@5": 1.0
+      },
+      "V2_hibrido_sem_hyde": {
+        "p@5": 1.0,
+        "p@10": 1.0,
+        "p@10_leniente": 1.0,
+        "ndcg@10": 1.0,
+        "mrr": 1.0,
+        "hit@5": 1.0
+      },
+      "V3_reranker_consulta_principal": {
+        "p@5": 1.0,
+        "p@10": 1.0,
+        "p@10_leniente": 1.0,
+        "ndcg@10": 1.0,
+        "mrr": 1.0,
+        "hit@5": 1.0
+      },
+      "V4_reranker_media": {
+        "p@5": 1.0,
+        "p@10": 0.8,
+        "p@10_leniente": 0.8,
+        "ndcg@10": 0.8630152897016883,
+        "mrr": 1.0,
+        "hit@5": 1.0
+      },
+      "F1_final_so_reescrita": {
+        "p@5": 1.0,
+        "p@10": 1.0,
+        "p@10_leniente": 1.0,
+        "ndcg@10": 1.0,
+        "mrr": 1.0,
+        "hit@5": 1.0
+      },
+      "F2_final_multiquery": {
+        "p@5": 1.0,
+        "p@10": 1.0,
+        "p@10_leniente": 1.0,
+        "ndcg@10": 1.0,
+        "mrr": 1.0,
+        "hit@5": 1.0
+      },
+      "E_minilm": {
+        "p@5": 0.6,
+        "p@10": 0.7,
+        "p@10_leniente": 0.8,
+        "ndcg@10": 0.6447478862954971,
+        "mrr": 0.5,
+        "hit@5": 1.0
+      },
+      "E_e5_base": {
+        "p@5": 1.0,
+        "p@10": 1.0,
+        "p@10_leniente": 1.0,
+        "ndcg@10": 1.0,
+        "mrr": 1.0,
+        "hit@5": 1.0
+      },
+      "E_bge_m3": {
+        "p@5": 1.0,
+        "p@10": 1.0,
+        "p@10_leniente": 1.0,
+        "ndcg@10": 1.0,
+        "mrr": 1.0,
+        "hit@5": 1.0
+      }
+    },
+    "Q13": {
+      "A0_denso_pergunta_crua": {
+        "p@5": 1.0,
+        "p@10": 0.9,
+        "p@10_leniente": 1.0,
+        "ndcg@10": 0.9510907186004267,
+        "mrr": 1.0,
+        "hit@5": 1.0
+      },
+      "A1_reescrita": {
+        "p@5": 0.8,
+        "p@10": 0.9,
+        "p@10_leniente": 0.9,
+        "ndcg@10": 0.8611375561264454,
+        "mrr": 1.0,
+        "hit@5": 1.0
+      },
+      "A2_multiquery_hyde": {
+        "p@5": 0.4,
+        "p@10": 0.5,
+        "p@10_leniente": 0.5,
+        "ndcg@10": 0.5239294981581574,
+        "mrr": 1.0,
+        "hit@5": 1.0
+      },
+      "A3_hibrido_bm25_rrf": {
+        "p@5": 0.8,
+        "p@10": 0.8,
+        "p@10_leniente": 0.8,
+        "ndcg@10": 0.7065443116025597,
+        "mrr": 0.5,
+        "hit@5": 1.0
+      },
+      "A4_reranker": {
+        "p@5": 0.8,
+        "p@10": 0.8,
+        "p@10_leniente": 0.8,
+        "ndcg@10": 0.716287445502968,
+        "mrr": 0.5,
+        "hit@5": 1.0
+      },
+      "A5_metadados_polaridade": {
+        "p@5": 0.8,
+        "p@10": 0.8,
+        "p@10_leniente": 0.8,
+        "ndcg@10": 0.716287445502968,
+        "mrr": 0.5,
+        "hit@5": 1.0
+      },
+      "V1_hibrido_so_reescrita": {
+        "p@5": 0.8,
+        "p@10": 0.9,
+        "p@10_leniente": 0.9,
+        "ndcg@10": 0.7799082337019198,
+        "mrr": 0.5,
+        "hit@5": 1.0
+      },
+      "V2_hibrido_sem_hyde": {
+        "p@5": 0.8,
+        "p@10": 0.8,
+        "p@10_leniente": 0.8,
+        "ndcg@10": 0.7065443116025597,
+        "mrr": 0.5,
+        "hit@5": 1.0
+      },
+      "V3_reranker_consulta_principal": {
+        "p@5": 0.4,
+        "p@10": 0.4,
+        "p@10_leniente": 0.5,
+        "ndcg@10": 0.35425845224043584,
+        "mrr": 0.3333333333333333,
+        "hit@5": 1.0
+      },
+      "V4_reranker_media": {
+        "p@5": 0.2,
+        "p@10": 0.2,
+        "p@10_leniente": 0.3,
+        "ndcg@10": 0.24497562686001179,
+        "mrr": 0.5,
+        "hit@5": 1.0
+      },
+      "F1_final_so_reescrita": {
+        "p@5": 0.8,
+        "p@10": 0.9,
+        "p@10_leniente": 0.9,
+        "ndcg@10": 0.7799082337019198,
+        "mrr": 0.5,
+        "hit@5": 1.0
+      },
+      "F2_final_multiquery": {
+        "p@5": 0.8,
+        "p@10": 0.8,
+        "p@10_leniente": 0.8,
+        "ndcg@10": 0.7065443116025597,
+        "mrr": 0.5,
+        "hit@5": 1.0
+      },
+      "E_minilm": {
+        "p@5": 1.0,
+        "p@10": 1.0,
+        "p@10_leniente": 1.0,
+        "ndcg@10": 1.0,
+        "mrr": 1.0,
+        "hit@5": 1.0
+      },
+      "E_e5_base": {
+        "p@5": 0.6,
+        "p@10": 0.5,
+        "p@10_leniente": 0.5,
+        "ndcg@10": 0.47938213678331165,
+        "mrr": 0.5,
+        "hit@5": 1.0
+      },
+      "E_bge_m3": {
+        "p@5": 0.8,
+        "p@10": 0.9,
+        "p@10_leniente": 0.9,
+        "ndcg@10": 0.8611375561264454,
+        "mrr": 1.0,
+        "hit@5": 1.0
+      }
+    },
+    "Q14": {
+      "A0_denso_pergunta_crua": {
+        "p@5": 1.0,
+        "p@10": 1.0,
+        "p@10_leniente": 1.0,
+        "ndcg@10": 1.0,
+        "mrr": 1.0,
+        "hit@5": 1.0
+      },
+      "A1_reescrita": {
+        "p@5": 1.0,
+        "p@10": 1.0,
+        "p@10_leniente": 1.0,
+        "ndcg@10": 1.0,
+        "mrr": 1.0,
+        "hit@5": 1.0
+      },
+      "A2_multiquery_hyde": {
+        "p@5": 1.0,
+        "p@10": 1.0,
+        "p@10_leniente": 1.0,
+        "ndcg@10": 1.0,
+        "mrr": 1.0,
+        "hit@5": 1.0
+      },
+      "A3_hibrido_bm25_rrf": {
+        "p@5": 1.0,
+        "p@10": 1.0,
+        "p@10_leniente": 1.0,
+        "ndcg@10": 1.0,
+        "mrr": 1.0,
+        "hit@5": 1.0
+      },
+      "A4_reranker": {
+        "p@5": 1.0,
+        "p@10": 1.0,
+        "p@10_leniente": 1.0,
+        "ndcg@10": 1.0,
+        "mrr": 1.0,
+        "hit@5": 1.0
+      },
+      "A5_metadados_polaridade": {
+        "p@5": 1.0,
+        "p@10": 1.0,
+        "p@10_leniente": 1.0,
+        "ndcg@10": 1.0,
+        "mrr": 1.0,
+        "hit@5": 1.0
+      },
+      "V1_hibrido_so_reescrita": {
+        "p@5": 1.0,
+        "p@10": 1.0,
+        "p@10_leniente": 1.0,
+        "ndcg@10": 1.0,
+        "mrr": 1.0,
+        "hit@5": 1.0
+      },
+      "V2_hibrido_sem_hyde": {
+        "p@5": 1.0,
+        "p@10": 1.0,
+        "p@10_leniente": 1.0,
+        "ndcg@10": 1.0,
+        "mrr": 1.0,
+        "hit@5": 1.0
+      },
+      "V3_reranker_consulta_principal": {
+        "p@5": 1.0,
+        "p@10": 1.0,
+        "p@10_leniente": 1.0,
+        "ndcg@10": 1.0,
+        "mrr": 1.0,
+        "hit@5": 1.0
+      },
+      "V4_reranker_media": {
+        "p@5": 1.0,
+        "p@10": 1.0,
+        "p@10_leniente": 1.0,
+        "ndcg@10": 1.0,
+        "mrr": 1.0,
+        "hit@5": 1.0
+      },
+      "F1_final_so_reescrita": {
+        "p@5": 1.0,
+        "p@10": 1.0,
+        "p@10_leniente": 1.0,
+        "ndcg@10": 1.0,
+        "mrr": 1.0,
+        "hit@5": 1.0
+      },
+      "F2_final_multiquery": {
+        "p@5": 1.0,
+        "p@10": 1.0,
+        "p@10_leniente": 1.0,
+        "ndcg@10": 1.0,
+        "mrr": 1.0,
+        "hit@5": 1.0
+      },
+      "E_minilm": {
+        "p@5": 1.0,
+        "p@10": 1.0,
+        "p@10_leniente": 1.0,
+        "ndcg@10": 1.0,
+        "mrr": 1.0,
+        "hit@5": 1.0
+      },
+      "E_e5_base": {
+        "p@5": 1.0,
+        "p@10": 1.0,
+        "p@10_leniente": 1.0,
+        "ndcg@10": 1.0,
+        "mrr": 1.0,
+        "hit@5": 1.0
+      },
+      "E_bge_m3": {
+        "p@5": 1.0,
+        "p@10": 1.0,
+        "p@10_leniente": 1.0,
+        "ndcg@10": 1.0,
+        "mrr": 1.0,
+        "hit@5": 1.0
+      }
+    },
+    "Q15": {
+      "A0_denso_pergunta_crua": {
+        "p@5": 1.0,
+        "p@10": 1.0,
+        "p@10_leniente": 1.0,
+        "ndcg@10": 1.0,
+        "mrr": 1.0,
+        "hit@5": 1.0
+      },
+      "A1_reescrita": {
+        "p@5": 1.0,
+        "p@10": 1.0,
+        "p@10_leniente": 1.0,
+        "ndcg@10": 1.0,
+        "mrr": 1.0,
+        "hit@5": 1.0
+      },
+      "A2_multiquery_hyde": {
+        "p@5": 1.0,
+        "p@10": 0.9,
+        "p@10_leniente": 1.0,
+        "ndcg@10": 0.9575861412006988,
+        "mrr": 1.0,
+        "hit@5": 1.0
+      },
+      "A3_hibrido_bm25_rrf": {
+        "p@5": 1.0,
+        "p@10": 0.9,
+        "p@10_leniente": 1.0,
+        "ndcg@10": 0.9477344873475498,
+        "mrr": 1.0,
+        "hit@5": 1.0
+      },
+      "A4_reranker": {
+        "p@5": 1.0,
+        "p@10": 1.0,
+        "p@10_leniente": 1.0,
+        "ndcg@10": 1.0,
+        "mrr": 1.0,
+        "hit@5": 1.0
+      },
+      "A5_metadados_polaridade": {
+        "p@5": 1.0,
+        "p@10": 1.0,
+        "p@10_leniente": 1.0,
+        "ndcg@10": 1.0,
+        "mrr": 1.0,
+        "hit@5": 1.0
+      },
+      "V1_hibrido_so_reescrita": {
+        "p@5": 1.0,
+        "p@10": 1.0,
+        "p@10_leniente": 1.0,
+        "ndcg@10": 1.0,
+        "mrr": 1.0,
+        "hit@5": 1.0
+      },
+      "V2_hibrido_sem_hyde": {
+        "p@5": 1.0,
+        "p@10": 1.0,
+        "p@10_leniente": 1.0,
+        "ndcg@10": 1.0,
+        "mrr": 1.0,
+        "hit@5": 1.0
+      },
+      "V3_reranker_consulta_principal": {
+        "p@5": 1.0,
+        "p@10": 1.0,
+        "p@10_leniente": 1.0,
+        "ndcg@10": 1.0,
+        "mrr": 1.0,
+        "hit@5": 1.0
+      },
+      "V4_reranker_media": {
+        "p@5": 1.0,
+        "p@10": 1.0,
+        "p@10_leniente": 1.0,
+        "ndcg@10": 1.0,
+        "mrr": 1.0,
+        "hit@5": 1.0
+      },
+      "F1_final_so_reescrita": {
+        "p@5": 1.0,
+        "p@10": 1.0,
+        "p@10_leniente": 1.0,
+        "ndcg@10": 1.0,
+        "mrr": 1.0,
+        "hit@5": 1.0
+      },
+      "F2_final_multiquery": {
+        "p@5": 1.0,
+        "p@10": 0.9,
+        "p@10_leniente": 1.0,
+        "ndcg@10": 0.9510907186004267,
+        "mrr": 1.0,
+        "hit@5": 1.0
+      },
+      "E_minilm": {
+        "p@5": 1.0,
+        "p@10": 1.0,
+        "p@10_leniente": 1.0,
+        "ndcg@10": 1.0,
+        "mrr": 1.0,
+        "hit@5": 1.0
+      },
+      "E_e5_base": {
+        "p@5": 1.0,
+        "p@10": 1.0,
+        "p@10_leniente": 1.0,
+        "ndcg@10": 1.0,
+        "mrr": 1.0,
+        "hit@5": 1.0
+      },
+      "E_bge_m3": {
+        "p@5": 1.0,
+        "p@10": 1.0,
+        "p@10_leniente": 1.0,
+        "ndcg@10": 1.0,
+        "mrr": 1.0,
+        "hit@5": 1.0
+      }
+    },
+    "Q16": {
+      "A0_denso_pergunta_crua": {
+        "p@5": 1.0,
+        "p@10": 1.0,
+        "p@10_leniente": 1.0,
+        "ndcg@10": 1.0,
+        "mrr": 1.0,
+        "hit@5": 1.0
+      },
+      "A1_reescrita": {
+        "p@5": 1.0,
+        "p@10": 1.0,
+        "p@10_leniente": 1.0,
+        "ndcg@10": 1.0,
+        "mrr": 1.0,
+        "hit@5": 1.0
+      },
+      "A2_multiquery_hyde": {
+        "p@5": 1.0,
+        "p@10": 1.0,
+        "p@10_leniente": 1.0,
+        "ndcg@10": 1.0,
+        "mrr": 1.0,
+        "hit@5": 1.0
+      },
+      "A3_hibrido_bm25_rrf": {
+        "p@5": 1.0,
+        "p@10": 1.0,
+        "p@10_leniente": 1.0,
+        "ndcg@10": 1.0,
+        "mrr": 1.0,
+        "hit@5": 1.0
+      },
+      "A4_reranker": {
+        "p@5": 1.0,
+        "p@10": 1.0,
+        "p@10_leniente": 1.0,
+        "ndcg@10": 1.0,
+        "mrr": 1.0,
+        "hit@5": 1.0
+      },
+      "A5_metadados_polaridade": {
+        "p@5": 1.0,
+        "p@10": 1.0,
+        "p@10_leniente": 1.0,
+        "ndcg@10": 1.0,
+        "mrr": 1.0,
+        "hit@5": 1.0
+      },
+      "V1_hibrido_so_reescrita": {
+        "p@5": 1.0,
+        "p@10": 1.0,
+        "p@10_leniente": 1.0,
+        "ndcg@10": 1.0,
+        "mrr": 1.0,
+        "hit@5": 1.0
+      },
+      "V2_hibrido_sem_hyde": {
+        "p@5": 1.0,
+        "p@10": 1.0,
+        "p@10_leniente": 1.0,
+        "ndcg@10": 1.0,
+        "mrr": 1.0,
+        "hit@5": 1.0
+      },
+      "V3_reranker_consulta_principal": {
+        "p@5": 1.0,
+        "p@10": 1.0,
+        "p@10_leniente": 1.0,
+        "ndcg@10": 1.0,
+        "mrr": 1.0,
+        "hit@5": 1.0
+      },
+      "V4_reranker_media": {
+        "p@5": 1.0,
+        "p@10": 1.0,
+        "p@10_leniente": 1.0,
+        "ndcg@10": 1.0,
+        "mrr": 1.0,
+        "hit@5": 1.0
+      },
+      "F1_final_so_reescrita": {
+        "p@5": 1.0,
+        "p@10": 1.0,
+        "p@10_leniente": 1.0,
+        "ndcg@10": 1.0,
+        "mrr": 1.0,
+        "hit@5": 1.0
+      },
+      "F2_final_multiquery": {
+        "p@5": 1.0,
+        "p@10": 1.0,
+        "p@10_leniente": 1.0,
+        "ndcg@10": 1.0,
+        "mrr": 1.0,
+        "hit@5": 1.0
+      },
+      "E_minilm": {
+        "p@5": 0.6,
+        "p@10": 0.4,
+        "p@10_leniente": 0.4,
+        "ndcg@10": 0.54739836229935,
+        "mrr": 1.0,
+        "hit@5": 1.0
+      },
+      "E_e5_base": {
+        "p@5": 1.0,
+        "p@10": 0.9,
+        "p@10_leniente": 0.9,
+        "ndcg@10": 0.9363792118010483,
+        "mrr": 1.0,
+        "hit@5": 1.0
+      },
+      "E_bge_m3": {
+        "p@5": 1.0,
+        "p@10": 1.0,
+        "p@10_leniente": 1.0,
+        "ndcg@10": 1.0,
+        "mrr": 1.0,
+        "hit@5": 1.0
+      }
+    },
+    "Q17": {
+      "A0_denso_pergunta_crua": {
+        "p@5": 1.0,
+        "p@10": 1.0,
+        "p@10_leniente": 1.0,
+        "ndcg@10": 1.0,
+        "mrr": 1.0,
+        "hit@5": 1.0
+      },
+      "A1_reescrita": {
+        "p@5": 1.0,
+        "p@10": 1.0,
+        "p@10_leniente": 1.0,
+        "ndcg@10": 1.0,
+        "mrr": 1.0,
+        "hit@5": 1.0
+      },
+      "A2_multiquery_hyde": {
+        "p@5": 1.0,
+        "p@10": 1.0,
+        "p@10_leniente": 1.0,
+        "ndcg@10": 1.0,
+        "mrr": 1.0,
+        "hit@5": 1.0
+      },
+      "A3_hibrido_bm25_rrf": {
+        "p@5": 1.0,
+        "p@10": 1.0,
+        "p@10_leniente": 1.0,
+        "ndcg@10": 1.0,
+        "mrr": 1.0,
+        "hit@5": 1.0
+      },
+      "A4_reranker": {
+        "p@5": 1.0,
+        "p@10": 1.0,
+        "p@10_leniente": 1.0,
+        "ndcg@10": 1.0,
+        "mrr": 1.0,
+        "hit@5": 1.0
+      },
+      "A5_metadados_polaridade": {
+        "p@5": 1.0,
+        "p@10": 1.0,
+        "p@10_leniente": 1.0,
+        "ndcg@10": 1.0,
+        "mrr": 1.0,
+        "hit@5": 1.0
+      },
+      "V1_hibrido_so_reescrita": {
+        "p@5": 1.0,
+        "p@10": 1.0,
+        "p@10_leniente": 1.0,
+        "ndcg@10": 1.0,
+        "mrr": 1.0,
+        "hit@5": 1.0
+      },
+      "V2_hibrido_sem_hyde": {
+        "p@5": 1.0,
+        "p@10": 1.0,
+        "p@10_leniente": 1.0,
+        "ndcg@10": 1.0,
+        "mrr": 1.0,
+        "hit@5": 1.0
+      },
+      "V3_reranker_consulta_principal": {
+        "p@5": 1.0,
+        "p@10": 1.0,
+        "p@10_leniente": 1.0,
+        "ndcg@10": 1.0,
+        "mrr": 1.0,
+        "hit@5": 1.0
+      },
+      "V4_reranker_media": {
+        "p@5": 1.0,
+        "p@10": 1.0,
+        "p@10_leniente": 1.0,
+        "ndcg@10": 1.0,
+        "mrr": 1.0,
+        "hit@5": 1.0
+      },
+      "F1_final_so_reescrita": {
+        "p@5": 1.0,
+        "p@10": 1.0,
+        "p@10_leniente": 1.0,
+        "ndcg@10": 1.0,
+        "mrr": 1.0,
+        "hit@5": 1.0
+      },
+      "F2_final_multiquery": {
+        "p@5": 1.0,
+        "p@10": 1.0,
+        "p@10_leniente": 1.0,
+        "ndcg@10": 1.0,
+        "mrr": 1.0,
+        "hit@5": 1.0
+      },
+      "E_minilm": {
+        "p@5": 1.0,
+        "p@10": 1.0,
+        "p@10_leniente": 1.0,
+        "ndcg@10": 1.0,
+        "mrr": 1.0,
+        "hit@5": 1.0
+      },
+      "E_e5_base": {
+        "p@5": 1.0,
+        "p@10": 1.0,
+        "p@10_leniente": 1.0,
+        "ndcg@10": 1.0,
+        "mrr": 1.0,
+        "hit@5": 1.0
+      },
+      "E_bge_m3": {
+        "p@5": 1.0,
+        "p@10": 1.0,
+        "p@10_leniente": 1.0,
+        "ndcg@10": 1.0,
+        "mrr": 1.0,
+        "hit@5": 1.0
+      }
+    },
+    "Q18": {
+      "A0_denso_pergunta_crua": {
+        "p@5": 0.8,
+        "p@10": 0.7,
+        "p@10_leniente": 0.9,
+        "ndcg@10": 0.806658641686814,
+        "mrr": 1.0,
+        "hit@5": 1.0
+      },
+      "A1_reescrita": {
+        "p@5": 1.0,
+        "p@10": 1.0,
+        "p@10_leniente": 1.0,
+        "ndcg@10": 1.0,
+        "mrr": 1.0,
+        "hit@5": 1.0
+      },
+      "A2_multiquery_hyde": {
+        "p@5": 1.0,
+        "p@10": 1.0,
+        "p@10_leniente": 1.0,
+        "ndcg@10": 1.0,
+        "mrr": 1.0,
+        "hit@5": 1.0
+      },
+      "A3_hibrido_bm25_rrf": {
+        "p@5": 1.0,
+        "p@10": 1.0,
+        "p@10_leniente": 1.0,
+        "ndcg@10": 1.0,
+        "mrr": 1.0,
+        "hit@5": 1.0
+      },
+      "A4_reranker": {
+        "p@5": 0.8,
+        "p@10": 0.9,
+        "p@10_leniente": 0.9,
+        "ndcg@10": 0.8899541168509598,
+        "mrr": 1.0,
+        "hit@5": 1.0
+      },
+      "A5_metadados_polaridade": {
+        "p@5": 0.8,
+        "p@10": 0.8,
+        "p@10_leniente": 0.9,
+        "ndcg@10": 0.8410448354513865,
+        "mrr": 1.0,
+        "hit@5": 1.0
+      },
+      "V1_hibrido_so_reescrita": {
+        "p@5": 1.0,
+        "p@10": 1.0,
+        "p@10_leniente": 1.0,
+        "ndcg@10": 1.0,
+        "mrr": 1.0,
+        "hit@5": 1.0
+      },
+      "V2_hibrido_sem_hyde": {
+        "p@5": 1.0,
+        "p@10": 1.0,
+        "p@10_leniente": 1.0,
+        "ndcg@10": 1.0,
+        "mrr": 1.0,
+        "hit@5": 1.0
+      },
+      "V3_reranker_consulta_principal": {
+        "p@5": 1.0,
+        "p@10": 1.0,
+        "p@10_leniente": 1.0,
+        "ndcg@10": 1.0,
+        "mrr": 1.0,
+        "hit@5": 1.0
+      },
+      "V4_reranker_media": {
+        "p@5": 0.8,
+        "p@10": 0.8,
+        "p@10_leniente": 0.8,
+        "ndcg@10": 0.8364586133797035,
+        "mrr": 1.0,
+        "hit@5": 1.0
+      },
+      "F1_final_so_reescrita": {
+        "p@5": 1.0,
+        "p@10": 1.0,
+        "p@10_leniente": 1.0,
+        "ndcg@10": 1.0,
+        "mrr": 1.0,
+        "hit@5": 1.0
+      },
+      "F2_final_multiquery": {
+        "p@5": 1.0,
+        "p@10": 1.0,
+        "p@10_leniente": 1.0,
+        "ndcg@10": 1.0,
+        "mrr": 1.0,
+        "hit@5": 1.0
+      },
+      "E_minilm": {
+        "p@5": 1.0,
+        "p@10": 0.9,
+        "p@10_leniente": 1.0,
+        "ndcg@10": 0.9537125187088151,
+        "mrr": 1.0,
+        "hit@5": 1.0
+      },
+      "E_e5_base": {
+        "p@5": 0.6,
+        "p@10": 0.4,
+        "p@10_leniente": 0.5,
+        "ndcg@10": 0.4352126544803856,
+        "mrr": 0.5,
+        "hit@5": 1.0
+      },
+      "E_bge_m3": {
+        "p@5": 1.0,
+        "p@10": 1.0,
+        "p@10_leniente": 1.0,
+        "ndcg@10": 1.0,
+        "mrr": 1.0,
+        "hit@5": 1.0
+      }
+    },
+    "Q19": {
+      "A0_denso_pergunta_crua": {
+        "p@5": 0.4,
+        "p@10": 0.3,
+        "p@10_leniente": 0.9,
+        "ndcg@10": 0.572375192451945,
+        "mrr": 1.0,
+        "hit@5": 1.0
+      },
+      "A1_reescrita": {
+        "p@5": 1.0,
+        "p@10": 1.0,
+        "p@10_leniente": 1.0,
+        "ndcg@10": 1.0,
+        "mrr": 1.0,
+        "hit@5": 1.0
+      },
+      "A2_multiquery_hyde": {
+        "p@5": 0.8,
+        "p@10": 0.8,
+        "p@10_leniente": 1.0,
+        "ndcg@10": 0.8632555551147043,
+        "mrr": 1.0,
+        "hit@5": 1.0
+      },
+      "A3_hibrido_bm25_rrf": {
+        "p@5": 1.0,
+        "p@10": 0.9,
+        "p@10_leniente": 1.0,
+        "ndcg@10": 0.9537125187088151,
+        "mrr": 1.0,
+        "hit@5": 1.0
+      },
+      "A4_reranker": {
+        "p@5": 1.0,
+        "p@10": 1.0,
+        "p@10_leniente": 1.0,
+        "ndcg@10": 1.0,
+        "mrr": 1.0,
+        "hit@5": 1.0
+      },
+      "A5_metadados_polaridade": {
+        "p@5": 1.0,
+        "p@10": 1.0,
+        "p@10_leniente": 1.0,
+        "ndcg@10": 1.0,
+        "mrr": 1.0,
+        "hit@5": 1.0
+      },
+      "V1_hibrido_so_reescrita": {
+        "p@5": 1.0,
+        "p@10": 1.0,
+        "p@10_leniente": 1.0,
+        "ndcg@10": 1.0,
+        "mrr": 1.0,
+        "hit@5": 1.0
+      },
+      "V2_hibrido_sem_hyde": {
+        "p@5": 1.0,
+        "p@10": 1.0,
+        "p@10_leniente": 1.0,
+        "ndcg@10": 1.0,
+        "mrr": 1.0,
+        "hit@5": 1.0
+      },
+      "V3_reranker_consulta_principal": {
+        "p@5": 1.0,
+        "p@10": 1.0,
+        "p@10_leniente": 1.0,
+        "ndcg@10": 1.0,
+        "mrr": 1.0,
+        "hit@5": 1.0
+      },
+      "V4_reranker_media": {
+        "p@5": 1.0,
+        "p@10": 0.9,
+        "p@10_leniente": 1.0,
+        "ndcg@10": 0.9575861412006988,
+        "mrr": 1.0,
+        "hit@5": 1.0
+      },
+      "F1_final_so_reescrita": {
+        "p@5": 1.0,
+        "p@10": 1.0,
+        "p@10_leniente": 1.0,
+        "ndcg@10": 1.0,
+        "mrr": 1.0,
+        "hit@5": 1.0
+      },
+      "F2_final_multiquery": {
+        "p@5": 1.0,
+        "p@10": 0.9,
+        "p@10_leniente": 1.0,
+        "ndcg@10": 0.955830517697074,
+        "mrr": 1.0,
+        "hit@5": 1.0
+      },
+      "E_minilm": {
+        "p@5": 0.4,
+        "p@10": 0.6,
+        "p@10_leniente": 0.8,
+        "ndcg@10": 0.6355055733098477,
+        "mrr": 0.5,
+        "hit@5": 1.0
+      },
+      "E_e5_base": {
+        "p@5": 0.8,
+        "p@10": 0.8,
+        "p@10_leniente": 0.8,
+        "ndcg@10": 0.8364586133797035,
+        "mrr": 1.0,
+        "hit@5": 1.0
+      },
+      "E_bge_m3": {
+        "p@5": 1.0,
+        "p@10": 1.0,
+        "p@10_leniente": 1.0,
+        "ndcg@10": 1.0,
+        "mrr": 1.0,
+        "hit@5": 1.0
+      }
+    },
+    "Q20": {
+      "A0_denso_pergunta_crua": {
+        "p@5": 0.8,
+        "p@10": 0.9,
+        "p@10_leniente": 1.0,
+        "ndcg@10": 0.9368077570869661,
+        "mrr": 1.0,
+        "hit@5": 1.0
+      },
+      "A1_reescrita": {
+        "p@5": 1.0,
+        "p@10": 0.9,
+        "p@10_leniente": 1.0,
+        "ndcg@10": 0.9575861412006988,
+        "mrr": 1.0,
+        "hit@5": 1.0
+      },
+      "A2_multiquery_hyde": {
+        "p@5": 0.6,
+        "p@10": 0.6,
+        "p@10_leniente": 0.9,
+        "ndcg@10": 0.7574779273776173,
+        "mrr": 1.0,
+        "hit@5": 1.0
+      },
+      "A3_hibrido_bm25_rrf": {
+        "p@5": 0.8,
+        "p@10": 0.7,
+        "p@10_leniente": 0.9,
+        "ndcg@10": 0.8186282945282221,
+        "mrr": 1.0,
+        "hit@5": 1.0
+      },
+      "A4_reranker": {
+        "p@5": 0.2,
+        "p@10": 0.3,
+        "p@10_leniente": 0.9,
+        "ndcg@10": 0.4710214627005791,
+        "mrr": 0.3333333333333333,
+        "hit@5": 1.0
+      },
+      "A5_metadados_polaridade": {
+        "p@5": 0.2,
+        "p@10": 0.3,
+        "p@10_leniente": 0.9,
+        "ndcg@10": 0.4735129789095779,
+        "mrr": 0.3333333333333333,
+        "hit@5": 1.0
+      },
+      "V1_hibrido_so_reescrita": {
+        "p@5": 1.0,
+        "p@10": 1.0,
+        "p@10_leniente": 1.0,
+        "ndcg@10": 1.0,
+        "mrr": 1.0,
+        "hit@5": 1.0
+      },
+      "V2_hibrido_sem_hyde": {
+        "p@5": 0.8,
+        "p@10": 0.6,
+        "p@10_leniente": 0.9,
+        "ndcg@10": 0.7505878718572756,
+        "mrr": 1.0,
+        "hit@5": 1.0
+      },
+      "V3_reranker_consulta_principal": {
+        "p@5": 0.2,
+        "p@10": 0.4,
+        "p@10_leniente": 1.0,
+        "ndcg@10": 0.5443078769227527,
+        "mrr": 0.3333333333333333,
+        "hit@5": 1.0
+      },
+      "V4_reranker_media": {
+        "p@5": 0.0,
+        "p@10": 0.0,
+        "p@10_leniente": 0.3,
+        "ndcg@10": 0.06880531074502967,
+        "mrr": 0.0,
+        "hit@5": 0.0
+      },
+      "F1_final_so_reescrita": {
+        "p@5": 1.0,
+        "p@10": 0.9,
+        "p@10_leniente": 1.0,
+        "ndcg@10": 0.9575861412006988,
+        "mrr": 1.0,
+        "hit@5": 1.0
+      },
+      "F2_final_multiquery": {
+        "p@5": 0.6,
+        "p@10": 0.7,
+        "p@10_leniente": 0.9,
+        "ndcg@10": 0.7842827570236391,
+        "mrr": 1.0,
+        "hit@5": 1.0
+      },
+      "E_minilm": {
+        "p@5": 1.0,
+        "p@10": 1.0,
+        "p@10_leniente": 1.0,
+        "ndcg@10": 1.0,
+        "mrr": 1.0,
+        "hit@5": 1.0
+      },
+      "E_e5_base": {
+        "p@5": 0.8,
+        "p@10": 0.8,
+        "p@10_leniente": 1.0,
+        "ndcg@10": 0.8010066431488296,
+        "mrr": 0.5,
+        "hit@5": 1.0
+      },
+      "E_bge_m3": {
+        "p@5": 1.0,
+        "p@10": 0.9,
+        "p@10_leniente": 1.0,
+        "ndcg@10": 0.9575861412006988,
+        "mrr": 1.0,
+        "hit@5": 1.0
+      }
+    },
+    "Q21": {
+      "A0_denso_pergunta_crua": {
+        "p@5": 0.4,
+        "p@10": 0.6,
+        "p@10_leniente": 0.9,
+        "ndcg@10": 0.7026305163854644,
+        "mrr": 1.0,
+        "hit@5": 1.0,
+        "conformidade_metadado@10": 0.9
+      },
+      "A1_reescrita": {
+        "p@5": 1.0,
+        "p@10": 0.9,
+        "p@10_leniente": 0.9,
+        "ndcg@10": 0.9305687780632227,
+        "mrr": 1.0,
+        "hit@5": 1.0,
+        "conformidade_metadado@10": 0.9
+      },
+      "A2_multiquery_hyde": {
+        "p@5": 1.0,
+        "p@10": 0.9,
+        "p@10_leniente": 0.9,
+        "ndcg@10": 0.9216017310213247,
+        "mrr": 1.0,
+        "hit@5": 1.0,
+        "conformidade_metadado@10": 0.9
+      },
+      "A3_hibrido_bm25_rrf": {
+        "p@5": 0.8,
+        "p@10": 0.9,
+        "p@10_leniente": 0.9,
+        "ndcg@10": 0.914856882358379,
+        "mrr": 1.0,
+        "hit@5": 1.0,
+        "conformidade_metadado@10": 0.9
+      },
+      "A4_reranker": {
+        "p@5": 0.4,
+        "p@10": 0.5,
+        "p@10_leniente": 0.5,
+        "ndcg@10": 0.5135081645717172,
+        "mrr": 1.0,
+        "hit@5": 1.0,
+        "conformidade_metadado@10": 0.5
+      },
+      "A5_metadados_polaridade": {
+        "p@5": 1.0,
+        "p@10": 1.0,
+        "p@10_leniente": 1.0,
+        "ndcg@10": 1.0,
+        "mrr": 1.0,
+        "hit@5": 1.0,
+        "conformidade_metadado@10": 1.0
+      },
+      "V1_hibrido_so_reescrita": {
+        "p@5": 1.0,
+        "p@10": 0.9,
+        "p@10_leniente": 0.9,
+        "ndcg@10": 0.933745776545611,
+        "mrr": 1.0,
+        "hit@5": 1.0,
+        "conformidade_metadado@10": 0.9
+      },
+      "V2_hibrido_sem_hyde": {
+        "p@5": 1.0,
+        "p@10": 0.7,
+        "p@10_leniente": 0.7,
+        "ndcg@10": 0.7909506325094736,
+        "mrr": 1.0,
+        "hit@5": 1.0,
+        "conformidade_metadado@10": 0.7
+      },
+      "V3_reranker_consulta_principal": {
+        "p@5": 0.8,
+        "p@10": 0.8,
+        "p@10_leniente": 0.8,
+        "ndcg@10": 0.7104770117651424,
+        "mrr": 0.5,
+        "hit@5": 1.0,
+        "conformidade_metadado@10": 0.8
+      },
+      "V4_reranker_media": {
+        "p@5": 0.6,
+        "p@10": 0.5,
+        "p@10_leniente": 0.5,
+        "ndcg@10": 0.43780685607566444,
+        "mrr": 0.3333333333333333,
+        "hit@5": 1.0,
+        "conformidade_metadado@10": 0.5
+      },
+      "F1_final_so_reescrita": {
+        "p@5": 1.0,
+        "p@10": 1.0,
+        "p@10_leniente": 1.0,
+        "ndcg@10": 1.0,
+        "mrr": 1.0,
+        "hit@5": 1.0,
+        "conformidade_metadado@10": 1.0
+      },
+      "F2_final_multiquery": {
+        "p@5": 1.0,
+        "p@10": 1.0,
+        "p@10_leniente": 1.0,
+        "ndcg@10": 1.0,
+        "mrr": 1.0,
+        "hit@5": 1.0,
+        "conformidade_metadado@10": 1.0
+      },
+      "E_minilm": {
+        "p@5": 0.6,
+        "p@10": 0.7,
+        "p@10_leniente": 0.7,
+        "ndcg@10": 0.571614567891588,
+        "mrr": 0.3333333333333333,
+        "hit@5": 1.0,
+        "conformidade_metadado@10": 0.7
+      },
+      "E_e5_base": {
+        "p@5": 0.6,
+        "p@10": 0.8,
+        "p@10_leniente": 0.8,
+        "ndcg@10": 0.8200685179888281,
+        "mrr": 1.0,
+        "hit@5": 1.0,
+        "conformidade_metadado@10": 0.8
+      },
+      "E_bge_m3": {
+        "p@5": 1.0,
+        "p@10": 0.9,
+        "p@10_leniente": 0.9,
+        "ndcg@10": 0.9305687780632227,
+        "mrr": 1.0,
+        "hit@5": 1.0,
+        "conformidade_metadado@10": 0.9
+      }
+    },
+    "Q22": {
+      "A0_denso_pergunta_crua": {
+        "p@5": 0.6,
+        "p@10": 0.5,
+        "p@10_leniente": 0.5,
+        "ndcg@10": 0.5867945846769144,
+        "mrr": 1.0,
+        "hit@5": 1.0,
+        "conformidade_metadado@10": 0.5
+      },
+      "A1_reescrita": {
+        "p@5": 1.0,
+        "p@10": 0.6,
+        "p@10_leniente": 0.6,
+        "ndcg@10": 0.7125523635307983,
+        "mrr": 1.0,
+        "hit@5": 1.0,
+        "conformidade_metadado@10": 0.6
+      },
+      "A2_multiquery_hyde": {
+        "p@5": 0.4,
+        "p@10": 0.5,
+        "p@10_leniente": 0.5,
+        "ndcg@10": 0.5365535816822092,
+        "mrr": 1.0,
+        "hit@5": 1.0,
+        "conformidade_metadado@10": 0.5
+      },
+      "A3_hibrido_bm25_rrf": {
+        "p@5": 0.4,
+        "p@10": 0.2,
+        "p@10_leniente": 0.2,
+        "ndcg@10": 0.20483424751859086,
+        "mrr": 0.3333333333333333,
+        "hit@5": 1.0,
+        "conformidade_metadado@10": 0.3
+      },
+      "A4_reranker": {
+        "p@5": 0.0,
+        "p@10": 0.0,
+        "p@10_leniente": 0.0,
+        "ndcg@10": 0.0,
+        "mrr": 0.0,
+        "hit@5": 0.0,
+        "conformidade_metadado@10": 0.0
+      },
+      "A5_metadados_polaridade": {
+        "p@5": 1.0,
+        "p@10": 1.0,
+        "p@10_leniente": 1.0,
+        "ndcg@10": 1.0,
+        "mrr": 1.0,
+        "hit@5": 1.0,
+        "conformidade_metadado@10": 1.0
+      },
+      "V1_hibrido_so_reescrita": {
+        "p@5": 0.6,
+        "p@10": 0.6,
+        "p@10_leniente": 0.6,
+        "ndcg@10": 0.6434035614033736,
+        "mrr": 1.0,
+        "hit@5": 1.0,
+        "conformidade_metadado@10": 0.6
+      },
+      "V2_hibrido_sem_hyde": {
+        "p@5": 0.4,
+        "p@10": 0.2,
+        "p@10_leniente": 0.2,
+        "ndcg@10": 0.20483424751859086,
+        "mrr": 0.3333333333333333,
+        "hit@5": 1.0,
+        "conformidade_metadado@10": 0.3
+      },
+      "V3_reranker_consulta_principal": {
+        "p@5": 0.2,
+        "p@10": 0.5,
+        "p@10_leniente": 0.5,
+        "ndcg@10": 0.5049059675118446,
+        "mrr": 1.0,
+        "hit@5": 1.0,
+        "conformidade_metadado@10": 0.5
+      },
+      "V4_reranker_media": {
+        "p@5": 0.2,
+        "p@10": 0.3,
+        "p@10_leniente": 0.3,
+        "ndcg@10": 0.24655055544758617,
+        "mrr": 0.25,
+        "hit@5": 1.0,
+        "conformidade_metadado@10": 0.3
+      },
+      "F1_final_so_reescrita": {
+        "p@5": 1.0,
+        "p@10": 1.0,
+        "p@10_leniente": 1.0,
+        "ndcg@10": 1.0,
+        "mrr": 1.0,
+        "hit@5": 1.0,
+        "conformidade_metadado@10": 1.0
+      },
+      "F2_final_multiquery": {
+        "p@5": 1.0,
+        "p@10": 0.9,
+        "p@10_leniente": 0.9,
+        "ndcg@10": 0.9305687780632227,
+        "mrr": 1.0,
+        "hit@5": 1.0,
+        "conformidade_metadado@10": 1.0
+      },
+      "E_minilm": {
+        "p@5": 0.6,
+        "p@10": 0.4,
+        "p@10_leniente": 0.4,
+        "ndcg@10": 0.3971921948634016,
+        "mrr": 0.5,
+        "hit@5": 1.0,
+        "conformidade_metadado@10": 0.4
+      },
+      "E_e5_base": {
+        "p@5": 0.4,
+        "p@10": 0.3,
+        "p@10_leniente": 0.3,
+        "ndcg@10": 0.4283854321084119,
+        "mrr": 1.0,
+        "hit@5": 1.0,
+        "conformidade_metadado@10": 0.3
+      },
+      "E_bge_m3": {
+        "p@5": 1.0,
+        "p@10": 0.6,
+        "p@10_leniente": 0.6,
+        "ndcg@10": 0.7125523635307983,
+        "mrr": 1.0,
+        "hit@5": 1.0,
+        "conformidade_metadado@10": 0.6
+      }
+    },
+    "Q23": {
+      "A0_denso_pergunta_crua": {
+        "p@5": 0.4,
+        "p@10": 0.2,
+        "p@10_leniente": 0.7,
+        "ndcg@10": 0.47850467856629003,
+        "mrr": 1.0,
+        "hit@5": 1.0,
+        "conformidade_metadado@10": 0.7
+      },
+      "A1_reescrita": {
+        "p@5": 0.6,
+        "p@10": 0.6,
+        "p@10_leniente": 0.8,
+        "ndcg@10": 0.6378891765242927,
+        "mrr": 0.5,
+        "hit@5": 1.0,
+        "conformidade_metadado@10": 0.8
+      },
+      "A2_multiquery_hyde": {
+        "p@5": 0.0,
+        "p@10": 0.3,
+        "p@10_leniente": 0.4,
+        "ndcg@10": 0.2325486885613141,
+        "mrr": 0.14285714285714285,
+        "hit@5": 0.0,
+        "conformidade_metadado@10": 0.4
+      },
+      "A3_hibrido_bm25_rrf": {
+        "p@5": 0.4,
+        "p@10": 0.5,
+        "p@10_leniente": 0.8,
+        "ndcg@10": 0.6139291762949785,
+        "mrr": 1.0,
+        "hit@5": 1.0,
+        "conformidade_metadado@10": 0.8
+      },
+      "A4_reranker": {
+        "p@5": 0.4,
+        "p@10": 0.2,
+        "p@10_leniente": 0.7,
+        "ndcg@10": 0.3700663117731848,
+        "mrr": 0.25,
+        "hit@5": 1.0,
+        "conformidade_metadado@10": 0.7
+      },
+      "A5_metadados_polaridade": {
+        "p@5": 0.4,
+        "p@10": 0.2,
+        "p@10_leniente": 1.0,
+        "ndcg@10": 0.4698894983457272,
+        "mrr": 0.3333333333333333,
+        "hit@5": 1.0,
+        "conformidade_metadado@10": 1.0
+      },
+      "V1_hibrido_so_reescrita": {
+        "p@5": 0.4,
+        "p@10": 0.4,
+        "p@10_leniente": 0.7,
+        "ndcg@10": 0.5676299386525355,
+        "mrr": 1.0,
+        "hit@5": 1.0,
+        "conformidade_metadado@10": 0.7
+      },
+      "V2_hibrido_sem_hyde": {
+        "p@5": 0.6,
+        "p@10": 0.6,
+        "p@10_leniente": 0.9,
+        "ndcg@10": 0.7354994541359205,
+        "mrr": 1.0,
+        "hit@5": 1.0,
+        "conformidade_metadado@10": 0.9
+      },
+      "V3_reranker_consulta_principal": {
+        "p@5": 0.4,
+        "p@10": 0.4,
+        "p@10_leniente": 0.8,
+        "ndcg@10": 0.4939517581684189,
+        "mrr": 0.25,
+        "hit@5": 1.0,
+        "conformidade_metadado@10": 0.8
+      },
+      "V4_reranker_media": {
+        "p@5": 0.2,
+        "p@10": 0.1,
+        "p@10_leniente": 0.8,
+        "ndcg@10": 0.3313374444166924,
+        "mrr": 0.5,
+        "hit@5": 1.0,
+        "conformidade_metadado@10": 0.8
+      },
+      "F1_final_so_reescrita": {
+        "p@5": 0.4,
+        "p@10": 0.6,
+        "p@10_leniente": 1.0,
+        "ndcg@10": 0.7331295545875969,
+        "mrr": 1.0,
+        "hit@5": 1.0,
+        "conformidade_metadado@10": 1.0
+      },
+      "F2_final_multiquery": {
+        "p@5": 0.6,
+        "p@10": 0.7,
+        "p@10_leniente": 1.0,
+        "ndcg@10": 0.8235865181817077,
+        "mrr": 1.0,
+        "hit@5": 1.0,
+        "conformidade_metadado@10": 1.0
+      },
+      "E_minilm": {
+        "p@5": 0.2,
+        "p@10": 0.2,
+        "p@10_leniente": 0.5,
+        "ndcg@10": 0.29894052567460666,
+        "mrr": 0.3333333333333333,
+        "hit@5": 1.0,
+        "conformidade_metadado@10": 0.5
+      },
+      "E_e5_base": {
+        "p@5": 0.6,
+        "p@10": 0.4,
+        "p@10_leniente": 0.6,
+        "ndcg@10": 0.5899941788771731,
+        "mrr": 1.0,
+        "hit@5": 1.0,
+        "conformidade_metadado@10": 0.6
+      },
+      "E_bge_m3": {
+        "p@5": 0.6,
+        "p@10": 0.6,
+        "p@10_leniente": 0.8,
+        "ndcg@10": 0.6378891765242927,
+        "mrr": 0.5,
+        "hit@5": 1.0,
+        "conformidade_metadado@10": 0.8
+      }
+    },
+    "Q24": {
+      "A0_denso_pergunta_crua": {
+        "p@5": 0.0,
+        "p@10": 0.1,
+        "p@10_leniente": 0.1,
+        "ndcg@10": 0.0636207881989517,
+        "mrr": 0.1,
+        "hit@5": 0.0,
+        "conformidade_metadado@10": 0.1
+      },
+      "A1_reescrita": {
+        "p@5": 0.0,
+        "p@10": 0.1,
+        "p@10_leniente": 0.1,
+        "ndcg@10": 0.07839826897867533,
+        "mrr": 0.16666666666666666,
+        "hit@5": 0.0,
+        "conformidade_metadado@10": 0.1
+      },
+      "A2_multiquery_hyde": {
+        "p@5": 0.2,
+        "p@10": 0.2,
+        "p@10_leniente": 0.2,
+        "ndcg@10": 0.1884441521277154,
+        "mrr": 0.3333333333333333,
+        "hit@5": 1.0,
+        "conformidade_metadado@10": 0.2
+      },
+      "A3_hibrido_bm25_rrf": {
+        "p@5": 0.0,
+        "p@10": 0.3,
+        "p@10_leniente": 0.3,
+        "ndcg@10": 0.19930623359011798,
+        "mrr": 0.125,
+        "hit@5": 0.0,
+        "conformidade_metadado@10": 0.3
+      },
+      "A4_reranker": {
+        "p@5": 0.4,
+        "p@10": 0.2,
+        "p@10_leniente": 0.2,
+        "ndcg@10": 0.2240055615151755,
+        "mrr": 0.5,
+        "hit@5": 1.0,
+        "conformidade_metadado@10": 0.2
+      },
+      "A5_metadados_polaridade": {
+        "p@5": 1.0,
+        "p@10": 1.0,
+        "p@10_leniente": 1.0,
+        "ndcg@10": 1.0,
+        "mrr": 1.0,
+        "hit@5": 1.0,
+        "conformidade_metadado@10": 1.0
+      },
+      "V1_hibrido_so_reescrita": {
+        "p@5": 0.0,
+        "p@10": 0.1,
+        "p@10_leniente": 0.1,
+        "ndcg@10": 0.07839826897867533,
+        "mrr": 0.16666666666666666,
+        "hit@5": 0.0,
+        "conformidade_metadado@10": 0.1
+      },
+      "V2_hibrido_sem_hyde": {
+        "p@5": 0.0,
+        "p@10": 0.1,
+        "p@10_leniente": 0.1,
+        "ndcg@10": 0.06943122193677725,
+        "mrr": 0.125,
+        "hit@5": 0.0,
+        "conformidade_metadado@10": 0.1
+      },
+      "V3_reranker_consulta_principal": {
+        "p@5": 0.2,
+        "p@10": 0.3,
+        "p@10_leniente": 0.3,
+        "ndcg@10": 0.24703059344735182,
+        "mrr": 0.3333333333333333,
+        "hit@5": 1.0,
+        "conformidade_metadado@10": 0.3
+      },
+      "V4_reranker_media": {
+        "p@5": 0.2,
+        "p@10": 0.1,
+        "p@10_leniente": 0.1,
+        "ndcg@10": 0.1388624438735545,
+        "mrr": 0.5,
+        "hit@5": 1.0,
+        "conformidade_metadado@10": 0.1
+      },
+      "F1_final_so_reescrita": {
+        "p@5": 1.0,
+        "p@10": 0.9,
+        "p@10_leniente": 1.0,
+        "ndcg@10": 0.9537125187088151,
+        "mrr": 1.0,
+        "hit@5": 1.0,
+        "conformidade_metadado@10": 1.0
+      },
+      "F2_final_multiquery": {
+        "p@5": 1.0,
+        "p@10": 1.0,
+        "p@10_leniente": 1.0,
+        "ndcg@10": 1.0,
+        "mrr": 1.0,
+        "hit@5": 1.0,
+        "conformidade_metadado@10": 1.0
+      },
+      "E_minilm": {
+        "p@5": 0.2,
+        "p@10": 0.2,
+        "p@10_leniente": 0.3,
+        "ndcg@10": 0.2257645863770022,
+        "mrr": 0.3333333333333333,
+        "hit@5": 1.0,
+        "conformidade_metadado@10": 0.3
+      },
+      "E_e5_base": {
+        "p@5": 0.0,
+        "p@10": 0.1,
+        "p@10_leniente": 0.1,
+        "ndcg@10": 0.06943122193677725,
+        "mrr": 0.125,
+        "hit@5": 0.0,
+        "conformidade_metadado@10": 0.1
+      },
+      "E_bge_m3": {
+        "p@5": 0.0,
+        "p@10": 0.1,
+        "p@10_leniente": 0.1,
+        "ndcg@10": 0.07839826897867533,
+        "mrr": 0.16666666666666666,
+        "hit@5": 0.0,
+        "conformidade_metadado@10": 0.1
+      }
+    },
+    "Q25": {
+      "A0_denso_pergunta_crua": {
+        "p@5": 0.2,
+        "p@10": 0.2,
+        "p@10_leniente": 0.3,
+        "ndcg@10": 0.2024328629296542,
+        "mrr": 0.3333333333333333,
+        "hit@5": 1.0,
+        "conformidade_metadado@10": 0.3
+      },
+      "A1_reescrita": {
+        "p@5": 0.2,
+        "p@10": 0.3,
+        "p@10_leniente": 0.3,
+        "ndcg@10": 0.27191445400928344,
+        "mrr": 0.5,
+        "hit@5": 1.0,
+        "conformidade_metadado@10": 0.3
+      },
+      "A2_multiquery_hyde": {
+        "p@5": 0.0,
+        "p@10": 0.0,
+        "p@10_leniente": 0.0,
+        "ndcg@10": 0.0,
+        "mrr": 0.0,
+        "hit@5": 0.0,
+        "conformidade_metadado@10": 0.0
+      },
+      "A3_hibrido_bm25_rrf": {
+        "p@5": 0.0,
+        "p@10": 0.1,
+        "p@10_leniente": 0.1,
+        "ndcg@10": 0.07336392209936005,
+        "mrr": 0.14285714285714285,
+        "hit@5": 0.0,
+        "conformidade_metadado@10": 0.1
+      },
+      "A4_reranker": {
+        "p@5": 0.0,
+        "p@10": 0.0,
+        "p@10_leniente": 0.0,
+        "ndcg@10": 0.0,
+        "mrr": 0.0,
+        "hit@5": 0.0,
+        "conformidade_metadado@10": 0.0
+      },
+      "A5_metadados_polaridade": {
+        "p@5": 1.0,
+        "p@10": 0.9,
+        "p@10_leniente": 1.0,
+        "ndcg@10": 0.9575861412006988,
+        "mrr": 1.0,
+        "hit@5": 1.0,
+        "conformidade_metadado@10": 1.0
+      },
+      "V1_hibrido_so_reescrita": {
+        "p@5": 0.4,
+        "p@10": 0.3,
+        "p@10_leniente": 0.3,
+        "ndcg@10": 0.30240383049385083,
+        "mrr": 0.5,
+        "hit@5": 1.0,
+        "conformidade_metadado@10": 0.3
+      },
+      "V2_hibrido_sem_hyde": {
+        "p@5": 0.2,
+        "p@10": 0.1,
+        "p@10_leniente": 0.1,
+        "ndcg@10": 0.09478836436955078,
+        "mrr": 0.25,
+        "hit@5": 1.0,
+        "conformidade_metadado@10": 0.1
+      },
+      "V3_reranker_consulta_principal": {
+        "p@5": 0.2,
+        "p@10": 0.2,
+        "p@10_leniente": 0.2,
+        "ndcg@10": 0.20829366581033176,
+        "mrr": 0.5,
+        "hit@5": 1.0,
+        "conformidade_metadado@10": 0.2
+      },
+      "V4_reranker_media": {
+        "p@5": 0.2,
+        "p@10": 0.1,
+        "p@10_leniente": 0.1,
+        "ndcg@10": 0.09478836436955078,
+        "mrr": 0.25,
+        "hit@5": 1.0,
+        "conformidade_metadado@10": 0.1
+      },
+      "F1_final_so_reescrita": {
+        "p@5": 1.0,
+        "p@10": 1.0,
+        "p@10_leniente": 1.0,
+        "ndcg@10": 1.0,
+        "mrr": 1.0,
+        "hit@5": 1.0,
+        "conformidade_metadado@10": 1.0
+      },
+      "F2_final_multiquery": {
+        "p@5": 1.0,
+        "p@10": 0.9,
+        "p@10_leniente": 1.0,
+        "ndcg@10": 0.9537125187088151,
+        "mrr": 1.0,
+        "hit@5": 1.0,
+        "conformidade_metadado@10": 1.0
+      },
+      "E_minilm": {
+        "p@5": 0.2,
+        "p@10": 0.2,
+        "p@10_leniente": 0.2,
+        "ndcg@10": 0.16421958630632802,
+        "mrr": 0.25,
+        "hit@5": 1.0,
+        "conformidade_metadado@10": 0.2
+      },
+      "E_e5_base": {
+        "p@5": 0.4,
+        "p@10": 0.3,
+        "p@10_leniente": 0.3,
+        "ndcg@10": 0.3125291152215463,
+        "mrr": 0.5,
+        "hit@5": 1.0,
+        "conformidade_metadado@10": 0.3
+      },
+      "E_bge_m3": {
+        "p@5": 0.2,
+        "p@10": 0.3,
+        "p@10_leniente": 0.3,
+        "ndcg@10": 0.27191445400928344,
+        "mrr": 0.5,
+        "hit@5": 1.0,
+        "conformidade_metadado@10": 0.3
+      }
+    },
+    "Q26": {
+      "A0_denso_pergunta_crua": {
+        "p@5": 0.0,
+        "p@10": 0.0,
+        "p@10_leniente": 0.0,
+        "ndcg@10": 0.0,
+        "mrr": 0.0,
+        "hit@5": 0.0,
+        "conformidade_metadado@10": 0.0
+      },
+      "A1_reescrita": {
+        "p@5": 0.8,
+        "p@10": 0.6,
+        "p@10_leniente": 0.6,
+        "ndcg@10": 0.6871952210980247,
+        "mrr": 1.0,
+        "hit@5": 1.0,
+        "conformidade_metadado@10": 0.6
+      },
+      "A2_multiquery_hyde": {
+        "p@5": 0.8,
+        "p@10": 0.8,
+        "p@10_leniente": 0.8,
+        "ndcg@10": 0.7948833326720564,
+        "mrr": 1.0,
+        "hit@5": 1.0,
+        "conformidade_metadado@10": 0.8
+      },
+      "A3_hibrido_bm25_rrf": {
+        "p@5": 0.8,
+        "p@10": 0.6,
+        "p@10_leniente": 0.6,
+        "ndcg@10": 0.6470538417566037,
+        "mrr": 1.0,
+        "hit@5": 1.0,
+        "conformidade_metadado@10": 0.6
+      },
+      "A4_reranker": {
+        "p@5": 0.8,
+        "p@10": 0.6,
+        "p@10_leniente": 0.6,
+        "ndcg@10": 0.6968404678259544,
+        "mrr": 1.0,
+        "hit@5": 1.0,
+        "conformidade_metadado@10": 0.6
+      },
+      "A5_metadados_polaridade": {
+        "p@5": 1.0,
+        "p@10": 1.0,
+        "p@10_leniente": 1.0,
+        "ndcg@10": 1.0,
+        "mrr": 1.0,
+        "hit@5": 1.0,
+        "conformidade_metadado@10": 1.0
+      },
+      "V1_hibrido_so_reescrita": {
+        "p@5": 0.4,
+        "p@10": 0.7,
+        "p@10_leniente": 0.7,
+        "ndcg@10": 0.6812060741152737,
+        "mrr": 1.0,
+        "hit@5": 1.0,
+        "conformidade_metadado@10": 0.7
+      },
+      "V2_hibrido_sem_hyde": {
+        "p@5": 0.8,
+        "p@10": 0.6,
+        "p@10_leniente": 0.6,
+        "ndcg@10": 0.643121141594021,
+        "mrr": 1.0,
+        "hit@5": 1.0,
+        "conformidade_metadado@10": 0.6
+      },
+      "V3_reranker_consulta_principal": {
+        "p@5": 0.8,
+        "p@10": 0.6,
+        "p@10_leniente": 0.6,
+        "ndcg@10": 0.7007731679885373,
+        "mrr": 1.0,
+        "hit@5": 1.0,
+        "conformidade_metadado@10": 0.6
+      },
+      "V4_reranker_media": {
+        "p@5": 0.4,
+        "p@10": 0.6,
+        "p@10_leniente": 0.6,
+        "ndcg@10": 0.5063209639325833,
+        "mrr": 0.5,
+        "hit@5": 1.0,
+        "conformidade_metadado@10": 0.6
+      },
+      "F1_final_so_reescrita": {
+        "p@5": 1.0,
+        "p@10": 1.0,
+        "p@10_leniente": 1.0,
+        "ndcg@10": 1.0,
+        "mrr": 1.0,
+        "hit@5": 1.0,
+        "conformidade_metadado@10": 1.0
+      },
+      "F2_final_multiquery": {
+        "p@5": 1.0,
+        "p@10": 1.0,
+        "p@10_leniente": 1.0,
+        "ndcg@10": 1.0,
+        "mrr": 1.0,
+        "hit@5": 1.0,
+        "conformidade_metadado@10": 1.0
+      },
+      "E_minilm": {
+        "p@5": 0.6,
+        "p@10": 0.4,
+        "p@10_leniente": 0.4,
+        "ndcg@10": 0.48153499054313026,
+        "mrr": 1.0,
+        "hit@5": 1.0,
+        "conformidade_metadado@10": 0.4
+      },
+      "E_e5_base": {
+        "p@5": 0.4,
+        "p@10": 0.5,
+        "p@10_leniente": 0.5,
+        "ndcg@10": 0.508473817692402,
+        "mrr": 1.0,
+        "hit@5": 1.0,
+        "conformidade_metadado@10": 0.5
+      },
+      "E_bge_m3": {
+        "p@5": 0.8,
+        "p@10": 0.6,
+        "p@10_leniente": 0.6,
+        "ndcg@10": 0.6871952210980247,
+        "mrr": 1.0,
+        "hit@5": 1.0,
+        "conformidade_metadado@10": 0.6
+      }
+    },
+    "Q27": {
+      "A0_denso_pergunta_crua": {
+        "p@5": 0.0,
+        "p@10": 0.0,
+        "p@10_leniente": 0.1,
+        "ndcg@10": 0.023143740645592423,
+        "mrr": 0.0,
+        "hit@5": 0.0,
+        "conformidade_metadado@10": 0.1
+      },
+      "A1_reescrita": {
+        "p@5": 0.0,
+        "p@10": 0.0,
+        "p@10_leniente": 0.0,
+        "ndcg@10": 0.0,
+        "mrr": 0.0,
+        "hit@5": 0.0,
+        "conformidade_metadado@10": 0.0
+      },
+      "A2_multiquery_hyde": {
+        "p@5": 0.0,
+        "p@10": 0.0,
+        "p@10_leniente": 0.1,
+        "ndcg@10": 0.03668196104968002,
+        "mrr": 0.0,
+        "hit@5": 0.0,
+        "conformidade_metadado@10": 0.1
+      },
+      "A3_hibrido_bm25_rrf": {
+        "p@5": 0.0,
+        "p@10": 0.1,
+        "p@10_leniente": 0.1,
+        "ndcg@10": 0.06625422345438903,
+        "mrr": 0.1111111111111111,
+        "hit@5": 0.0,
+        "conformidade_metadado@10": 0.1
+      },
+      "A4_reranker": {
+        "p@5": 0.0,
+        "p@10": 0.0,
+        "p@10_leniente": 0.0,
+        "ndcg@10": 0.0,
+        "mrr": 0.0,
+        "hit@5": 0.0,
+        "conformidade_metadado@10": 0.0
+      },
+      "A5_metadados_polaridade": {
+        "p@5": 0.4,
+        "p@10": 0.5,
+        "p@10_leniente": 0.5,
+        "ndcg@10": 0.3979478965435962,
+        "mrr": 0.25,
+        "hit@5": 1.0,
+        "conformidade_metadado@10": 0.5
+      },
+      "V1_hibrido_so_reescrita": {
+        "p@5": 0.0,
+        "p@10": 0.1,
+        "p@10_leniente": 0.1,
+        "ndcg@10": 0.07839826897867533,
+        "mrr": 0.16666666666666666,
+        "hit@5": 0.0,
+        "conformidade_metadado@10": 0.1
+      },
+      "V2_hibrido_sem_hyde": {
+        "p@5": 0.0,
+        "p@10": 0.1,
+        "p@10_leniente": 0.1,
+        "ndcg@10": 0.07336392209936005,
+        "mrr": 0.14285714285714285,
+        "hit@5": 0.0,
+        "conformidade_metadado@10": 0.1
+      },
+      "V3_reranker_consulta_principal": {
+        "p@5": 0.0,
+        "p@10": 0.2,
+        "p@10_leniente": 0.2,
+        "ndcg@10": 0.15176219107803537,
+        "mrr": 0.16666666666666666,
+        "hit@5": 0.0,
+        "conformidade_metadado@10": 0.2
+      },
+      "V4_reranker_media": {
+        "p@5": 0.0,
+        "p@10": 0.1,
+        "p@10_leniente": 0.1,
+        "ndcg@10": 0.06943122193677725,
+        "mrr": 0.125,
+        "hit@5": 0.0,
+        "conformidade_metadado@10": 0.1
+      },
+      "F1_final_so_reescrita": {
+        "p@5": 0.2,
+        "p@10": 0.5,
+        "p@10_leniente": 0.5,
+        "ndcg@10": 0.4977962688668735,
+        "mrr": 1.0,
+        "hit@5": 1.0,
+        "conformidade_metadado@10": 0.5
+      },
+      "F2_final_multiquery": {
+        "p@5": 0.8,
+        "p@10": 0.7,
+        "p@10_leniente": 0.8,
+        "ndcg@10": 0.7775500257642896,
+        "mrr": 1.0,
+        "hit@5": 1.0,
+        "conformidade_metadado@10": 0.8
+      },
+      "E_minilm": {
+        "p@5": 0.0,
+        "p@10": 0.0,
+        "p@10_leniente": 0.0,
+        "ndcg@10": 0.0,
+        "mrr": 0.0,
+        "hit@5": 0.0,
+        "conformidade_metadado@10": 0.0
+      },
+      "E_e5_base": {
+        "p@5": 0.0,
+        "p@10": 0.0,
+        "p@10_leniente": 0.0,
+        "ndcg@10": 0.0,
+        "mrr": 0.0,
+        "hit@5": 0.0,
+        "conformidade_metadado@10": 0.0
+      },
+      "E_bge_m3": {
+        "p@5": 0.0,
+        "p@10": 0.0,
+        "p@10_leniente": 0.0,
+        "ndcg@10": 0.0,
+        "mrr": 0.0,
+        "hit@5": 0.0,
+        "conformidade_metadado@10": 0.0
+      }
+    },
+    "Q28": {
+      "A0_denso_pergunta_crua": {
+        "p@5": 0.2,
+        "p@10": 0.1,
+        "p@10_leniente": 0.1,
+        "ndcg@10": 0.11004588314904007,
+        "mrr": 0.3333333333333333,
+        "hit@5": 1.0,
+        "conformidade_metadado@10": 0.1
+      },
+      "A1_reescrita": {
+        "p@5": 0.0,
+        "p@10": 0.0,
+        "p@10_leniente": 0.0,
+        "ndcg@10": 0.0,
+        "mrr": 0.0,
+        "hit@5": 0.0,
+        "conformidade_metadado@10": 0.0
+      },
+      "A2_multiquery_hyde": {
+        "p@5": 0.0,
+        "p@10": 0.0,
+        "p@10_leniente": 0.0,
+        "ndcg@10": 0.0,
+        "mrr": 0.0,
+        "hit@5": 0.0,
+        "conformidade_metadado@10": 0.0
+      },
+      "A3_hibrido_bm25_rrf": {
+        "p@5": 0.0,
+        "p@10": 0.1,
+        "p@10_leniente": 0.1,
+        "ndcg@10": 0.07839826897867533,
+        "mrr": 0.16666666666666666,
+        "hit@5": 0.0,
+        "conformidade_metadado@10": 0.1
+      },
+      "A4_reranker": {
+        "p@5": 0.0,
+        "p@10": 0.0,
+        "p@10_leniente": 0.0,
+        "ndcg@10": 0.0,
+        "mrr": 0.0,
+        "hit@5": 0.0,
+        "conformidade_metadado@10": 0.0
+      },
+      "A5_metadados_polaridade": {
+        "p@5": 0.0,
+        "p@10": 0.2,
+        "p@10_leniente": 0.5,
+        "ndcg@10": 0.25016773436294104,
+        "mrr": 0.16666666666666666,
+        "hit@5": 0.0,
+        "conformidade_metadado@10": 0.6
+      },
+      "V1_hibrido_so_reescrita": {
+        "p@5": 0.0,
+        "p@10": 0.0,
+        "p@10_leniente": 0.0,
+        "ndcg@10": 0.0,
+        "mrr": 0.0,
+        "hit@5": 0.0,
+        "conformidade_metadado@10": 0.0
+      },
+      "V2_hibrido_sem_hyde": {
+        "p@5": 0.0,
+        "p@10": 0.1,
+        "p@10_leniente": 0.1,
+        "ndcg@10": 0.07839826897867533,
+        "mrr": 0.16666666666666666,
+        "hit@5": 0.0,
+        "conformidade_metadado@10": 0.1
+      },
+      "V3_reranker_consulta_principal": {
+        "p@5": 0.0,
+        "p@10": 0.0,
+        "p@10_leniente": 0.0,
+        "ndcg@10": 0.0,
+        "mrr": 0.0,
+        "hit@5": 0.0,
+        "conformidade_metadado@10": 0.0
+      },
+      "V4_reranker_media": {
+        "p@5": 0.0,
+        "p@10": 0.0,
+        "p@10_leniente": 0.0,
+        "ndcg@10": 0.0,
+        "mrr": 0.0,
+        "hit@5": 0.0,
+        "conformidade_metadado@10": 0.0
+      },
+      "F1_final_so_reescrita": {
+        "p@5": 0.8,
+        "p@10": 0.8,
+        "p@10_leniente": 0.8,
+        "ndcg@10": 0.716287445502968,
+        "mrr": 0.5,
+        "hit@5": 1.0,
+        "conformidade_metadado@10": 0.8
+      },
+      "F2_final_multiquery": {
+        "p@5": 0.4,
+        "p@10": 0.5,
+        "p@10_leniente": 0.5,
+        "ndcg@10": 0.4482145606127126,
+        "mrr": 0.5,
+        "hit@5": 1.0,
+        "conformidade_metadado@10": 0.5
+      },
+      "E_minilm": {
+        "p@5": 0.0,
+        "p@10": 0.2,
+        "p@10_leniente": 0.2,
+        "ndcg@10": 0.12987501165334073,
+        "mrr": 0.1111111111111111,
+        "hit@5": 0.0,
+        "conformidade_metadado@10": 0.2
+      },
+      "E_e5_base": {
+        "p@5": 0.0,
+        "p@10": 0.0,
+        "p@10_leniente": 0.0,
+        "ndcg@10": 0.0,
+        "mrr": 0.0,
+        "hit@5": 0.0,
+        "conformidade_metadado@10": 0.0
+      },
+      "E_bge_m3": {
+        "p@5": 0.0,
+        "p@10": 0.0,
+        "p@10_leniente": 0.0,
+        "ndcg@10": 0.0,
+        "mrr": 0.0,
+        "hit@5": 0.0,
+        "conformidade_metadado@10": 0.0
+      }
+    }
+  },
+  "precisao_contexto": {
+    "A5_metadados_polaridade": 0.8512,
+    "F1_final_so_reescrita": 0.9098,
+    "F2_final_multiquery": 0.8929
+  },
+  "precisao_contexto_final": 0.9098,
+  "sistema_final": "F1_final_so_reescrita",
+  "calibracao_limiar": {
+    "n_pares": 1539,
+    "auc_reranker_vs_juiz": 0.7272,
+    "limiar_f1_max": {
+      "limiar": 0.05,
+      "precisao": 0.8434,
+      "recall": 0.9502,
+      "f1": 0.8937
+    },
+    "tabela": [
+      {
+        "limiar": 0.05,
+        "precisao": 0.8434,
+        "recall": 0.9502,
+        "f1": 0.8937
+      },
+      {
+        "limiar": 0.1,
+        "precisao": 0.8471,
+        "recall": 0.935,
+        "f1": 0.8889
+      },
+      {
+        "limiar": 0.15,
+        "precisao": 0.849,
+        "recall": 0.9156,
+        "f1": 0.881
+      },
+      {
+        "limiar": 0.2,
+        "precisao": 0.8537,
+        "recall": 0.8962,
+        "f1": 0.8744
+      },
+      {
+        "limiar": 0.25,
+        "precisao": 0.8542,
+        "recall": 0.8802,
+        "f1": 0.867
+      },
+      {
+        "limiar": 0.3,
+        "precisao": 0.8537,
+        "recall": 0.8616,
+        "f1": 0.8576
+      },
+      {
+        "limiar": 0.35,
+        "precisao": 0.8573,
+        "recall": 0.8312,
+        "f1": 0.844
+      },
+      {
+        "limiar": 0.4,
+        "precisao": 0.8589,
+        "recall": 0.8118,
+        "f1": 0.8347
+      },
+      {
+        "limiar": 0.45,
+        "precisao": 0.857,
+        "recall": 0.784,
+        "f1": 0.8189
+      },
+      {
+        "limiar": 0.5,
+        "precisao": 0.8581,
+        "recall": 0.7603,
+        "f1": 0.8063
+      },
+      {
+        "limiar": 0.55,
+        "precisao": 0.8601,
+        "recall": 0.7316,
+        "f1": 0.7907
+      },
+      {
+        "limiar": 0.6,
+        "precisao": 0.8595,
+        "recall": 0.7072,
+        "f1": 0.7759
+      },
+      {
+        "limiar": 0.65,
+        "precisao": 0.8585,
+        "recall": 0.681,
+        "f1": 0.7595
+      },
+      {
+        "limiar": 0.7,
+        "precisao": 0.8597,
+        "recall": 0.6565,
+        "f1": 0.7445
+      },
+      {
+        "limiar": 0.75,
+        "precisao": 0.8662,
+        "recall": 0.6228,
+        "f1": 0.7246
+      },
+      {
+        "limiar": 0.8,
+        "precisao": 0.8668,
+        "recall": 0.5823,
+        "f1": 0.6966
+      },
+      {
+        "limiar": 0.85,
+        "precisao": 0.8649,
+        "recall": 0.535,
+        "f1": 0.6611
+      },
+      {
+        "limiar": 0.9,
+        "precisao": 0.8706,
+        "recall": 0.4768,
+        "f1": 0.6161
+      },
+      {
+        "limiar": 0.95,
+        "precisao": 0.8787,
+        "recall": 0.3485,
+        "f1": 0.4991
+      }
+    ],
+    "max_relevancia_perguntas_sem_evidencia": 0.9983
+  },
+  "n_perguntas_respondiveis": 28,
+  "n_julgamentos": 3251,
+  "rotulos": {
+    "A0_denso_pergunta_crua": "RAG ingênuo (pergunta crua, só vetor)",
+    "A1_reescrita": "+ reescrita da pergunta",
+    "A2_multiquery_hyde": "+ multi-query e HyDE",
+    "A3_hibrido_bm25_rrf": "+ BM25 (híbrido, RRF)",
+    "A4_reranker": "+ reranker cross-encoder",
+    "A5_metadados_polaridade": "+ filtros de metadado e polaridade",
+    "V1_hibrido_so_reescrita": "híbrido só com a consulta reescrita",
+    "V2_hibrido_sem_hyde": "híbrido com variações, sem HyDE",
+    "V3_reranker_consulta_principal": "reranker contra a consulta principal",
+    "V4_reranker_media": "reranker pela média das consultas",
+    "F1_final_so_reescrita": "final: reescrita + híbrido + metadados, ordem RRF",
+    "F2_final_multiquery": "final: + multi-query e HyDE, ordem RRF",
+    "E_minilm": "sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2",
+    "E_e5_base": "intfloat/multilingual-e5-base",
+    "E_bge_m3": "BAAI/bge-m3"
+  }
+}

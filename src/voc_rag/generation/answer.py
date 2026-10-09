@@ -60,6 +60,26 @@ Regras:
    formato brasileiro (33,0%). Não use travessões."""
 
 
+REFORCO_ACENTOS = (
+    "\n\nATENÇÃO: escreva com a acentuação completa do português do Brasil (não, são, também, "
+    "avaliações, frequências, relação). Texto sem acentos será rejeitado."
+)
+
+# Palavras frequentes que só aparecem sem acento quando o modelo "esquece" a acentuação.
+_SEM_ACENTO = re.compile(
+    r"\b(nao|sao|tambem|avaliacoes|frequencias?|relacao|informacoes|analises|satisfacao|"
+    r"evidencias|entao|ja|ate|preco|servico)\b",
+    re.IGNORECASE,
+)
+
+
+def sem_acentos(resp: RespostaGerada, minimo: int = 2) -> bool:
+    """Detecta a falha (observada no modelo lite) de escrever sem acentos."""
+    texto = " ".join([resp.resumo, resp.limitacoes]
+                     + [f"{i.titulo} {i.descricao}" for i in resp.insights])
+    return len(_SEM_ACENTO.findall(texto)) >= minimo
+
+
 def _fmt_meta(r: pd.Series) -> str:
     partes = [f"nota {int(r['nota'])}/5"]
     status = r.get("entrega_status")

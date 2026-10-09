@@ -39,23 +39,32 @@ log = logging.getLogger(__name__)
 
 @dataclass
 class RetrievalConfig:
+    # Padrões = sistema final escolhido na avaliação (reports/avaliacao_recuperacao.json,
+    # configuração F1): reescrita + híbrido + metadados, ordem RRF, reranker como porteiro.
+    # Multi-query e HyDE seguem implementados e medidos, mas não melhoraram a recuperação.
     usar_reescrita: bool = True          # False = busca com a pergunta crua (baseline)
     usar_denso: bool = True
     usar_bm25: bool = True
-    usar_alternativas: bool = True       # multi-query
-    usar_hyde: bool = True               # avaliação hipotética
+    usar_alternativas: bool = False      # multi-query
+    usar_hyde: bool = False              # avaliação hipotética
     usar_polaridade: bool = True         # filtro implícito de nota pela polaridade
     usar_filtros: bool = True            # filtros explícitos de metadado
     usar_rerank: bool = True
     # Texto contra o qual o cross-encoder pontua cada avaliação:
     #   "pergunta"       pergunta original do gestor (registro analítico)
     #   "consulta_busca" consulta reescrita no vocabulário do cliente
-    #   "max_consultas"  maior score entre reescrita e variações (padrão)
+    #   "max_consultas"  maior score entre reescrita e variações
+    #   "media_consultas" média dos scores entre reescrita e variações
     consulta_rerank: str = "max_consultas"
+    # "reranker": ordena pelo cross-encoder; "rrf": ordena pela fusão e usa o
+    # reranker só como porteiro de relevância (limiar/abstenção).
+    ordenar_por: str = "rrf"
     k_por_consulta: int = 50
     rrf_k: int = 60
     n_rerank: int = 80
-    limiar_relevancia: float = 0.30      # calibrado em reports/avaliacao (ver decisões)
+    # Porteiro: com 0,1 a 0,5 o reranker barra 3 de 5 perguntas sem evidência e nenhuma
+    # respondível; 0,30 é o meio da faixa segura (decisão D13).
+    limiar_relevancia: float = 0.30
     min_evidencias: int = 3              # abaixo disso: evidência insuficiente
     n_contexto_tema: int = 15
     n_contexto_panorama: int = 30
@@ -252,16 +261,21 @@ def recupera(
             # A avaliação hipotética (HyDE) não entra: é texto inventado, serve
             # para a busca vetorial, não como critério de relevância.
             qs = [q for q in consultas if q != analise.avaliacao_hipotetica] or consultas
-            cand["relevancia"] = np.max([kb.reranker.score(q, textos) for q in qs], axis=0)
-    else:
-        # Sem reranker, a relevância é o cosseno denso (ou o RRF normalizado).
-        if cfg.usar_denso:
-            base = cand["score_denso"].fillna(0.0)
-        else:
-            base = cand["rrf"] / cand["rrf"].max()
-        cand["relevancia"] = base.astype(np.float32)
+            escores = np.array([kb.reranker.score(q, textos) for q in qs])
+            # "max": basta casar com uma variação (risco: variação que desvia do tema);
+            # "media": precisa casar com o conjunto das consultas.
+            agg = np.mean if cfg.consulta_rerank == "media_consultas" else np.max
+            cand["relevancia"] = agg(escores, axis=0)
+    rrf_norm = (cand["rrf"] / cand["rrf"].max()).astype(np.float32)
+    if not cfg.usar_rerank:
+        # Sem reranker, a relevância e a ordem são as da fusão RRF.
+        cand["relevancia"] = rrf_norm
     tempos["rerank_s"] = round(time.perf_counter() - t, 3)
-    cand = cand.sort_values("relevancia", ascending=False, kind="stable").reset_index(drop=True)
+    # Ordem final: pelo reranker ou pela fusão RRF. Na avaliação, o reranker piorou a
+    # ordenação (confunde temas vizinhos: "produto quebrado" sobe numa pergunta sobre
+    # embalagem); no sistema final ele só decide o que é relevante (porteiro).
+    cand["ordem"] = rrf_norm if cfg.ordenar_por == "rrf" else cand["relevancia"]
+    cand = cand.sort_values("ordem", ascending=False, kind="stable").reset_index(drop=True)
 
     relevantes = cand[cand["relevancia"] >= cfg.limiar_relevancia]
     # Deduplicação: mesmo texto (ex.: "muito bom") de clientes diferentes entra
@@ -274,10 +288,10 @@ def recupera(
     if len(unicos):
         vet = kb.emb[kb.docs_pos.loc[unicos["review_id"]].to_numpy()]
         idx = mmr(
-            unicos["review_id"].tolist(), unicos["relevancia"].to_numpy(), vet, n_ctx,
+            unicos["review_id"].tolist(), unicos["ordem"].to_numpy(), vet, n_ctx,
             cfg.mmr_lambda,
         )
-        selecionados = unicos.iloc[sorted(idx, key=lambda i: -unicos["relevancia"].iloc[i])]
+        selecionados = unicos.iloc[sorted(idx, key=lambda i: -unicos["ordem"].iloc[i])]
     else:
         selecionados = unicos
     selecionados = selecionados.reset_index(drop=True)

@@ -22,16 +22,18 @@ from dataclasses import dataclass, field
 import pandas as pd
 
 from voc_rag.generation.answer import (
-    SYSTEM as SYSTEM_RESPOSTA,
-)
-from voc_rag.generation.answer import (
+    REFORCO_ACENTOS,
     RelatorioCitacoes,
     RespostaGerada,
     ids_citados,
     monta_contexto,
     monta_prompt,
     rotula_evidencias,
+    sem_acentos,
     valida_citacoes,
+)
+from voc_rag.generation.answer import (
+    SYSTEM as SYSTEM_RESPOSTA,
 )
 from voc_rag.generation.llm import LLMClient, LLMIndisponivel
 from voc_rag.retrieval.filters import Filtros
@@ -108,6 +110,14 @@ def render_markdown(g: RespostaGerada, n_evidencias: int) -> str:
     return "\n".join(linhas).strip()
 
 
+def _milhar(n: int) -> str:
+    return f"{n:,}".replace(",", ".")
+
+
+def _decimal(x: float) -> str:
+    return f"{x:.2f}".replace(".", ",")
+
+
 def _lista_evidencias(ev: pd.DataFrame) -> str:
     return "\n".join(
         f"- [{r.rotulo}] (nota {int(r.nota)}/5) \"{r.texto}\"" for r in ev.itertuples()
@@ -176,9 +186,9 @@ class VoCPipeline:
             md = (
                 "**Não encontrei avaliações relevantes para responder com segurança.** "
                 f"Analisei {len(rec.candidatos)} candidatas no recorte ({recorte}; "
-                f"{rec.n_universo} avaliações com comentário), e nenhuma atingiu a relevância "
-                f"mínima ({self.cfg.limiar_relevancia:.2f}). Prefiro não responder a inventar "
-                "uma conclusão sem suporte nos dados."
+                f"{_milhar(rec.n_universo)} avaliações com comentário), e nenhuma atingiu a "
+                f"relevância mínima ({_decimal(self.cfg.limiar_relevancia)}). Prefiro não "
+                "responder a inventar uma conclusão sem suporte nos dados."
             )
             tempos["total_s"] = round(time.perf_counter() - t0, 3)
             return Resposta(pergunta, "sem_evidencia", md, analise, rec, tempos=tempos)
@@ -204,6 +214,13 @@ class VoCPipeline:
         try:
             gerada = self.llm.generate(SYSTEM_RESPOSTA, prompt, RespostaGerada, etapa="geracao",
                                        pensamento="alto")
+            if sem_acentos(gerada):
+                # Controle de qualidade: o modelo lite às vezes escreve sem acentos;
+                # uma nova geração com reforço explícito resolve.
+                log.info("resposta sem acentos; gerando de novo com reforço")
+                gerada = self.llm.generate(SYSTEM_RESPOSTA + REFORCO_ACENTOS, prompt,
+                                           RespostaGerada, etapa="geracao_reforco",
+                                           pensamento="alto")
         except LLMIndisponivel as e:
             log.error("geração indisponível: %s", e)
             md = (

@@ -50,8 +50,10 @@ def test_ablacao_desliga_filtros():
 def test_consultas_deduplicadas_e_hyde_opcional():
     a = _analise(consultas_alternativas=["Atraso na entrega", "demorou a chegar"],
                  avaliacao_hipotetica="comprei e até hoje não chegou")
-    assert consultas_de(a, RetrievalConfig()) == [
+    completo = RetrievalConfig(usar_alternativas=True, usar_hyde=True)
+    assert consultas_de(a, completo) == [
         "atraso na entrega", "demorou a chegar", "comprei e até hoje não chegou"]
+    assert consultas_de(a, RetrievalConfig()) == ["atraso na entrega"]
     assert consultas_de(a, RetrievalConfig(usar_hyde=False, usar_alternativas=False)) == [
         "atraso na entrega"]
     cru = RetrievalConfig(usar_reescrita=False)
