@@ -31,6 +31,10 @@ class LLMIndisponivel(RuntimeError):
     """Sem chave configurada ou API fora do ar após as tentativas."""
 
 
+class CotaDiariaEsgotada(LLMIndisponivel):
+    """429 de cota diária: não adianta repetir hoje; troca de modelo."""
+
+
 @dataclass
 class Uso:
     chamadas: int = 0
@@ -73,9 +77,17 @@ class LLMClient:
         cache_dir: Path = CACHE_DIR / "llm",
         rpm: float | None = None,
         usar_cache: bool = True,
+        fallbacks: list[str] | None = None,
     ):
         cfg = get_settings()
         self.model = model or cfg.llm_model
+        # Modelos alternativos usados quando a cota diária do principal acaba
+        # (no plano gratuito do Gemini a cota é por modelo).
+        if fallbacks is None:
+            fallbacks = [m.strip() for m in os.getenv("VOC_LLM_FALLBACK", "").split(",")
+                         if m.strip()]
+        self.fallbacks = [m for m in fallbacks if m != self.model]
+        self._esgotados: set[str] = set()
         self.cache_dir = cache_dir
         self.usar_cache = usar_cache
         self.min_intervalo = 60.0 / float(rpm or os.getenv("VOC_LLM_RPM", "10"))
@@ -117,14 +129,15 @@ class LLMClient:
             time.sleep(falta)
         self._ultimo = time.monotonic()
 
-    def _chama(self, system: str, prompt: str, schema: type[BaseModel] | None,
-               temperatura: float, pensamento: str) -> tuple[str, int, int]:
+    def _chama_modelo(self, modelo: str, system: str, prompt: str,
+                      schema: type[BaseModel] | None, temperatura: float,
+                      pensamento: str) -> tuple[str, int, int]:
         from google.genai import errors, types
 
         config = types.GenerateContentConfig(
             system_instruction=system,
             temperature=temperatura,
-            thinking_config=_thinking_config(self.model, pensamento),
+            thinking_config=_thinking_config(modelo, pensamento),
             seed=42,
         )
         if schema is not None:
@@ -136,20 +149,37 @@ class LLMClient:
             self._espera_rpm()
             try:
                 resp = self.client.models.generate_content(
-                    model=self.model, contents=prompt, config=config
+                    model=modelo, contents=prompt, config=config
                 )
                 um = resp.usage_metadata
                 tin = (um.prompt_token_count or 0) if um else 0
                 tout = (um.candidates_token_count or 0) if um else 0
                 return resp.text or "", tin, tout
             except errors.APIError as e:
+                if e.code == 429 and "PerDay" in str(e):
+                    raise CotaDiariaEsgotada(f"cota diária de {modelo} esgotada") from e
                 transitorio = e.code in (429, 500, 502, 503, 504)
                 if not transitorio or tentativa == 5:
                     raise LLMIndisponivel(f"Gemini falhou ({e.code}): {e}") from e
-                log.warning("Gemini %s, nova tentativa em %.0fs", e.code, espera)
+                log.warning("Gemini %s (%s), nova tentativa em %.0fs", e.code, modelo, espera)
                 time.sleep(espera)
                 espera = min(espera * 2, 90)
         raise LLMIndisponivel("Gemini indisponível")
+
+    def _chama(self, system: str, prompt: str, schema: type[BaseModel] | None,
+               temperatura: float, pensamento: str) -> tuple[str, int, int, str]:
+        """Tenta o modelo principal e, se a cota diária acabar, os fallbacks em ordem."""
+        for modelo in [self.model, *self.fallbacks]:
+            if modelo in self._esgotados:
+                continue
+            try:
+                texto, tin, tout = self._chama_modelo(modelo, system, prompt, schema,
+                                                      temperatura, pensamento)
+                return texto, tin, tout, modelo
+            except CotaDiariaEsgotada:
+                log.warning("cota diária de %s esgotada; tentando o próximo modelo", modelo)
+                self._esgotados.add(modelo)
+        raise LLMIndisponivel("cota diária esgotada em todos os modelos configurados")
 
     def generate(
         self,
@@ -172,9 +202,10 @@ class LLMClient:
             return schema.model_validate_json(cache["texto"])
 
         t0 = time.monotonic()
-        texto, tin, tout = self._chama(system, prompt, schema, temperatura, pensamento)
+        texto, tin, tout, modelo = self._chama(system, prompt, schema, temperatura, pensamento)
         seg = time.monotonic() - t0
         obj = schema.model_validate_json(texto)
-        self._grava_cache(chave, {"texto": texto, "tin": tin, "tout": tout, "segundos": seg})
+        self._grava_cache(chave, {"texto": texto, "tin": tin, "tout": tout, "segundos": seg,
+                                  "modelo_usado": modelo})
         self.uso.registra(etapa, tin, tout, seg, cache=False)
         return obj
