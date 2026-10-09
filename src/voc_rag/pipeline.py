@@ -34,6 +34,7 @@ from voc_rag.generation.answer import (
     valida_citacoes,
 )
 from voc_rag.generation.llm import LLMClient, LLMIndisponivel
+from voc_rag.retrieval.filters import Filtros
 from voc_rag.retrieval.query import AnalisePergunta, analisa_pergunta
 from voc_rag.retrieval.retriever import (
     KnowledgeBase,
@@ -137,11 +138,15 @@ class VoCPipeline:
 
         return quadro_frequencias(self.kb.docs, rec.filtros_aplicados, analise.polaridade)
 
-    def responder(self, pergunta: str) -> Resposta:
+    def responder(self, pergunta: str, filtros_manuais: Filtros | None = None) -> Resposta:
+        """Responde a pergunta. Filtros manuais (da interface) prevalecem sobre os do LLM."""
         t0 = time.perf_counter()
         tempos: dict[str, float] = {}
 
         analise = analisa_pergunta(pergunta, self.kb.categorias, self.llm)
+        if filtros_manuais is not None:
+            for campo, valor in filtros_manuais.model_dump(exclude_defaults=True).items():
+                setattr(analise.filtros, campo, valor)
         tempos["analise_s"] = round(time.perf_counter() - t0, 3)
 
         if analise.escopo == "fora":
