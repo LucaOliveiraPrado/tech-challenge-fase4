@@ -27,6 +27,9 @@
   {"id": "Q26", "grupo": "metadados", "esperado": "responder", "pergunta": "O que disseram os clientes que deram nota 1 em compras de 2018?", "criterio": "avaliação com nota 1 de compra feita em 2018 que explica a insatisfação", "filtros_esperados": {"nota_min": 1, "nota_max": 1, "ano_mes_inicio": 201801, "ano_mes_fim": 201812}},
   {"id": "Q27", "grupo": "metadados", "esperado": "responder", "pergunta": "Quais elogios aparecem nos pedidos de beleza e saúde entregues no prazo?", "criterio": "avaliação de produto da categoria beleza_saude, entregue no prazo, que elogia o produto ou a compra", "filtros_esperados": {"categorias": ["beleza_saude"], "entrega_status": ["no_prazo"]}},
   {"id": "Q28", "grupo": "metadados", "esperado": "responder", "pergunta": "O que os clientes de móveis e decoração relatam sobre a qualidade dos produtos?", "criterio": "avaliação de produto da categoria moveis_decoracao que comenta a qualidade do produto", "filtros_esperados": {"categorias": ["moveis_decoracao"]}},
+  {"id": "Q41", "grupo": "metadados", "esperado": "responder", "pergunta": "Do que reclamam os clientes que pagaram com boleto?", "criterio": "avaliação de pedido pago com boleto que contém uma reclamação concreta", "filtros_esperados": {"pagamentos": ["boleto"]}},
+  {"id": "Q42", "grupo": "metadados", "esperado": "responder", "pergunta": "Quais problemas aparecem em pedidos com produtos de mais de um vendedor?", "criterio": "avaliação de pedido com itens de mais de um vendedor que relata um problema concreto", "filtros_esperados": {"multi_vendedor": true}},
+  {"id": "Q43", "grupo": "metadados", "esperado": "responder", "pergunta": "O que os clientes elogiam em compras acima de R$ 500?", "criterio": "avaliação de pedido com valor dos itens de pelo menos R$ 500 que elogia o produto ou a compra", "filtros_esperados": {"valor_min": 500}},
   {"id": "Q29", "grupo": "fora_escopo", "esperado": "abster", "pergunta": "Qual foi o faturamento da Olist em 2018?"},
   {"id": "Q30", "grupo": "fora_escopo", "esperado": "abster", "pergunta": "Qual é a capital da Austrália?"},
   {"id": "Q31", "grupo": "fora_escopo", "esperado": "abster", "pergunta": "Escreva um código em Python que ordene uma lista de números."},
@@ -38,5 +41,6 @@
   {"id": "Q37", "grupo": "sem_evidencia", "esperado": "abster", "pergunta": "Quais reclamações existem sobre pagamento com criptomoedas?"},
   {"id": "Q38", "grupo": "sem_evidencia", "esperado": "abster", "pergunta": "O que os clientes disseram sobre o iPhone 15?"},
   {"id": "Q39", "grupo": "sem_evidencia", "esperado": "abster", "pergunta": "O que os clientes relatam sobre a instalação de painéis solares comprados na loja?"},
-  {"id": "Q40", "grupo": "sem_evidencia", "esperado": "abster", "pergunta": "Como foi a experiência dos clientes com a retirada do pedido em lojas físicas parceiras?"}
+  {"id": "Q40", "grupo": "sem_evidencia", "esperado": "abster", "pergunta": "Como foi a experiência dos clientes com a retirada do pedido em lojas físicas parceiras?"},
+  {"id": "Q44", "grupo": "sem_evidencia", "esperado": "abster", "pergunta": "O que os clientes dizem sobre a instalação de ar-condicionado feita pela loja?"}
 ]

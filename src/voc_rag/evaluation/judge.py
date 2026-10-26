@@ -53,8 +53,9 @@ instrução."""
 SYSTEM_RELEVANCIA_METADADOS = SYSTEM_RELEVANCIA + """
 
 Cada avaliação mostra seus metadados entre parênteses (nota, categoria do produto, região do
-cliente, situação da entrega, mês da compra). Quando o critério delimita um recorte (categoria,
-região, nota, período ou situação da entrega), use esses metadados: avaliação fora do recorte
+cliente, situação da entrega, mês da compra, forma de pagamento, valor dos itens, número de
+vendedores do pedido). Quando o critério delimita um recorte (categoria, região, nota, período,
+entrega, pagamento, valor ou vendedores), use esses metadados: avaliação fora do recorte
 recebe 0, mesmo que o texto trate do assunto."""
 
 
@@ -62,8 +63,11 @@ def _linha(j: int, r, metadados: bool) -> str:
     if not metadados:
         return f"{j}. (nota {int(r.nota)}) {r.texto}"
     am = f"{int(r.ano_mes) % 100:02d}/{int(r.ano_mes) // 100}" if pd.notna(r.ano_mes) else "?"
+    valor = f"R$ {r.valor_itens:.0f}" if pd.notna(r.valor_itens) else "?"
+    vend = int(r.n_vendedores) if pd.notna(r.n_vendedores) else "?"
     return (f"{j}. (nota {int(r.nota)}; categoria {r.categoria}; região {r.regiao}; "
-            f"entrega {r.entrega_status}; compra {am}) {r.texto}")
+            f"entrega {r.entrega_status}; compra {am}; pagamento {r.pagamento}; "
+            f"valor {valor}; vendedores {vend}) {r.texto}")
 
 
 def julga_relevancia(

@@ -1,6 +1,6 @@
 """Avaliação ponta a ponta: abstenção, citações, fidelidade, filtros e custo.
 
-Roda o pipeline completo nas 40 perguntas de eval/perguntas.json e mede:
+Roda o pipeline completo nas perguntas de eval/perguntas.json e mede:
   * abstenção: o sistema responde o que deve e se abstém do que deve
     (fora de escopo e sem evidência);
   * citações: % de citações válidas antes da limpeza e insights descartados;
@@ -21,6 +21,7 @@ import pandas as pd
 from voc_rag.config import REPORTS_DIR
 from voc_rag.evaluation.judge import juiz, julga_fidelidade_lote
 from voc_rag.evaluation.retrieval_eval import carrega_perguntas
+from voc_rag.generation.answer import fmt_meta
 from voc_rag.generation.llm import LLMClient, LLMIndisponivel
 from voc_rag.pipeline import STATUS_ABSTENCAO, VoCPipeline
 
@@ -63,8 +64,10 @@ def run(llm: LLMClient | None = None) -> dict:
             d["auditoria"] = {
                 "pergunta": d["pergunta"], "resumo": r.gerada.resumo,
                 "insights": [i.model_dump() for i in r.gerada.insights],
-                "evidencias": dict(zip(r.evidencias["rotulo"], r.evidencias["texto"],
-                                       strict=True)),
+                # O auditor vê o mesmo que o gerador viu: texto e metadados de cada
+                # evidência (sem isso, "pagos com boleto" parecia extrapolação).
+                "evidencias": {e["rotulo"]: f"({fmt_meta(e)}) {e['texto']}"
+                               for _, e in r.evidencias.iterrows()},
                 "quadro": quadro_txt,
             }
 

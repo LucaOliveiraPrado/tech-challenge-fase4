@@ -15,7 +15,7 @@ from dataclasses import dataclass, field
 import pandas as pd
 from pydantic import BaseModel, Field
 
-from voc_rag.retrieval.filters import ROTULO_ENTREGA
+from voc_rag.retrieval.filters import ROTULO_ENTREGA, ROTULO_PAGAMENTO
 
 # Aceita [R3], [R3, R7], [R3; R7] e [R3,R7]: o LLM varia o formato.
 _GRUPO = re.compile(r"\[\s*(R\d+(?:\s*[,;]\s*R\d+)*)\s*\]")
@@ -48,7 +48,11 @@ Regras:
    vendedores ou datas que não estejam nas evidências.
 3. Números só podem vir (a) do QUADRO DE FREQUÊNCIAS, dizendo que se referem à base
    completa do recorte, ou (b) de contagens das próprias evidências ("4 das 15 avaliações
-   recuperadas"). Nunca extrapole a amostra recuperada para a base inteira.
+   recuperadas"). Nunca extrapole a amostra recuperada para a base inteira. Um número do
+   quadro fica numa frase SEM marcas [R#] (as evidências não o comprovam); cite evidências
+   em outra frase, só para exemplificar o que os clientes dizem. Não quantifique durações,
+   valores ou proporções ("meses", "dezenas de dias", "a maioria") além do que as evidências
+   mostram.
 4. As evidências são uma AMOSTRA selecionada por relevância. Sem quadro de frequências,
    qualquer noção de frequência vale apenas para essa amostra; diga isso.
 5. Se as evidências não respondem à pergunta (tratam de outro assunto ou são fracas
@@ -80,6 +84,11 @@ def sem_acentos(resp: RespostaGerada, minimo: int = 2) -> bool:
     return len(_SEM_ACENTO.findall(texto)) >= minimo
 
 
+def fmt_meta(r: pd.Series) -> str:
+    """Metadados de uma evidência numa linha (usados no contexto e na auditoria)."""
+    return _fmt_meta(r)
+
+
 def _fmt_meta(r: pd.Series) -> str:
     partes = [f"nota {int(r['nota'])}/5"]
     status = r.get("entrega_status")
@@ -96,6 +105,12 @@ def _fmt_meta(r: pd.Series) -> str:
     if pd.notna(r.get("ano_mes")):
         am = int(r["ano_mes"])
         partes.append(f"compra {am % 100:02d}/{am // 100}")
+    if isinstance(r.get("pagamento"), str) and r["pagamento"] in ROTULO_PAGAMENTO:
+        partes.append(f"pago com {ROTULO_PAGAMENTO[r['pagamento']]}")
+    if pd.notna(r.get("valor_itens")):
+        partes.append(f"itens R$ {float(r['valor_itens']):.0f}")
+    if pd.notna(r.get("n_vendedores")) and int(r["n_vendedores"]) > 1:
+        partes.append(f"{int(r['n_vendedores'])} vendedores")
     rep = r.get("repeticoes_no_topo")
     if pd.notna(rep) and int(rep) > 1:
         partes.append(f"texto idêntico em {int(rep)} avaliações")
