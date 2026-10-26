@@ -1,14 +1,14 @@
 {
-  "n_perguntas": 40,
+  "n_perguntas": 44,
   "abstencao": {
     "acuracia": 1.0,
     "precisao_abstencao": 1.0,
     "recall_abstencao": 1.0,
     "matriz": {
-      "abstencao_correta": 12,
+      "abstencao_correta": 13,
       "abstencao_indevida": 0,
       "resposta_indevida": 0,
-      "resposta_correta": 28
+      "resposta_correta": 31
     },
     "status_por_grupo": {
       "atendimento": {
@@ -30,7 +30,7 @@
         "respondida": 2
       },
       "metadados": {
-        "respondida": 8
+        "respondida": 11
       },
       "qualidade": {
         "respondida": 4
@@ -39,31 +39,30 @@
         "respondida": 3
       },
       "sem_evidencia": {
+        "fora_escopo": 4,
         "nao_respondida": 2,
-        "sem_evidencia": 2,
-        "fora_escopo": 1,
-        "evidencia_insuficiente": 1
+        "sem_evidencia": 1
       }
     }
   },
   "citacoes": {
-    "respostas_com_citacao": 30,
-    "citacoes_total": 635,
+    "respostas_com_citacao": 33,
+    "citacoes_total": 669,
     "citacoes_validas_pct": 1.0,
-    "insights_total": 84,
+    "insights_total": 98,
     "insights_descartados_sem_evidencia": 0
   },
   "fidelidade": {
-    "insights_julgados": 84,
+    "insights_julgados": 98,
     "distribuicao": {
-      "sustentado": 78,
-      "parcial": 6
+      "sustentado": 90,
+      "parcial": 8
     },
-    "escore_fidelidade": 0.9643,
-    "resumos_sustentados_pct": 0.9643
+    "escore_fidelidade": 0.9592,
+    "resumos_sustentados_pct": 0.9355
   },
   "extracao_filtros": {
-    "perguntas": 8,
+    "perguntas": 11,
     "acerto_pct": 1.0,
     "por_pergunta": [
       {
@@ -97,36 +96,48 @@
       {
         "id": "Q28",
         "acerto": true
+      },
+      {
+        "id": "Q41",
+        "acerto": true
+      },
+      {
+        "id": "Q42",
+        "acerto": true
+      },
+      {
+        "id": "Q43",
+        "acerto": true
       }
     ]
   },
   "latencia": {
-    "total_mediana_s_respondidas": 0.31,
-    "recuperacao_mediana_s": 0.293,
+    "total_mediana_s_respondidas": 0.32,
+    "recuperacao_mediana_s": 0.3,
     "geracao_mediana_s": 0.0,
     "analise_mediana_s": 0.0
   },
   "uso_llm_execucao": {
-    "chamadas": 4,
-    "chamadas_cache": 70,
-    "tokens_entrada": 9638,
-    "tokens_saida": 2661,
-    "segundos": 41.874000000000706,
+    "chamadas": 0,
+    "chamadas_cache": 80,
+    "tokens_entrada": 0,
+    "tokens_saida": 0,
+    "segundos": 0.0,
     "por_etapa": {
       "analise_pergunta": {
-        "chamadas": 40,
-        "tokens_entrada": 56120,
-        "tokens_saida": 8852
+        "chamadas": 44,
+        "tokens_entrada": 66226,
+        "tokens_saida": 11970
       },
       "geracao": {
-        "chamadas": 30,
-        "tokens_entrada": 58002,
-        "tokens_saida": 16062
+        "chamadas": 33,
+        "tokens_entrada": 74285,
+        "tokens_saida": 17685
       },
       "geracao_reforco": {
-        "chamadas": 4,
-        "tokens_entrada": 9638,
-        "tokens_saida": 2661
+        "chamadas": 3,
+        "tokens_entrada": 8260,
+        "tokens_saida": 1522
       }
     }
   }

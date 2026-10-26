@@ -28,7 +28,7 @@ CHROMA_DIR = INDEX_DIR / "chroma"
 METADADOS = [
     "order_id", "nota", "sentimento", "ano", "mes", "ano_mes", "entrega_status",
     "atraso_dias", "tempo_entrega_dias", "categoria", "categoria_en", "uf",
-    "regiao", "pagamento", "n_palavras", "texto_repetido",
+    "regiao", "pagamento", "valor_itens", "n_vendedores", "n_palavras", "texto_repetido",
 ]
 
 

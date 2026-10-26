@@ -149,9 +149,9 @@ Uma chamada ao LLM com saída JSON converte a pergunta em: escopo (dentro/fora),
 tema, evidência), polaridade (problemas/elogios), filtros explícitos de metadado e a **consulta
 reescrita no vocabulário do cliente**. A pergunta do gestor é analítica ("quais reclamações
 aparecem com maior frequência?"); o documento é coloquial ("comprei dia 10 e até hoje nada"); a
-reescrita aproxima os dois e é o **maior ganho isolado do projeto** (P@10 de 0,61 para 0,80, D10).
+reescrita aproxima os dois e é o **maior ganho isolado do projeto** (P@10 de 0,56 para 0,70, D10).
 O módulo também gera variações (multi-query) e uma avaliação hipotética (HyDE); ambas foram
-medidas, **não ajudaram** e ficam desligadas por padrão.
+medidas: ajudam pouco isoladas e pioram no sistema completo, então ficam desligadas por padrão.
 
 **2. Recuperação semântica e lexical** ([`retrieval/retriever.py`](src/voc_rag/retrieval/retriever.py)).
 A consulta vai ao ChromaDB (cosseno, filtros no `where`) e ao BM25 (filtros como máscara). As
@@ -159,8 +159,8 @@ listas são fundidas por **Reciprocal Rank Fusion**, que usa só a posição e p
 diferentes. **A ordem final é a da fusão.**
 
 **3. Seleção dos mais relevantes.** Os 80 primeiros passam pelo **reranker cross-encoder**,
-pontuado contra a consulta reescrita (contra a pergunta analítica o escore mediano era 0,002;
-contra a reescrita, 0,87). Ele atua como **porteiro**: só entram evidências acima do limiar, e
+pontuado contra a consulta reescrita (contra a pergunta analítica o escore mediano é 0,000;
+contra a reescrita, 0,95). Ele atua como **porteiro**: só entram evidências acima do limiar, e
 com menos de 3 o sistema não generaliza. A hipótese inicial era usá-lo para reordenar, mas a
 avaliação mostrou que ele confunde temas vizinhos ("produto veio quebrado" no topo de uma
 pergunta sobre embalagem) e piora a precisão (D12). Depois: **deduplicação** de textos idênticos
@@ -192,7 +192,7 @@ Olist, mostrado na interface e salvo em `reports/respostas_avaliacao.json`.
 | Camada | Onde | O que barra | Exemplo |
 |---|---|---|---|
 | Escopo | análise da pergunta | conhecimento externo, dados que não estão nos comentários, *prompt injection* | "Qual foi o faturamento da Olist em 2018?" |
-| Relevância | reranker + limiar | nenhuma avaliação relevante; menos de 3 evidências | "Quais reclamações existem sobre pagamento com criptomoedas?" |
+| Relevância | reranker + limiar | nenhuma avaliação relevante; menos de 3 evidências | "O que os clientes dizem sobre a instalação de ar-condicionado feita pela loja?" |
 | Suficiência | geração | evidências tocam o tema mas não respondem | "O que os clientes acharam das entregas feitas por drone?" |
 
 Cada camada é mais cara e mais fina que a anterior: abster cedo economiza chamadas, abster tarde
@@ -204,57 +204,62 @@ Nota, período (`ano_mes`), situação da entrega e atraso, categoria, UF/regiã
 cada documento. Eles entram em três lugares:
 
 1. **Filtro dentro da busca**: "nota baixa", "cama, mesa e banho", "entregues com atraso", "nota 1
-   em 2018" viram cláusula `where` no banco vetorial e máscara no BM25;
+   em 2018", "pagos com boleto", "acima de R$ 500", "pedidos com mais de um vendedor" viram
+   cláusula `where` no banco vetorial e máscara no BM25;
 2. **Polaridade como filtro implícito**: perguntas sobre problemas buscam notas até 3; sobre
    elogios, notas a partir de 4;
 3. **Contexto de cada evidência**: o LLM sabe que aquele "demorou" veio de um pedido 12 dias
    atrasado.
 
-Ganho medido nas 8 perguntas com recorte, mesma configuração com e sem filtros (notebook 03):
+Ganho medido nas 11 perguntas com recorte, mesma configuração com e sem filtros (notebook 03):
 
 <!-- num:metadados -->
-| 8 perguntas com recorte por metadado | Sem filtros | Com filtros (sistema final) |
+| 11 perguntas com recorte por metadado | Sem filtros | Com filtros (sistema final) |
 |---|---|---|
-| Conformidade ao recorte (top-10) | 42,5% | **91,2%** |
-| P@10 (juiz vê os metadados) | 0,388 | **0,850** |
+| Conformidade ao recorte (top-10) | 30,9% | **95,5%** |
+| P@10 (juiz vê os metadados) | 0,273 | **0,873** |
 <!-- /num:metadados -->
 
 Sem filtro, a busca acha o **tema** certo fora do **recorte** pedido (uma reclamação de móveis numa
 pergunta sobre cama, mesa e banho), e essas avaliações ocupam vagas do contexto. Com o filtro, o
 recorte é respeitado por construção.
 
+As informações do pedido também revelam padrões que o texto sozinho não mostra: pedidos com
+itens de **mais de um vendedor** têm 61,3% de avaliações negativas, contra 25,7% na base de
+comentários (costumam chegar em partes, e o cliente reclama de "faltou item").
+
 ## 9. Avaliação quantitativa
 
 Detalhes, gráficos e leitura em [`notebooks/03_avaliacao.ipynb`](notebooks/03_avaliacao.ipynb).
-**40 perguntas** ([`eval/perguntas.json`](eval/perguntas.json)): 28 respondíveis (os cinco tipos de
-exploração do enunciado + 8 com metadados), 6 fora do escopo (incluindo *prompt injection*) e 6 sem
-evidência na base. Relevância julgada por **pooling** (como no TREC) com um **LLM-juiz diferente do
+**44 perguntas** ([`eval/perguntas.json`](eval/perguntas.json)): 31 respondíveis (os cinco tipos de
+exploração do enunciado, as perguntas do problema de negócio e 11 com recorte por metadado), 6 fora
+do escopo (incluindo *prompt injection*) e 7 sem evidência na base. Relevância julgada por **pooling** (como no TREC) com um **LLM-juiz diferente do
 gerador**; julgamentos versionados em `eval/julgamentos_relevancia.csv`.
 
-**Ablação: o caminho até o sistema final** (28 perguntas respondíveis; P@10 = fração do top-10
+**Ablação: o caminho até o sistema final** (31 perguntas respondíveis; P@10 = fração do top-10
 com evidência clara, relevância 2):
 
 <!-- num:ablacao -->
 | Etapa | P@5 | P@10 | nDCG@10 | MRR | Hit@5 |
 |---|---|---|---|---|---|
-| RAG ingênuo (pergunta crua, só vetor) | 0,600 | 0,607 | 0,664 | 0,722 | 0,893 |
-| + reescrita da pergunta | 0,821 | 0,800 | 0,817 | 0,863 | 0,893 |
-| + BM25 (busca híbrida, fusão RRF) | 0,786 | 0,804 | 0,812 | 0,869 | 0,893 |
-| **+ filtros de metadado, polaridade e reranker como porteiro (sistema final)** | 0,914 | 0,939 | 0,943 | 0,964 | 1,000 |
+| RAG ingênuo (pergunta crua, só vetor) | 0,548 | 0,561 | 0,619 | 0,691 | 0,839 |
+| + reescrita da pergunta | 0,723 | 0,703 | 0,723 | 0,789 | 0,806 |
+| + BM25 (busca híbrida, fusão RRF) | 0,723 | 0,713 | 0,728 | 0,793 | 0,839 |
+| **+ filtros de metadado, polaridade e reranker como porteiro (sistema final)** | 0,923 | 0,926 | 0,941 | 0,968 | 1,000 |
 <!-- /num:ablacao -->
 
 ![Ablação](images/avaliacao_ablacao.png)
 
-**Testado e descartado pelos dados.** Duas técnicas comuns em RAG pioraram a recuperação aqui e
-ficaram fora do sistema final (continuam implementadas e reproduzíveis):
+**Testado e descartado pelos dados.** Duas técnicas comuns em RAG pioraram o sistema completo e
+ficaram fora dele (continuam implementadas e reproduzíveis):
 
 <!-- num:descartadas -->
 | Técnica testada | P@10 com | P@10 sem | Decisão |
 |---|---|---|---|
-| multi-query + HyDE sobre a consulta reescrita | 0,750 | 0,800 | descartada |
-| reranker ordenando o resultado da busca híbrida | 0,707 | 0,775 | descartada |
-| reranker contra a consulta principal (em vez do máximo) | 0,757 | 0,775 | descartada |
-| sistema completo ordenado pelo reranker | 0,857 | 0,939 | descartada |
+| multi-query + HyDE no sistema completo | 0,903 | 0,926 | descartada |
+| reranker ordenando o resultado da busca híbrida | 0,648 | 0,703 | descartada |
+| reranker contra a consulta principal (em vez do máximo) | 0,668 | 0,703 | descartada |
+| sistema completo ordenado pelo reranker | 0,871 | 0,926 | descartada |
 <!-- /num:descartadas -->
 
 As variações de consulta e o reranker têm o mesmo defeito neste domínio: puxam **temas
@@ -267,24 +272,24 @@ papel, o de porteiro de relevância, onde essa tolerância não atrapalha (D12, 
 <!-- num:embeddings -->
 | Modelo de embedding | P@10 | nDCG@10 | MRR |
 |---|---|---|---|
-| paraphrase-multilingual-MiniLM-L12-v2 | 0,704 | 0,713 | 0,739 |
-| multilingual-e5-base | 0,711 | 0,735 | 0,796 |
-| **bge-m3 (escolhido)** | 0,800 | 0,817 | 0,863 |
+| paraphrase-multilingual-MiniLM-L12-v2 | 0,632 | 0,664 | 0,758 |
+| multilingual-e5-base | 0,671 | 0,686 | 0,762 |
+| **bge-m3 (escolhido)** | 0,703 | 0,723 | 0,789 |
 <!-- /num:embeddings -->
 
-**Ponta a ponta** (40 perguntas, pipeline completo):
+**Ponta a ponta** (44 perguntas, pipeline completo):
 
 <!-- num:geracao -->
 | Métrica | Resultado |
 |---|---|
-| Decisão responder x abster correta | 100,0% (40 de 40) |
-| Abstenções corretas (fora de escopo + sem evidência) | 12 de 12 |
-| Perguntas respondíveis recusadas indevidamente | 0 de 28 |
-| Citações válidas (verificadas por código) | 100,0% de 635 |
-| Fidelidade dos insights (juiz; sustentado = 1, parcial = 0,5) | 0,96 em 84 insights |
-| Precisão do contexto enviado ao LLM | 91,0% |
+| Decisão responder x abster correta | 100,0% (44 de 44) |
+| Abstenções corretas (fora de escopo + sem evidência) | 13 de 13 |
+| Perguntas respondíveis recusadas indevidamente | 0 de 31 |
+| Citações válidas (verificadas por código) | 100,0% de 669 |
+| Fidelidade dos insights (juiz; sustentado = 1, parcial = 0,5) | 0,96 em 98 insights |
+| Precisão do contexto enviado ao LLM | 92,3% |
 | Extração correta dos filtros de metadado | 100% |
-| AUC do reranker contra o juiz | 0,727 |
+| AUC do reranker contra o juiz | 0,707 |
 <!-- /num:geracao -->
 
 **O juiz é confiável?** Com a cota gratuita, a maior parte dos julgamentos ficou com o modelo de
@@ -321,9 +326,9 @@ respeitar o limite por minuto; a recuperação inteira roda em menos de 1 segund
 
 ## 10. Exemplos de perguntas e respostas
 
-Nove exemplos completos (análise da pergunta, filtros, consulta reescrita, resposta e evidências
+Dez exemplos completos (análise da pergunta, filtros, consulta reescrita, resposta e evidências
 com `review_id`) em [`reports/exemplos_perguntas_respostas.md`](reports/exemplos_perguntas_respostas.md);
-as 40 respostas em [`reports/respostas_avaliacao.json`](reports/respostas_avaliacao.json).
+as 44 respostas em [`reports/respostas_avaliacao.json`](reports/respostas_avaliacao.json).
 
 <details>
 <summary><b>Exemplo completo: pergunta do tipo "evidência"</b></summary>
@@ -331,19 +336,17 @@ as 40 respostas em [`reports/respostas_avaliacao.json`](reports/respostas_avalia
 <!-- num:exemplo -->
 **Pergunta:** Quais avaliações sustentam a conclusão de que existem problemas recorrentes relacionados ao prazo de entrega?
 
-> As 15 avaliações recuperadas sustentam a conclusão de problemas recorrentes no prazo de entrega, apontando atrasos severos e não recebimento dos produtos [R1][R2][R3][R5]. Os clientes relatam descumprimento de prazos estabelecidos e falhas na comunicação por parte da loja [R5][R15].
+> As 15 avaliações recuperadas sustentam a conclusão de que existem problemas recorrentes com o prazo de entrega, evidenciados pelo descumprimento de prazos [R1][R2][R3][R4] e pelo não recebimento das mercadorias [R5][R6][R7][R8]. Os clientes relatam atrasos significativos e falta de aviso prévio por parte da empresa [R9][R10][R15].
 >
-> - **Descumprimento geral de prazos**: Os consumidores afirmam de forma recorrente que a loja falha em cumprir as datas estabelecidas para o recebimento das mercadorias [R2][R4][R5][R13]. *(apoio: 5 de 15 evidências)*
-> - **Atrasos prolongados e falta de entrega**: Várias avaliações apontam que os produtos ultrapassam o prazo limite e demoram dias a mais para chegar ou simplesmente não são entregues [R1][R3][R6][R8]. *(apoio: 6 de 15 evidências)*
-> - **Ausência de comunicação e satisfação**: Clientes criticam a falta de aviso prévio sobre os atrasos e a ausência de justificativas por parte da empresa sobre a demora [R5][R15]. *(apoio: 2 de 15 evidências)*
-> - **Pedidos cancelados e não recebidos**: Há registros de produtos que continuam sem entrega até o momento da avaliação, resultando em insatisfação e pedidos cancelados [R7][R9][R11]. *(apoio: 3 de 15 evidências)*
+> - **Atrasos recorrentes nas entregas**: Os consumidores apontam o descumprimento sistemático dos prazos estabelecidos para o envio das mercadorias [R1][R3][R4][R10]. Também há menção sobre a falta de comunicação e aviso prévio a respeito da demora [R15]. *(apoio: 10 de 15 evidências)*
+> - **Produtos não entregues após o prazo**: Várias avaliações destacam que os produtos não chegaram aos destinatários mesmo após o término do prazo determinado [R2][R4][R6][R11]. Ocorrem situações de demora extrema e pedidos não entregues [R11][R13][R14]. *(apoio: 10 de 15 evidências)*
 >
-> *Limitações: As constatações utilizam exclusivamente a amostra recuperada de 15 avaliações, sem permitir extrapolações para a base completa de 14445 comentários.*
+> *Limitações: Este relatório fundamenta a análise em uma amostra de 15 avaliações recuperadas por relevância a partir de um recorte de 14445 comentários, portanto a frequência observada vale apenas para esta amostra.*
 
 | id | review_id | nota | texto do cliente |
 |---|---|---|---|
-| R1 | `a4f9f285b2ed89a616d93dea024eb31b` | 1 | Não cumpriu com o prazo e o produto não chegou. |
-| R2 | `10467dc456e818c60bd750271b5d183e` | 1 | atraso na entrega da mercadoria,não cumpre prazo determinado. |
+| R1 | `10467dc456e818c60bd750271b5d183e` | 1 | atraso na entrega da mercadoria,não cumpre prazo determinado. |
+| R2 | `a4f9f285b2ed89a616d93dea024eb31b` | 1 | Não cumpriu com o prazo e o produto não chegou. |
 | R3 | `48b3ce236ea9d35a4850ea94ca9ca38f` | 2 | Atraso. Produto não chegou no prazo |
 <!-- /num:exemplo -->
 
@@ -357,15 +360,15 @@ Registro completo (22 decisões com problema, alternativas, escolha e evidência
 | # | Decisão | Evidência |
 |---|---|---|
 | D1 | Uma avaliação = um documento, sem chunking | mediana de 9 palavras, máximo 47 |
-| D8 | Embedding `bge-m3` local | nDCG@10 0,817 contra 0,735 (E5) e 0,713 (MiniLM) |
+| D8 | Embedding `bge-m3` local | nDCG@10 0,723 contra 0,686 (E5) e 0,664 (MiniLM) |
 | D9 | Busca híbrida (vetor + BM25), negações fora das stopwords | "não chegou" ≠ "chegou"; BM25 ancora termos literais |
-| D10 | Reescrita da pergunta no vocabulário do cliente; multi-query e HyDE desligados | P@10 0,607 → 0,800; variações pioraram (0,750) |
-| D12 | Reranker como porteiro, ordem pela fusão RRF | ordenar pelo reranker piorou; sistema final P@10 0,857 → 0,939 |
-| D13 | Limiar do porteiro escolhido pelo papel de abstenção | 0,1 a 0,5 barram 3 de 5 sem evidência e 0 de 28 respondíveis |
-| D15 | Abstenção em três camadas | 12 de 12 recusas corretas, 0 de 28 recusas indevidas |
+| D10 | Reescrita da pergunta no vocabulário do cliente; multi-query e HyDE desligados | P@10 0,561 → 0,703; variações pioram o sistema completo (0,926 → 0,903) |
+| D12 | Reranker como porteiro, ordem pela fusão RRF | ordenar pelo reranker piorou; sistema final P@10 0,871 → 0,926 |
+| D13 | Limiar do porteiro escolhido pelo papel de abstenção | precisão plana entre limiares; 0 de 31 respondíveis barradas |
+| D15 | Abstenção em três camadas | 13 de 13 recusas corretas, 0 de 31 recusas indevidas |
 | D16 | Citações verificadas por código; controle de acentuação | 100% das citações válidas; fidelidade 0,96 |
 | D17 | Quadro de frequências por classificador de aspectos + correção de prevalência | top-k não conta frequência |
-| D18 | Metadados como filtro dentro da busca | conformidade ao recorte 42,5% → 91,2% |
+| D18 | Metadados (inclusive pagamento, valor e vendedores) como filtro dentro da busca | conformidade ao recorte 30,9% → 95,5% |
 | D19 | Gemini no plano gratuito com papéis por modelo e fallback | cota de 20 req/dia por modelo "flash" |
 | D20 | Frequências relativas a quem comentou | nota 1 é 11% da base e 21% dos comentários |
 

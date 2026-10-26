@@ -73,6 +73,10 @@ filtros: preencha SOMENTE o que a pergunta delimita explicitamente.
   atrasaram", "entregas no prazo"). Se atraso é o próprio TEMA ("reclamações sobre
   atraso"), NÃO filtre: muitos clientes reclamam antes de o pedido constar como entregue.
 - ufs (siglas) e regioes (Norte, Nordeste, Centro-Oeste, Sudeste, Sul).
+- informações do pedido: pagamentos (credit_card, boleto, voucher, debit_card) quando a
+  pergunta cita a forma de pagamento; valor_min/valor_max (R$, valor dos itens) para
+  "compras acima de R$ 500", "pedidos baratos" (use um valor explícito só se a pergunta der
+  um); multi_vendedor=true para pedidos com itens de mais de um vendedor/loja.
 
 consulta_busca: reescreva a pergunta como consulta de busca semântica usando o vocabulário
 que CLIENTES usam nos comentários (ex.: "produto não chegou, atraso na entrega, prazo não
