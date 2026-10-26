@@ -17,7 +17,7 @@ warnings.filterwarnings("ignore")
 
 from voc_rag.config import REPORTS_DIR  # noqa: E402
 from voc_rag.pipeline import VoCPipeline  # noqa: E402
-from voc_rag.retrieval.filters import ROTULO_ENTREGA, Filtros  # noqa: E402
+from voc_rag.retrieval.filters import ROTULO_ENTREGA, ROTULO_PAGAMENTO, Filtros  # noqa: E402
 
 st.set_page_config(page_title="Voz do Cliente Olist", page_icon="💬", layout="wide")
 
@@ -50,6 +50,7 @@ EXEMPLOS = {
     "Metadados": [
         "Quais são os principais problemas relatados nas avaliações com nota baixa?",
         "Quais temas aparecem nas avaliações de pedidos entregues com atraso?",
+        "Quais problemas aparecem em pedidos com produtos de mais de um vendedor?",
     ],
     "Limites": [
         "Qual foi o faturamento da Olist em 2018?",
@@ -148,12 +149,17 @@ with st.sidebar:
     cats = st.multiselect("Categoria", categorias)
     entrega = st.multiselect("Entrega", list(ROTULO_ENTREGA), format_func=ROTULO_ENTREGA.get)
     regioes = st.multiselect("Região", ["Norte", "Nordeste", "Centro-Oeste", "Sudeste", "Sul"])
+    pagamentos = st.multiselect("Pagamento", list(ROTULO_PAGAMENTO),
+                                format_func=ROTULO_PAGAMENTO.get)
+    valor_min = st.number_input("Valor mínimo dos itens (R$)", min_value=0, value=0, step=50)
+    multi = st.checkbox("Só pedidos com mais de um vendedor")
     mostrar_rastro = st.toggle("Mostrar rastro do pipeline", value=True)
 
 filtros_manuais = Filtros(
     nota_min=notas[0] if notas != (1, 5) else None,
     nota_max=notas[1] if notas != (1, 5) else None,
-    categorias=cats, entrega_status=entrega, regioes=regioes,
+    categorias=cats, entrega_status=entrega, regioes=regioes, pagamentos=pagamentos,
+    valor_min=float(valor_min) if valor_min else None, multi_vendedor=True if multi else None,
 )
 
 # ------------------------------------------------------------------ pergunta

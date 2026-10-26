@@ -15,6 +15,14 @@ from pydantic import BaseModel, Field
 
 Sentimento = Literal["negativo", "neutro", "positivo"]
 EntregaStatus = Literal["no_prazo", "atrasado", "nao_entregue", "cancelado"]
+Pagamento = Literal["credit_card", "boleto", "voucher", "debit_card"]
+
+ROTULO_PAGAMENTO = {
+    "credit_card": "cartão de crédito",
+    "boleto": "boleto",
+    "voucher": "voucher",
+    "debit_card": "cartão de débito",
+}
 
 ROTULO_ENTREGA = {
     "no_prazo": "entregue no prazo",
@@ -34,13 +42,21 @@ class Filtros(BaseModel):
     ano_mes_fim: int | None = Field(default=None, description="AAAAMM inclusivo")
     ufs: list[str] = Field(default_factory=list)
     regioes: list[str] = Field(default_factory=list)
+    # Informações do pedido
+    pagamentos: list[Pagamento] = Field(default_factory=list)
+    valor_min: float | None = Field(default=None, ge=0, description="valor dos itens, R$")
+    valor_max: float | None = Field(default=None, ge=0, description="valor dos itens, R$")
+    multi_vendedor: bool | None = Field(
+        default=None, description="True: pedido com itens de mais de um vendedor"
+    )
 
     def vazio(self) -> bool:
         return not any(
             [
                 self.nota_min, self.nota_max, self.sentimentos, self.categorias,
                 self.entrega_status, self.ano_mes_inicio, self.ano_mes_fim,
-                self.ufs, self.regioes,
+                self.ufs, self.regioes, self.pagamentos, self.valor_min is not None,
+                self.valor_max is not None, self.multi_vendedor is not None,
             ]
         )
 
@@ -55,12 +71,21 @@ class Filtros(BaseModel):
             conds.append({"ano_mes": {"$gte": self.ano_mes_inicio}})
         if self.ano_mes_fim is not None:
             conds.append({"ano_mes": {"$lte": self.ano_mes_fim}})
+        if self.valor_min is not None:
+            conds.append({"valor_itens": {"$gte": float(self.valor_min)}})
+        if self.valor_max is not None:
+            conds.append({"valor_itens": {"$lte": float(self.valor_max)}})
+        if self.multi_vendedor is True:
+            conds.append({"n_vendedores": {"$gte": 2}})
+        elif self.multi_vendedor is False:
+            conds.append({"n_vendedores": {"$lte": 1}})
         for campo, valores in (
             ("sentimento", self.sentimentos),
             ("categoria", self.categorias),
             ("entrega_status", self.entrega_status),
             ("uf", self.ufs),
             ("regiao", self.regioes),
+            ("pagamento", self.pagamentos),
         ):
             if valores:
                 conds.append({campo: {"$in": list(valores)}})
@@ -81,12 +106,21 @@ class Filtros(BaseModel):
             m &= (df["ano_mes"] >= self.ano_mes_inicio).fillna(False).to_numpy(dtype=bool)
         if self.ano_mes_fim is not None:
             m &= (df["ano_mes"] <= self.ano_mes_fim).fillna(False).to_numpy(dtype=bool)
+        if self.valor_min is not None:
+            m &= (df["valor_itens"] >= self.valor_min).fillna(False).to_numpy(dtype=bool)
+        if self.valor_max is not None:
+            m &= (df["valor_itens"] <= self.valor_max).fillna(False).to_numpy(dtype=bool)
+        if self.multi_vendedor is True:
+            m &= (df["n_vendedores"] >= 2).fillna(False).to_numpy(dtype=bool)
+        elif self.multi_vendedor is False:
+            m &= (df["n_vendedores"] <= 1).fillna(False).to_numpy(dtype=bool)
         for campo, valores in (
             ("sentimento", self.sentimentos),
             ("categoria", self.categorias),
             ("entrega_status", self.entrega_status),
             ("uf", self.ufs),
             ("regiao", self.regioes),
+            ("pagamento", self.pagamentos),
         ):
             if valores:
                 m &= df[campo].isin(valores).to_numpy()
@@ -112,6 +146,16 @@ class Filtros(BaseModel):
             partes.append("UF " + ", ".join(self.ufs))
         if self.regioes:
             partes.append("região " + ", ".join(self.regioes))
+        if self.pagamentos:
+            partes.append("pago com " + ", ".join(ROTULO_PAGAMENTO[p] for p in self.pagamentos))
+        if self.valor_min is not None or self.valor_max is not None:
+            lo = f"R$ {self.valor_min:.0f}" if self.valor_min is not None else "R$ 0"
+            hi = f"R$ {self.valor_max:.0f}" if self.valor_max is not None else "sem teto"
+            partes.append(f"valor dos itens de {lo} a {hi}")
+        if self.multi_vendedor is True:
+            partes.append("pedido com mais de um vendedor")
+        elif self.multi_vendedor is False:
+            partes.append("pedido de um único vendedor")
         return "; ".join(partes) if partes else "sem filtros"
 
 

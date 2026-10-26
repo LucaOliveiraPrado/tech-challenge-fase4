@@ -91,21 +91,22 @@ camadas: escopo na análise da pergunta, relevância no reranker e suficiência 
 
 **Fala:**
 
-"Medimos. Montamos 40 perguntas: os cinco tipos do enunciado, oito com metadados, seis fora do
-escopo e seis sem evidência na base. A relevância foi julgada por pooling, como em avaliações de
+"Medimos. Montamos 44 perguntas: os cinco tipos do enunciado, onze com metadados, seis fora do
+escopo e sete sem evidência na base. A relevância foi julgada por pooling, como em avaliações de
 busca, com um LLM juiz diferente do que gera as respostas.
 
-A ablação mostra o caminho: o RAG ingênuo, com a pergunta crua contra o vetor, coloca 61% de
-evidência clara no top-10; a reescrita sobe para 80%; com metadados e o porteiro, o sistema final
-chega a 94%. E medir mudou o sistema: multi-query, HyDE e a reordenação pelo reranker pioraram a
-precisão e ficaram de fora. Isso só aparece porque medimos.
+A ablação mostra o caminho: o RAG ingênuo, com a pergunta crua contra o vetor, coloca 56% de
+evidência clara no top-10; a reescrita sobe para 70%; com metadados e o porteiro, o sistema final
+chega a 93%. E medir mudou o sistema: multi-query, HyDE e a reordenação pelo reranker pioraram o
+sistema completo e ficaram de fora. Isso só aparece porque medimos.
 
 O bge-m3 venceu dois outros modelos de embedding na mesma configuração.
 
-Nas perguntas com recorte, os metadados levam a conformidade ao recorte de 42% para 91%, e a
-precisão de 0,39 para 0,85.
+Nas perguntas com recorte, inclusive pagamento, valor e número de vendedores, os metadados levam a
+conformidade ao recorte de 31% para 96%, e a precisão de 0,27 para 0,87. E revelam padrão: pedidos
+com mais de um vendedor têm 61% de avaliações negativas, contra 26% no geral.
 
-Ponta a ponta: 40 de 40 decisões corretas entre responder e abster, 100% das citações válidas e
+Ponta a ponta: 44 de 44 decisões corretas entre responder e abster, 100% das citações válidas e
 fidelidade de 0,96 nos insights, auditada por um modelo diferente do que gera."
 
 *(Visuais: `avaliacao_ablacao.png`, tabelas do README, notebook 03.)*

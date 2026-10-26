@@ -82,9 +82,9 @@ locais (consulta reescrita, só busca vetorial; notebook 03):
 
 | Modelo | P@10 | nDCG@10 |
 |---|---|---|
-| paraphrase-multilingual-MiniLM-L12-v2 | 0,704 | 0,713 |
-| multilingual-e5-base | 0,711 | 0,735 |
-| **bge-m3** | **0,800** | **0,817** |
+| paraphrase-multilingual-MiniLM-L12-v2 | 0,632 | 0,664 |
+| multilingual-e5-base | 0,671 | 0,686 |
+| **bge-m3** | **0,703** | **0,723** |
 
 Local e não via API: indexar ~42 mil documentos sem limite de requisições, custo zero e vetores
 reproduzíveis por qualquer avaliador (105 s na GPU; roda em CPU, mais devagar).
@@ -98,10 +98,10 @@ português, acentos removidos) para termos exatos ("correios", "nota fiscal", "l
 nas stopwords: "não chegou" e "chegou" são opiniões opostas.
 **Evidência:** na pergunta do notebook 02 (sistema final, uma consulta), dos 80 candidatos 31
 vieram só do BM25, 32 só do vetor e 17 dos dois índices: as duas buscas trazem conjuntos bem
-diferentes e a fusão aproveita os dois. Na média da avaliação o BM25 é neutro quando há uma consulta só (P@10 0,800 só vetor
-contra 0,804 híbrido) e ajuda quando há várias consultas (0,750 contra 0,775): ele ancora a
-busca nos termos literais quando as consultas vetoriais se dispersam. Fica no sistema final pelo
-custo desprezível (milissegundos) e pela robustez a termos exatos.
+diferentes e a fusão aproveita os dois. Na média da avaliação o ganho é pequeno com a consulta
+reescrita (P@10 0,703 só vetor contra 0,713 híbrido) e some quando há várias consultas (0,723
+contra 0,703). Fica no sistema final pelo custo desprezível (milissegundos), pela robustez a
+termos exatos e porque o sistema final usa uma consulta só.
 
 ### D10: Transformação da pergunta por LLM
 
@@ -113,12 +113,13 @@ cliente, 2 a 3 variações (multi-query) e uma avaliação hipotética (HyDE).
 **Regra de fidelidade:** as variações não podem generalizar o assunto. Sem ela, "entregas por
 drone" virava "entrega rápida drone" e recuperava elogios genéricos de entrega com relevância
 0,99.
-**Evidência:** a reescrita é o maior ganho isolado do projeto: P@10 de **0,607 → 0,800** e
-nDCG@10 de 0,664 → 0,817 (pergunta crua contra consulta reescrita, mesma busca vetorial). No
-espaço vetorial, o cosseno médio com 200 reclamações de entrega sobe de 0,51 para 0,70
-(notebook 02). Já **multi-query e HyDE pioraram** a média (P@10 0,800 → 0,750): mesmo com a
-regra de fidelidade, as variações puxam temas vizinhos. Por isso o sistema final usa só a
-consulta reescrita; as variações e a avaliação hipotética continuam implementadas, medidas e
+**Evidência:** a reescrita é o maior ganho isolado do projeto: P@10 de **0,561 → 0,703** e
+nDCG@10 de 0,619 → 0,723 (pergunta crua contra consulta reescrita, mesma busca vetorial). No
+espaço vetorial, o cosseno médio com 200 reclamações de entrega sobe de 0,51 para 0,67
+(notebook 02). Já **multi-query e HyDE têm efeito instável**: isolados, somam pouco (0,703 →
+0,723); no sistema completo, pioram (0,926 → 0,903), porque as variações puxam temas vizinhos
+mesmo com a regra de fidelidade. Numa primeira rodada da avaliação, com 28 perguntas, já tinham
+piorado também isolados (0,800 → 0,750). Por isso o sistema final usa só a consulta reescrita; as variações e a avaliação hipotética continuam implementadas, medidas e
 desligadas por padrão (`usar_alternativas`, `usar_hyde`).
 
 ### D11: Fusão por RRF (k = 60)
@@ -135,7 +136,7 @@ melhoraria a precisão do topo.
 **Primeiro achado:** o cross-encoder precisa ser pontuado contra a **consulta reescrita**, não
 contra a pergunta original. Para "O que os clientes relatam sobre problemas relacionados à
 entrega?", o escore mediano dos 80 candidatos foi **0,002** contra a pergunta analítica e
-**0,87** contra a reescrita (notebook 02): o modelo foi treinado em pares
+**0,87** contra a reescrita; na pergunta do notebook 02, **0,000** contra **0,95**: o modelo foi treinado em pares
 pergunta→trecho-que-responde, e nenhuma avaliação "responde" literalmente a uma pergunta sobre o
 que os clientes dizem.
 **Segundo achado (a avaliação refutou a hipótese):** mesmo assim, ordenar pelo reranker
@@ -143,30 +144,34 @@ que os clientes dizem.
 
 | Ordenação (mesmas candidatas) | P@10 |
 |---|---|
-| fusão RRF, sem reranker | 0,775 |
-| reranker, maior escore entre as consultas | 0,707 |
-| reranker contra a consulta principal | 0,757 |
-| reranker pela média das consultas | 0,661 |
+| fusão RRF, sem reranker | 0,703 |
+| reranker, maior escore entre as consultas | 0,648 |
+| reranker contra a consulta principal | 0,668 |
+| reranker pela média das consultas | 0,645 |
 
 A análise pergunta a pergunta mostra o mecanismo: o cross-encoder confunde temas vizinhos.
 Numa pergunta sobre **embalagem** ele põe "Produto veio quebrado" no topo com 1,00; numa sobre
 **qualidade de móveis**, idem. O vetor com a consulta reescrita mantém o assunto exato.
 **Decisão:** a ordem final é a da fusão RRF; o reranker continua no pipeline como **porteiro de
 relevância** (D13), papel em que a sobreposição temática é tolerável. Resultado no sistema
-completo: P@10 0,857 (ordem do reranker) → **0,939** (ordem RRF, reranker como porteiro).
+completo: P@10 0,871 (ordem do reranker) → **0,926** (ordem RRF, reranker como porteiro). O
+resultado se repetiu nas duas rodadas da avaliação (28 e 31 perguntas respondíveis).
 
 ### D13: Limiar do porteiro escolhido pelo papel de abstenção
 
-**Evidência:** sobre 1.539 pares julgados, o escore do reranker tem AUC 0,727 contra o juiz, e a
-precisão das evidências é quase plana entre limiares (0,84 em 0,05; 0,85 em 0,30; 0,87 em 0,90),
-enquanto o recall cai de 0,95 para 0,48. Ou seja: o limiar não serve para filtrar evidência; o
-que ele faz bem é identificar perguntas sem evidência. Com qualquer limiar entre 0,1 e 0,5, a
-recuperação barra 3 das 5 perguntas sem evidência analisadas (criptomoeda, painel solar,
-retirada em loja) e **nenhuma** das 28 respondíveis.
-**Decisão:** limiar 0,30 (meio da faixa segura; recall 0,86) e mínimo de 3 evidências acima dele;
-abaixo disso o sistema mostra o que encontrou e não generaliza.
+**Evidência:** sobre 1.738 pares julgados, o escore do reranker tem AUC 0,707 contra o juiz, e a
+precisão das evidências é quase plana entre limiares (0,87 em 0,05; 0,89 em 0,30; 0,89 em 0,90),
+enquanto o recall cai de 0,97 para 0,49. Ou seja: o limiar não serve para filtrar evidência; o
+que ele faz é identificar perguntas sem evidência sem recusar as respondíveis: entre 0,1 e 0,5,
+**nenhuma** das 31 respondíveis fica abaixo do mínimo. Na primeira rodada (28 perguntas), a
+mesma faixa barrava 3 das 5 perguntas sem evidência que chegavam à recuperação; na rodada final,
+a análise da pergunta passou a barrar a maioria delas já no escopo, e só 3 chegaram ao porteiro
+(ele barra 1 ou 2, conforme o limiar). Com tão poucos casos, não há base estatística para
+ajustar o limiar fino.
+**Decisão:** limiar 0,30 (recall 0,89) e mínimo de 3 evidências acima dele; abaixo disso o
+sistema mostra o que encontrou e não generaliza.
 **Limite conhecido:** o reranker é tolerante à sobreposição de palavras: "entregas feitas por
-drone" tem candidatos com 0,998 porque falam de "entrega". Por isso a decisão fina de suficiência
+drone" tem candidatos com 0,96 porque falam de "entrega". Por isso a decisão fina de suficiência
 fica com o LLM (D15).
 
 ### D14: Seleção do contexto: deduplicação + MMR
@@ -183,18 +188,18 @@ tokens).
 | Camada | Onde | Barra | Exemplo real |
 |---|---|---|---|
 | Escopo | análise da pergunta | fora da base, conhecimento externo, *prompt injection* | "Qual foi o faturamento da Olist em 2018?" |
-| Relevância | reranker + limiar | nenhuma evidência acima do limiar; menos de 3 relevantes | "Quais reclamações existem sobre pagamento com criptomoedas?" (máximo 0,00) |
+| Relevância | reranker + limiar | nenhuma evidência acima do limiar; menos de 3 relevantes | "O que os clientes dizem sobre a instalação de ar-condicionado feita pela loja?" (máximo 0,01) |
 | Suficiência | geração | evidências tocam o tema mas não respondem | "O que os clientes acharam das entregas feitas por drone?" (evidências só sobre entrega comum) |
 
 **Por que três:** cada camada é mais cara e mais fina que a anterior. Abster cedo economiza
 chamadas; abster tarde pega o que o limiar numérico não vê.
-**Evidência:** nas 40 perguntas da avaliação, **40 de 40** decisões entre responder e abster
-foram corretas: as 28 respondíveis foram respondidas e as 12 que deviam ser recusadas foram, cada
-uma pela camada esperada: 7 por escopo (incluindo a *prompt injection* e "iPhone 15", posterior à
-base), 2 por falta de evidência relevante (criptomoeda, painel solar), 1 por evidência
-insuficiente (retirada em loja física) e 2 pela geração (drone, cashback), em que a recuperação
-trouxe avaliações sobre "entrega" e "dinheiro de volta" e o LLM reconheceu que elas não tratam do
-assunto perguntado (`reports/avaliacao_geracao.json`).
+**Evidência:** nas 44 perguntas da avaliação, **44 de 44** decisões entre responder e abster
+foram corretas: as 31 respondíveis foram respondidas e as 13 que deviam ser recusadas foram, nas
+três camadas: 10 por escopo (as 6 fora do escopo, incluindo a *prompt injection*, mais cashback,
+criptomoeda, "iPhone 15" e retirada em loja), 1 por falta de evidência relevante (instalação de
+ar-condicionado, relevância máxima 0,01) e 2 pela geração (drone, painel solar), em que a
+recuperação trouxe avaliações sobre "entrega" e "instalação" e o LLM reconheceu que elas não
+tratam do assunto perguntado (`reports/avaliacao_geracao.json`).
 
 ### D16: Saída estruturada e citações verificadas por código
 
@@ -203,12 +208,16 @@ assunto perguntado (`reports/avaliacao_geracao.json`).
 `[R1, R2]` e `[R1; R2]`, normaliza para `[R1][R2]` e descarta insight sem evidência válida. Cada
 insight mostra o apoio ("apoio: 16 de 30 evidências") e cada `[R#]` leva a um `review_id` real.
 **Por que:** rastreabilidade não pode depender de o modelo obedecer ao prompt.
-**Evidência:** 635 citações nas respostas geradas, **100% válidas**; 84 insights, nenhum
-descartado por falta de evidência. A auditoria do juiz (modelo diferente do gerador) julgou 78
-dos 84 insights como **sustentados** e 6 como parciais (escore 0,96). Os parciais têm a mesma
-causa: o modelo anexa marcas `[R#]` a um percentual que vem do quadro de frequências, e o juiz lê
-isso como extrapolação da amostra para a base. A correção natural (proibir citação ao lado de
-números do quadro) fica registrada como evolução.
+**Evidência:** 669 citações nas respostas geradas, **100% válidas**; 98 insights, nenhum
+descartado por falta de evidência. A auditoria do juiz (modelo diferente do gerador) julgou 90
+dos 98 insights como **sustentados** e 8 como parciais (escore 0,96); 93,5% dos resumos foram
+julgados integralmente sustentados.
+**O que a auditoria ensinou:** a primeira auditoria da rodada final deu 0,93, com três causas.
+(1) O modelo anexava marcas `[R#]` a percentuais do quadro de frequências; o prompt passou a
+exigir que número do quadro fique numa frase sem citação. (2) O auditor recebia só o texto das
+evidências, sem os metadados que o gerador viu ("pago com boleto" parecia extrapolação); ele
+passou a ver o mesmo contexto do gerador. (3) Extrapolações reais ("esperas de meses") levaram a
+uma regra contra quantificar além das evidências. Com as três correções, 0,93 → 0,96.
 **Controle de qualidade de idioma:** o modelo "lite" às vezes escreve sem acentos (5 de 30
 respostas na primeira rodada). Um detector de termos comuns sem acento ("nao", "sao",
 "avaliacoes"...) dispara uma segunda geração com reforço explícito no prompt; as respostas
@@ -231,28 +240,33 @@ grandeza.
 
 ### D18: Metadados como filtro dentro do banco vetorial
 
-**Decisão:** filtros explícitos da pergunta (nota, categoria, período, entrega, UF, região)
-viram cláusula `where` no Chroma e máscara no BM25 (a mesma definição gera as duas, com teste
-de equivalência). A polaridade vira filtro implícito de nota (problemas: nota ≤ 3; elogios:
-nota ≥ 4) quando a pergunta não fixa nota; o campo `sentimentos` que o LLM às vezes preenche é
-descartado para não estreitar o recorte duas vezes.
+**Decisão:** filtros explícitos da pergunta viram cláusula `where` no Chroma e máscara no BM25
+(a mesma definição gera as duas, com teste de equivalência): nota, categoria, período, situação
+da entrega, UF, região e **informações do pedido** (forma de pagamento, faixa de valor dos itens,
+pedido com mais de um vendedor). A polaridade vira filtro implícito de nota (problemas: nota ≤ 3;
+elogios: nota ≥ 4) quando a pergunta não fixa nota; o campo `sentimentos` que o LLM às vezes
+preenche é descartado para não estreitar o recorte duas vezes.
 **Como os metadados melhoram a recuperação:** sem filtro, a busca vetorial acha o **tema** certo
 fora do **recorte** pedido (reclamação de móveis numa pergunta sobre cama, mesa e banho; nota 4
-numa pergunta sobre nota 1), e essas avaliações ocupam vagas do contexto. Com o filtro dentro da
-consulta, o recorte é respeitado por construção e as vagas vão para evidências do recorte.
-Os metadados também entram no **contexto** de cada evidência (nota, atraso em dias, categoria),
-o que deixa o LLM interpretar "demorou" à luz de um pedido 12 dias atrasado.
-**Evidência:** nas 8 perguntas com recorte, julgadas com os metadados visíveis para o juiz:
+numa pergunta sobre nota 1; pedido de cartão numa pergunta sobre boleto), e essas avaliações
+ocupam vagas do contexto. Com o filtro dentro da consulta, o recorte é respeitado por construção
+e as vagas vão para evidências do recorte. Os metadados também entram no **contexto** de cada
+evidência (nota, atraso em dias, categoria, pagamento, valor, vendedores), o que deixa o LLM
+interpretar "demorou" à luz de um pedido 12 dias atrasado.
+**Evidência:** nas 11 perguntas com recorte (8 de nota, categoria, período, entrega e região; 3
+de informações do pedido), julgadas com os metadados visíveis para o juiz:
 
 | Perguntas com recorte | P@10 | Conformidade ao recorte (top-10) |
 |---|---|---|
-| sem filtros (A4) | 0,188 | 25,0% |
-| com filtros e polaridade (A5) | 0,725 | 88,7% |
-| sistema final (filtros + ordem RRF) | **0,850** | **91,2%** |
+| sem filtros (mesma configuração do sistema final) | 0,273 | 30,9% |
+| sistema final (filtros + ordem RRF) | **0,873** | **95,5%** |
 
+Nas 3 perguntas de informações do pedido, a P@10 vai de 0,0 a 0,3 sem filtro para 0,9 a 1,0 com
+filtro. As informações do pedido também revelam padrão: pedidos com itens de **mais de um
+vendedor** têm 61,3% de avaliações negativas, contra 25,7% na base de comentários.
 A conformidade não chega a 100% porque o filtro aplicado é o que a análise da pergunta extraiu:
-quando o LLM erra um campo (ex.: deixa de marcar a situação da entrega), o recorte fica mais
-largo que o pedido. A taxa de extração correta está na avaliação de geração (D15).
+quando o LLM amplia um campo (ex.: "móveis" incluindo móveis de escritório e de sala), o recorte
+fica mais largo que o pedido. A extração dos filtros esperados foi correta nas 11 perguntas.
 
 ## Infraestrutura
 
@@ -291,18 +305,18 @@ isso. O prompt proíbe extrapolar a amostra recuperada para a base.
 
 **Problema:** não há rótulo de relevância para 42 mil documentos.
 **Decisão:** protocolo de pooling (TREC): a união dos top-10 de todas as configurações, mais os
-contextos finais e uma amostra ao longo do ranking, forma o conjunto julgado (3.251 pares); o
+contextos finais e uma amostra ao longo do ranking, forma o conjunto julgado (5.102 pares); o
 juiz atribui relevância 0/1/2 com critério escrito à mão por pergunta; julgamentos versionados em
 `eval/julgamentos_relevancia.csv`, com o modelo que julgou cada par. Fidelidade dos insights
 auditada pelo juiz contra as evidências citadas.
 **Correção durante o projeto:** a primeira rodada julgava só o texto. Nas perguntas com recorte
 ("reclamações do Nordeste", "elogios em beleza e saúde"), o juiz não tinha como saber a região
-ou a categoria e zerava avaliações corretas. Nessas 8 perguntas ele passou a ver os metadados de
+ou a categoria e zerava avaliações corretas. Nas perguntas com recorte ele passou a ver os metadados de
 cada avaliação, e os julgamentos foram refeitos.
-**Juízes efetivos:** a cota gratuita dos modelos "flash" acabou no meio da avaliação; 2.742 pares
-foram julgados pelo `gemini-3.1-flash-lite`, 292 pelo `gemini-3.8-flash` e 217 pelo
-`gemini-3.7-flash`. Como todo o pool de uma pergunta é julgado pelo mesmo modelo, a comparação
-entre configurações usa a mesma régua dentro de cada pergunta.
+**Juízes efetivos:** a cota gratuita dos modelos "flash" acaba no meio de cada rodada; dos 5.102
+pares, 3.758 foram julgados pelo `gemini-3.1-flash-lite`, 663 pelo `gemini-3.6-flash`, 355 pelo
+`gemini-3.7-flash` e 326 pelo `gemini-3.8-flash`. Cada par é julgado uma vez e reaproveitado; as
+configurações de uma pergunta são medidas sobre os mesmos julgamentos.
 **Concordância entre juízes:** 6 perguntas (626 pares) rejulgadas pelo `gemini-3.5-flash`:
 concordância exata de 90,4% na escala 0/1/2 (kappa ponderado 0,887) e de 96,0% na decisão
 "evidência clara", a usada na P@10 (kappa 0,916). Kappa acima de 0,8 é concordância quase

@@ -5,7 +5,7 @@ import json
 
 from voc_rag.config import REPORTS_DIR
 
-EXEMPLOS = ["Q01", "Q04", "Q08", "Q19", "Q22", "Q26", "Q29", "Q35", "Q37"]
+EXEMPLOS = ["Q01", "Q04", "Q08", "Q19", "Q22", "Q26", "Q42", "Q29", "Q35", "Q37"]
 
 TITULO_STATUS = {
     "respondida": "respondida com evidências",
@@ -70,8 +70,8 @@ def gera_tabelas_readme() -> dict[str, str]:
     t["ablacao"] = "\n".join(linhas)
 
     testes = [
-        ("multi-query + HyDE sobre a consulta reescrita", "A2_multiquery_hyde",
-         "A1_reescrita"),
+        ("multi-query + HyDE no sistema completo", "F2_final_multiquery",
+         "F1_final_so_reescrita"),
         ("reranker ordenando o resultado da busca híbrida", "A4_reranker",
          "A3_hibrido_bm25_rrf"),
         ("reranker contra a consulta principal (em vez do máximo)",
@@ -94,8 +94,12 @@ def gera_tabelas_readme() -> dict[str, str]:
     t["embeddings"] = "\n".join(linhas)
 
     sem_f, com_f = cfg["V1_hibrido_so_reescrita"], cfg["F1_final_so_reescrita"]
+    from voc_rag.evaluation.retrieval_eval import carrega_perguntas
+
+    n_meta = sum(1 for p in carrega_perguntas() if p.get("filtros_esperados"))
     t["metadados"] = "\n".join([
-        "| 8 perguntas com recorte por metadado | Sem filtros | Com filtros (sistema final) |",
+        f"| {n_meta} perguntas com recorte por metadado | Sem filtros | "
+        "Com filtros (sistema final) |",
         "|---|---|---|",
         f"| Conformidade ao recorte (top-10) | {_pct(sem_f['metadados_conformidade@10'])} | "
         f"**{_pct(com_f['metadados_conformidade@10'])}** |",
@@ -209,7 +213,8 @@ def gera_exemplos(max_evidencias: int = 5) -> str:
         "# Exemplos de perguntas e respostas",
         "",
         "> Gerado automaticamente por `uv run voc avaliar` a partir de",
-        "> `reports/respostas_avaliacao.json` (todas as 40 respostas estão lá, com análise da",
+        f"> `reports/respostas_avaliacao.json` (todas as {len(registros)} respostas estão lá, "
+        "com análise da",
         "> pergunta, filtros, evidências e tempos). Cada evidência é rastreável pelo `review_id`",
         "> na base da Olist.",
         "",

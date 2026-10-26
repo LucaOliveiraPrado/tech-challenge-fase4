@@ -39,6 +39,9 @@ log = logging.getLogger(__name__)
 K = 10
 
 _SEM_EXTRAS = dict(usar_filtros=False, usar_polaridade=False)
+# Explícito: o padrão do RetrievalConfig (sistema final) desliga multi-query e HyDE, e a
+# ablação precisa medir as etapas que os testam independentemente desse padrão.
+_MQ = dict(usar_alternativas=True, usar_hyde=True)
 
 # Ablação incremental: cada linha acrescenta UMA técnica à anterior.
 ABLACAO: dict[str, RetrievalConfig] = {
@@ -48,9 +51,10 @@ ABLACAO: dict[str, RetrievalConfig] = {
     "A1_reescrita": RetrievalConfig(
         usar_alternativas=False, usar_hyde=False, usar_bm25=False, usar_rerank=False,
         **_SEM_EXTRAS),
-    "A2_multiquery_hyde": RetrievalConfig(usar_bm25=False, usar_rerank=False, **_SEM_EXTRAS),
-    "A3_hibrido_bm25_rrf": RetrievalConfig(usar_rerank=False, **_SEM_EXTRAS),
-    "A4_reranker": RetrievalConfig(ordenar_por="reranker", **_SEM_EXTRAS),
+    "A2_multiquery_hyde": RetrievalConfig(usar_bm25=False, usar_rerank=False, **_MQ,
+                                          **_SEM_EXTRAS),
+    "A3_hibrido_bm25_rrf": RetrievalConfig(usar_rerank=False, **_MQ, **_SEM_EXTRAS),
+    "A4_reranker": RetrievalConfig(ordenar_por="reranker", **_MQ, **_SEM_EXTRAS),
     "A5_metadados_polaridade": RetrievalConfig(
         usar_alternativas=True, usar_hyde=True, ordenar_por="reranker"),
 }
@@ -80,11 +84,12 @@ def carrega_perguntas() -> list[dict]:
 VARIANTES: dict[str, RetrievalConfig] = {
     "V1_hibrido_so_reescrita": RetrievalConfig(
         usar_alternativas=False, usar_hyde=False, usar_rerank=False, **_SEM_EXTRAS),
-    "V2_hibrido_sem_hyde": RetrievalConfig(usar_hyde=False, usar_rerank=False, **_SEM_EXTRAS),
+    "V2_hibrido_sem_hyde": RetrievalConfig(usar_alternativas=True, usar_hyde=False,
+                                           usar_rerank=False, **_SEM_EXTRAS),
     "V3_reranker_consulta_principal": RetrievalConfig(
-        consulta_rerank="consulta_busca", ordenar_por="reranker", **_SEM_EXTRAS),
+        consulta_rerank="consulta_busca", ordenar_por="reranker", **_MQ, **_SEM_EXTRAS),
     "V4_reranker_media": RetrievalConfig(
-        consulta_rerank="media_consultas", ordenar_por="reranker", **_SEM_EXTRAS),
+        consulta_rerank="media_consultas", ordenar_por="reranker", **_MQ, **_SEM_EXTRAS),
     # Candidatos a sistema final: ordem RRF, reranker como porteiro, metadados ligados.
     "F1_final_so_reescrita": RetrievalConfig(
         usar_alternativas=False, usar_hyde=False, ordenar_por="rrf"),

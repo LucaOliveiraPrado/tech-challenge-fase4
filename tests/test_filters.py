@@ -15,6 +15,9 @@ DOCS = pd.DataFrame(
         "ano_mes": pd.array([201701, 201706, 201712, 201801, 201806, None], dtype="Int64"),
         "uf": ["SP", "RJ", "SP", "MG", "BA", "SP"],
         "regiao": ["Sudeste", "Sudeste", "Sudeste", "Sudeste", "Nordeste", "Sudeste"],
+        "pagamento": ["boleto", "credit_card", "boleto", "voucher", "credit_card", None],
+        "valor_itens": [120.0, 600.0, 35.5, None, 900.0, 59.9],
+        "n_vendedores": [1.0, 2.0, 1.0, None, 3.0, 1.0],
     }
 )
 
@@ -47,6 +50,11 @@ CASOS = [
     Filtros(ano_mes_inicio=201706, ano_mes_fim=201801),
     Filtros(ufs=["SP"], sentimentos=["negativo"]),
     Filtros(regioes=["Nordeste"], nota_min=4),
+    Filtros(pagamentos=["boleto"]),
+    Filtros(valor_min=500),
+    Filtros(valor_max=100, nota_max=2),
+    Filtros(multi_vendedor=True),
+    Filtros(multi_vendedor=False, pagamentos=["credit_card", "boleto"]),
 ]
 
 
