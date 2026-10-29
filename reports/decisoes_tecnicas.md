@@ -330,3 +330,11 @@ escala.
 `uv` com `uv.lock` (Python 3.12), torch CUDA no Windows/Linux com fallback para CPU, dataset
 baixado do Kaggle por `kagglehub` (sem login), embeddings em cache alinhados por `review_id`,
 semente 42, cache das chamadas ao LLM e rótulos/julgamentos versionados.
+**Atalho para quem avalia:** reproduzir do zero exige GPU (42 mil embeddings `bge-m3`) e uma
+chave do Gemini com cota de mais de um dia para a avaliação completa. A release `artefatos-v1`
+(120 MB) leva a base processada, os embeddings e o cache do LLM; `voc baixar` extrai só os
+caminhos esperados e `voc build` monta ChromaDB e BM25 em cerca de um minuto. Validado num clone
+limpo, em CPU e sem chave: as perguntas da avaliação reproduzem as mesmas decisões (respondida,
+fora de escopo, sem evidência) a partir do cache. Alternativas descartadas: versionar o índice
+no git (1,2 GB) e publicar o ChromaDB pronto (amarrado à versão do Chroma e aos três modelos da
+comparação de embeddings).

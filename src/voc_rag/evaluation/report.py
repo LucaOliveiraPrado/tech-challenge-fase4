@@ -158,6 +158,20 @@ def gera_tabelas_readme() -> dict[str, str]:
             f"| Kappa de Cohen nessa decisão | {_n(c['kappa_binario_relevante'])} |",
         ])
 
+    hum_path = REPORTS_DIR / "concordancia_humana.json"
+    if hum_path.exists():
+        h = json.loads(hum_path.read_text(encoding="utf-8"))
+        t["humano"] = "\n".join([
+            f"| Anotação humana x juiz ({h['pares']} pares de {h['perguntas']} perguntas, "
+            "estratificados pela nota do juiz) | Resultado |",
+            "|---|---|",
+            f"| Concordância exata na escala 0/1/2 | {_pct(h['concordancia_exata'])} |",
+            f"| Kappa de Cohen ponderado (0/1/2) | {_n(h['kappa_ponderado'])} |",
+            f"| Concordância em \"evidência clara\" (decisão usada na P@10) | "
+            f"{_pct(h['concordancia_binaria_relevante'])} |",
+            f"| Kappa de Cohen nessa decisão | {_n(h['kappa_binario_relevante'])} |",
+        ])
+
     resp_path = REPORTS_DIR / "respostas_avaliacao.json"
     if resp_path.exists():
         t["exemplo"] = exemplo_inline("Q19")
