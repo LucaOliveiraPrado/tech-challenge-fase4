@@ -370,12 +370,15 @@ baixado do Kaggle por `kagglehub` (sem login), embeddings em cache alinhados por
 semente 42, cache das chamadas ao LLM e rótulos/julgamentos versionados.
 **Atalho para quem avalia:** reproduzir do zero exige GPU (42 mil embeddings `bge-m3`) e uma
 chave do Gemini com cota de mais de um dia para a avaliação completa. A release `artefatos-v2`
-(120 MB) leva a base processada, os embeddings e o cache do LLM; `voc baixar` extrai só os
-caminhos esperados e `voc build` monta ChromaDB e BM25 em cerca de um minuto. Validado num clone
-limpo, em CPU e sem chave: as perguntas da avaliação reproduzem as mesmas decisões (respondida,
-fora de escopo, sem evidência) a partir do cache. Alternativas descartadas: versionar o índice
-no git (1,2 GB) e publicar o ChromaDB pronto (amarrado à versão do Chroma e aos três modelos da
-comparação de embeddings).
+(310 MB) leva a base processada, o índice pronto (ChromaDB só com a coleção `bge-m3`, BM25) e o
+cache do LLM; `voc baixar` extrai só os caminhos esperados.
+**Por que o índice vai pronto:** a primeira versão do pacote levava só os embeddings e pedia um
+`voc build`. Num clone limpo, 2 das 44 perguntas perdiam o cache: o grafo HNSW do ChromaDB não é
+determinístico na construção, então um índice reconstruído devolve vizinhos ligeiramente
+diferentes, muda a seleção de evidências e, com ela, a chave do cache. Com o índice avaliado no
+pacote, um clone limpo sem chave reproduz as 44 decisões a partir do cache na GPU; em CPU, 40 de
+44 (diferenças numéricas de CPU x GPU mudam a seleção em 4 respondíveis, que então precisam de
+chave). Alternativa descartada: versionar o índice no git (1,2 GB com os três modelos).
 
 ### D23: Conjunto de perguntas: desenvolvimento, não teste retido
 

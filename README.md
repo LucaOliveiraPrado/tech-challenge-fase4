@@ -521,16 +521,20 @@ uv sync
 cp .env.example .env          # e preencha GEMINI_API_KEY
 ```
 
-**Atalho sem GPU (recomendado para avaliar):** a release
+**Atalho (recomendado para avaliar):** a release
 [`artefatos-v2`](https://github.com/LucaOliveiraPrado/tech-challenge-fase4/releases/tag/artefatos-v2)
-traz a base processada, os embeddings `bge-m3` já calculados e o cache das respostas do LLM
-(120 MB). Com ela não é preciso baixar do Kaggle nem calcular embeddings, e as 44 perguntas da
-avaliação e as da demo rodam **sem chave do Gemini e sem gastar cota**, inclusive em CPU:
+(310 MB) traz a base processada, o **índice exatamente como foi avaliado** (ChromaDB com a coleção
+`bge-m3` e BM25) e o cache das respostas do LLM. Não é preciso baixar do Kaggle, calcular
+embeddings nem rodar `voc build`, e as perguntas da avaliação rodam **sem chave do Gemini e sem
+gastar cota**. Validado num clone limpo, sem chave: com GPU, as 44 perguntas reproduzem as mesmas
+decisões a partir do cache; em CPU, 40 de 44 (em 4 respondíveis, diferenças numéricas de CPU x
+GPU mudam a seleção de evidências e a geração precisa de chave; as perguntas da demo estão entre
+as 40):
 
 ```bash
-uv run voc baixar             # baixa e extrai os artefatos
-uv run voc build              # só monta ChromaDB + BM25 (~1 min, sem GPU)
+uv run voc baixar             # baixa e extrai os artefatos (não rode voc build depois)
 uv run voc ask "O que os clientes relatam sobre problemas relacionados à entrega?"
+uv run streamlit run app/streamlit_app.py
 ```
 
 **Do zero:**
