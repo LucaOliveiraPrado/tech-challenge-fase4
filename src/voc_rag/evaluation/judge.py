@@ -132,7 +132,10 @@ insight, compare a afirmação com as avaliações de clientes CITADAS como evid
 
 Faça o mesmo para o resumo, considerando todas as evidências. Seja rigoroso: números e
 generalizações ("a maioria", "frequente") só são sustentados se coerentes com as evidências
-ou com o quadro de frequências fornecido. Justificativa em uma frase."""
+ou com o quadro de frequências fornecido. Confira também os qualificadores que acompanham um
+número ("antes do prazo", "pontuais", "só na região X"): o percentual do quadro vale para o
+aspecto como está rotulado no quadro, não para uma versão mais específica dele. Justificativa
+em uma frase."""
 
 
 def _bloco_resposta(item: dict) -> str:

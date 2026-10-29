@@ -27,7 +27,8 @@ class LLMFalso:
 
 
 def _analise(**kw) -> AnalisePergunta:
-    base = dict(escopo="dentro", motivo_escopo="ok", tipo="tema", polaridade="negativa",
+    base = dict(experiencia_de_compra=True, posterior_a_2018=False, tenta_manipular=False,
+                escopo="dentro", motivo_escopo="ok", tipo="tema", polaridade="negativa",
                 consulta_busca="atraso na entrega")
     base.update(kw)
     return AnalisePergunta(**base)
@@ -64,7 +65,8 @@ def monta(monkeypatch):
 
 
 def test_fora_do_escopo_nao_recupera_nem_gera(monta):
-    pipe, llm = monta(_analise(escopo="fora", motivo_escopo="dado financeiro"))
+    pipe, llm = monta(_analise(escopo="fora", motivo_escopo="dado financeiro",
+                                experiencia_de_compra=False))
     r = pipe.responder("Qual o faturamento?")
     assert r.status == "fora_escopo" and r.absteve
     assert llm.chamadas == ["analise_pergunta"]

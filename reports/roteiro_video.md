@@ -7,7 +7,7 @@
 
 ---
 
-## Bloco 1: O problema (0:00 a 0:40)
+## Bloco 1: O problema (0:00 a 0:35)
 
 **Fala:**
 
@@ -22,7 +22,7 @@ não tem evidência."
 
 *(Visual: `images/app_resposta.png`.)*
 
-## Bloco 2: A base de conhecimento (0:40 a 1:30)
+## Bloco 2: A base de conhecimento (0:35 a 1:20)
 
 **Fala:**
 
@@ -37,13 +37,14 @@ situação da entrega virou metadado de cada documento e filtro de busca."
 
 *(Visuais: `eda_comentario_por_nota.png`, `eda_entrega_negativas.png`.)*
 
-## Bloco 3: A arquitetura e o pipeline (1:30 a 3:00)
+## Bloco 3: A arquitetura e o pipeline (1:20 a 2:55)
 
 **Fala:**
 
 "O pipeline tem cinco etapas. (mostrar o diagrama do README)
 
-Um: um LLM analisa a pergunta. Ele decide se está no escopo, extrai filtros como 'nota baixa' ou
+Um: um LLM analisa a pergunta. Ele responde se a pergunta é sobre experiência de compra, e o
+código decide o escopo a partir disso; ele também extrai filtros como 'nota baixa' ou
 'cama, mesa e banho' e reescreve a pergunta no vocabulário do cliente. Isso importa porque o
 gestor pergunta 'quais reclamações aparecem com mais frequência' e o cliente escreve 'comprei dia
 10 e até hoje nada'.
@@ -52,14 +53,13 @@ Dois: busca híbrida. Um índice vetorial com bge-m3 no ChromaDB, com filtro de 
 consulta, e um BM25 com stemming em português em que o 'não' não é stopword, porque 'não chegou'
 e 'chegou' são opiniões opostas. As listas são fundidas por RRF.
 
-Três: seleção. Um reranker cross-encoder avalia cada candidato contra a consulta reescrita
-(contra a pergunta original ele dava relevância mediana de 0,002; contra a reescrita, 0,87). A
+Três: seleção. Um reranker cross-encoder avalia cada candidato contra a consulta reescrita. A
 hipótese era usar ele para reordenar, mas a avaliação mostrou o contrário: ele confunde temas
 vizinhos e piorou a precisão. Então a ordem final é a da fusão, e o reranker virou porteiro: só
 decide se há evidência relevante o bastante.
 
 Quatro: o contexto. Evidências numeradas, com nota, atraso e categoria de cada uma. Em perguntas
-de panorama entra também um quadro de frequências, porque o top-k mostra as avaliações mais
+de panorama, e nas que pedem evidência de algo recorrente, entra também um quadro de frequências, porque o top-k mostra as avaliações mais
 relevantes, mas não conta: um classificador de aspectos estima a frequência de cada tema na base
 inteira.
 
@@ -68,26 +68,30 @@ removida e insight sem evidência é descartado."
 
 *(Visuais: diagrama mermaid do README; `images/app_rastro.png`; notebook 02, etapas 1 e 4.)*
 
-## Bloco 4: Demonstração (3:00 a 5:00)
+## Bloco 4: Demonstração (2:55 a 4:45)
 
-**Ação na tela (app):**
+**Ação na tela (app) e fala de cada pergunta:**
 
 1. "Quais reclamações relacionadas à entrega aparecem com maior frequência?" Mostrar a resposta,
-   o gráfico de frequência dos temas e as evidências com borda azul. Abrir uma evidência e mostrar
-   o `review_id`.
+   o gráfico de frequência e as evidências com borda azul; abrir "Evidências do insight 1".
+   **Fala:** "Cada insight abre as avaliações que o sustentam, com o `review_id` da Olist. O
+   percentual não vem das 30 evidências: vem do classificador de aspectos sobre todos os
+   comentários do recorte, e a resposta diz qual é esse denominador."
 2. "O que os clientes mais elogiam na categoria cama, mesa e banho?" Abrir "Como a resposta foi
-   construída": o filtro de categoria e o de nota foram extraídos da pergunta; mostrar o funil
-   (recorte, candidatas, relevantes, contexto).
+   construída". **Fala:** "O filtro de categoria e o de nota saíram da própria pergunta. O funil
+   mostra o recorte, as candidatas da busca híbrida, as que passaram no porteiro e as que foram
+   para o contexto."
 3. "Quais avaliações sustentam a conclusão de que existem problemas recorrentes relacionados ao
-   prazo de entrega?" Pergunta do tipo evidência: as avaliações vêm primeiro.
+   prazo de entrega?" **Fala:** "Aqui o gestor pede a prova: cada citação aponta uma avaliação
+   real, e a legenda mostra que nenhuma citação inválida passou pela verificação do código."
 4. "Qual foi o faturamento da Olist em 2018?" Recusa por escopo.
 5. "O que os clientes acharam das entregas feitas por drone?" As avaliações recuperadas falam de
    entrega, mas nenhuma de drone: a geração recusa e explica por quê.
 
 **Fala (durante 4 e 5):** "Responder é fácil; o difícil é saber quando não responder. São três
-camadas: escopo na análise da pergunta, relevância no reranker e suficiência na geração."
+camadas: escopo na análise da pergunta, relevância no porteiro e suficiência na geração."
 
-## Bloco 5: Como sabemos que funciona (5:00 a 6:15)
+## Bloco 5: Como sabemos que funciona (4:45 a 6:05)
 
 **Fala:**
 
@@ -96,44 +100,42 @@ escopo e sete sem evidência na base. A relevância foi julgada por pooling, com
 busca, com um LLM juiz diferente do que gera as respostas.
 
 A ablação mostra o caminho: o RAG ingênuo, com a pergunta crua contra o vetor, coloca 56% de
-evidência clara no top-10; a reescrita sobe para 70%; com metadados e o porteiro, o sistema final
-chega a 93%. E medir mudou o sistema: multi-query, HyDE e a reordenação pelo reranker pioraram o
-sistema completo e ficaram de fora. Isso só aparece porque medimos.
-
-O bge-m3 venceu dois outros modelos de embedding na mesma configuração.
+evidência clara no top-10; a reescrita sobe para 71%; com os filtros de metadado, o sistema final
+chega a 93%. E medir mudou o sistema: multi-query e HyDE não trouxeram ganho e a reordenação pelo
+reranker piorou a precisão; ficaram de fora. Isso só aparece porque medimos.
 
 Nas perguntas com recorte, inclusive pagamento, valor e número de vendedores, os metadados levam a
-conformidade ao recorte de 31% para 96%, e a precisão de 0,27 para 0,87. E revelam padrão: pedidos
+conformidade ao recorte de 27% para 98%, e a precisão de 0,24 para 0,90. E revelam padrão: pedidos
 com mais de um vendedor têm 61% de avaliações negativas, contra 26% no geral.
 
 Ponta a ponta: 44 de 44 decisões corretas entre responder e abster, 100% das citações válidas e
-fidelidade de 0,96 nos insights, auditada por um modelo diferente do que gera."
+fidelidade de 0,99 nos insights, auditada por um modelo diferente do que gera. Como as perguntas
+são nossas e guiaram as escolhas, tratamos esses números como de desenvolvimento."
 
 *(Visuais: `avaliacao_ablacao.png`, tabelas do README, notebook 03.)*
 
-## Bloco 6: Desafios e decisões (6:15 a 6:50)
+## Bloco 6: Desafios e decisões (6:05 a 6:40)
 
 **Fala:**
 
-"Quatro desafios. O primeiro foi a distância entre a linguagem do gestor e a do cliente,
-resolvida com a reescrita da pergunta. O segundo foi a frequência: RAG recupera, não conta, daí o
-classificador de aspectos com correção de prevalência. O terceiro foi medir com honestidade: o
-juiz precisou ver os metadados nas perguntas com recorte, senão zerava respostas certas. O
-quarto foi a cota gratuita do Gemini, de 20 requisições por dia por modelo: papéis separados por
+"Três desafios. O primeiro foi a distância entre a linguagem do gestor e a do cliente,
+resolvida com a reescrita da pergunta. O segundo foi medir com honestidade: o juiz precisou ver
+os metadados nas perguntas com recorte, senão zerava respostas certas. O terceiro foi a cota gratuita do Gemini, de 20 requisições por dia por modelo: papéis separados por
 modelo, fallback automático, cache e julgamentos salvos a cada pergunta, e a avaliação aborta se
 o LLM cair, para nunca medir um sistema diferente do real."
 
-## Bloco 7: Fecho (6:50 a 7:00)
+## Bloco 7: Fecho (6:40 a 6:50)
 
-**Fala:** "Código, avaliação, os julgamentos e as 22 decisões técnicas estão no repositório,
+**Fala:** "Código, avaliação, os julgamentos e as 23 decisões técnicas estão no repositório,
 reproduzíveis com quatro comandos. Obrigado."
 
 ---
 
 ## Checklist de gravação
 
-- [ ] Até 7 minutos: a fala soma ~810 palavras (~5,5 min a 150 palavras por minuto), então a
-      demonstração no app precisa caber em ~1,5 min (perguntas já em cache respondem na hora);
+- [ ] Até 7 minutos: a fala soma ~840 palavras (~5,6 min a 150 palavras por minuto); com ~1 min
+      de cliques e digitação na demonstração, o total fica perto de 6:50. Ensaiar com cronômetro;
+      se passar de 6:45, encurtar o bloco 3 (é o mais longo, ~1:30 de fala);
 - [ ] Os oito itens do enunciado: problema, arquitetura, estratégia do RAG, recuperação,
       demonstração prática, exemplos de perguntas, evidências recuperadas, desafios e decisões;
 - [ ] App já aberto e aquecido antes de gravar (primeira pergunta carrega os modelos);
