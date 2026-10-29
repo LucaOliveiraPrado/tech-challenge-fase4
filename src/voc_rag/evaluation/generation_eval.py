@@ -57,10 +57,6 @@ def run(llm: LLMClient | None = None) -> dict:
         # Material da auditoria de fidelidade guardado junto da resposta: a auditoria pode
         # ser concluída depois (`voc avaliar --etapa fidelidade`) sem refazer o pipeline.
         if r.gerada is not None and r.gerada.insights:
-            quadro_txt = None
-            if r.quadro is not None:
-                quadro_txt = "\n".join(f"- {q.rotulo}: ~{q.avaliacoes} ({q.pct:.1f}%)"
-                                       for q in r.quadro.itertuples())
             d["auditoria"] = {
                 "pergunta": d["pergunta"], "resumo": r.gerada.resumo,
                 "insights": [i.model_dump() for i in r.gerada.insights],
@@ -68,7 +64,8 @@ def run(llm: LLMClient | None = None) -> dict:
                 # evidência (sem isso, "pagos com boleto" parecia extrapolação).
                 "evidencias": {e["rotulo"]: f"({fmt_meta(e)}) {e['texto']}"
                                for _, e in r.evidencias.iterrows()},
-                "quadro": quadro_txt,
+                # O quadro com denominador e ressalvas, igual ao que o gerador recebeu.
+                "quadro": r.quadro_txt,
             }
 
     salva_registros(registros)

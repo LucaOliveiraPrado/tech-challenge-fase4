@@ -19,5 +19,10 @@
     "positivo": 27693,
     "negativo": 10845,
     "neutro": 3600
+  },
+  "multivendedor": {
+    "documentos": 838,
+    "negativos_pct": 0.6134,
+    "negativos_pct_base": 0.2574
   }
 }

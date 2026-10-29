@@ -6,7 +6,8 @@ from voc_rag.retrieval.retriever import RetrievalConfig, consultas_de, filtros_e
 
 
 def _analise(**kw) -> AnalisePergunta:
-    base = dict(escopo="dentro", motivo_escopo="", tipo="tema", polaridade="qualquer",
+    base = dict(experiencia_de_compra=True, posterior_a_2018=False, tenta_manipular=False,
+                escopo="dentro", motivo_escopo="", tipo="tema", polaridade="qualquer",
                 consulta_busca="atraso na entrega")
     base.update(kw)
     return AnalisePergunta(**base)
