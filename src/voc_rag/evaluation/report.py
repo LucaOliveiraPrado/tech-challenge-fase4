@@ -55,12 +55,13 @@ def gera_tabelas_readme() -> dict[str, str]:
         .replace(",", "."),
     ])
 
+    # O porteiro (limiar do reranker) não entra no top-10 medido: a ablação recupera com
+    # limiar 0, e o porteiro atua na abstenção e no contexto final (tabela "geracao").
     caminho = [
         ("A0_denso_pergunta_crua", "RAG ingênuo (pergunta crua, só vetor)"),
         ("A1_reescrita", "+ reescrita da pergunta"),
         ("V1_hibrido_so_reescrita", "+ BM25 (busca híbrida, fusão RRF)"),
-        ("F1_final_so_reescrita",
-         "**+ filtros de metadado, polaridade e reranker como porteiro (sistema final)**"),
+        ("F1_final_so_reescrita", "**+ filtros de metadado e polaridade (sistema final)**"),
     ]
     linhas = ["| Etapa | P@5 | P@10 | nDCG@10 | MRR | Hit@5 |", "|---|---|---|---|---|---|"]
     for k, nome in caminho:
@@ -68,6 +69,27 @@ def gera_tabelas_readme() -> dict[str, str]:
         linhas.append(f"| {nome} | {_n(c['p@5'])} | {_n(c['p@10'])} | {_n(c['ndcg@10'])} | "
                       f"{_n(c['mrr'])} | {_n(c['hit@5'])} |")
     t["ablacao"] = "\n".join(linhas)
+
+    # Mesma ablação separando perguntas com e sem recorte: mostra de onde vem o ganho final.
+    from voc_rag.evaluation.retrieval_eval import carrega_perguntas
+
+    perguntas = {p["id"]: p for p in carrega_perguntas()}
+    pp = rec["por_pergunta"]
+    grupos = {
+        "sem": [q for q in pp if not perguntas.get(q, {}).get("filtros_esperados")],
+        "com": [q for q in pp if perguntas.get(q, {}).get("filtros_esperados")],
+    }
+
+    def _media(k: str, qids: list[str]) -> float:
+        vals = [pp[q][k]["p@10"] for q in qids if k in pp[q]]
+        return sum(vals) / len(vals)
+
+    linhas = [f"| Etapa | P@10 sem recorte ({len(grupos['sem'])} perguntas) | "
+              f"P@10 com recorte ({len(grupos['com'])} perguntas) |", "|---|---|---|"]
+    for k, nome in caminho:
+        linhas.append(f"| {nome.strip('*')} | {_n(_media(k, grupos['sem']))} | "
+                      f"{_n(_media(k, grupos['com']))} |")
+    t["ablacao_recorte"] = "\n".join(linhas)
 
     testes = [
         ("multi-query + HyDE no sistema completo", "F2_final_multiquery",
@@ -89,14 +111,14 @@ def gera_tabelas_readme() -> dict[str, str]:
            ("E_e5_base", "multilingual-e5-base"), ("E_bge_m3", "**bge-m3 (escolhido)**")]
     linhas = ["| Modelo de embedding | P@10 | nDCG@10 | MRR |", "|---|---|---|---|"]
     for k, nome in emb:
+        if k not in cfg:  # índice do modelo ausente nesta execução (retrieval_eval._configs)
+            continue
         c = cfg[k]
         linhas.append(f"| {nome} | {_n(c['p@10'])} | {_n(c['ndcg@10'])} | {_n(c['mrr'])} |")
     t["embeddings"] = "\n".join(linhas)
 
     sem_f, com_f = cfg["V1_hibrido_so_reescrita"], cfg["F1_final_so_reescrita"]
-    from voc_rag.evaluation.retrieval_eval import carrega_perguntas
-
-    n_meta = sum(1 for p in carrega_perguntas() if p.get("filtros_esperados"))
+    n_meta = sum(1 for p in perguntas.values() if p.get("filtros_esperados"))
     t["metadados"] = "\n".join([
         f"| {n_meta} perguntas com recorte por metadado | Sem filtros | "
         "Com filtros (sistema final) |",
@@ -123,11 +145,29 @@ def gera_tabelas_readme() -> dict[str, str]:
         f"de {ci['citacoes_total']} |",
         f"| Fidelidade dos insights (juiz; sustentado = 1, parcial = 0,5) | "
         f"{_n(fi['escore_fidelidade'], 2)} em {fi['insights_julgados']} insights |",
+        f"| Insights integralmente sustentados (critério estrito) | "
+        f"{fi['distribuicao'].get('sustentado', 0)} de {fi['insights_julgados']} "
+        f"({_pct(fi['distribuicao'].get('sustentado', 0) / fi['insights_julgados'])}) |",
+        f"| Resumos sustentados pelas evidências citadas | "
+        f"{_pct(fi['resumos_sustentados_pct'])} |",
         f"| Precisão do contexto enviado ao LLM | {_pct(rec['precisao_contexto_final'])} |",
         f"| Extração correta dos filtros de metadado | "
         f"{_pct(ger['extracao_filtros']['acerto_pct'], 0)} |",
         f"| AUC do reranker contra o juiz | {_n(cal['auc_reranker_vs_juiz'])} |",
     ])
+
+    resp_path = REPORTS_DIR / "respostas_avaliacao.json"
+    if resp_path.exists():
+        t["abstencao"] = tabela_abstencao(
+            json.loads(resp_path.read_text(encoding="utf-8")))
+
+    mv = multivendedor(base)
+    if mv:
+        t["multivendedor"] = (
+            f"pedidos com itens de **mais de um vendedor** ({_milhar(mv['documentos'])} "
+            f"comentários) têm {_pct(mv['negativos_pct'])} de avaliações negativas, contra "
+            f"{_pct(mv['negativos_pct_base'])} na base de comentários"
+        )
 
     lat_path = REPORTS_DIR / "latencia.json"
     if lat_path.exists():
@@ -172,7 +212,6 @@ def gera_tabelas_readme() -> dict[str, str]:
             f"| Kappa de Cohen nessa decisão | {_n(h['kappa_binario_relevante'])} |",
         ])
 
-    resp_path = REPORTS_DIR / "respostas_avaliacao.json"
     if resp_path.exists():
         t["exemplo"] = exemplo_inline("Q19")
 
@@ -188,19 +227,83 @@ def gera_tabelas_readme() -> dict[str, str]:
     return t
 
 
-def exemplo_inline(qid: str, n_evidencias: int = 3) -> str:
-    """Versão curta de um exemplo para o README (resposta + primeiras evidências citadas)."""
+# Camada que barrou cada recusa (status do pipeline -> camada de abstenção).
+CAMADA = {
+    "fora_escopo": "1. Escopo (análise da pergunta, antes de buscar)",
+    "recorte_vazio": "1. Escopo (análise da pergunta, antes de buscar)",
+    "sem_evidencia": "2. Relevância (porteiro: menos de 3 evidências acima do limiar)",
+    "evidencia_insuficiente": "2. Relevância (porteiro: menos de 3 evidências acima do limiar)",
+    "nao_respondida": "3. Suficiência (geração: evidências não respondem)",
+}
+
+
+def tabela_abstencao(registros: list[dict]) -> str:
+    """Quantas recusas cada camada fez, com as perguntas (as respondíveis não aparecem)."""
+    por_camada: dict[str, list[str]] = {}
+    for r in registros:
+        if r["status"] in CAMADA:
+            por_camada.setdefault(CAMADA[r["status"]], []).append(r["id"])
+    linhas = ["| Camada que recusou | Recusas | Perguntas |", "|---|---|---|"]
+    for camada in sorted(por_camada):
+        qids = sorted(por_camada[camada])
+        linhas.append(f"| {camada} | {len(qids)} | {', '.join(qids)} |")
+    return "\n".join(linhas)
+
+
+def multivendedor(base: dict) -> dict | None:
+    """Negativas em pedidos com mais de um vendedor. Calculado da base quando ela existe e
+    guardado em base_conhecimento.json, para o README ser reproduzível sem os parquets."""
+    from voc_rag.config import DOCUMENTS_PARQUET
+
+    if DOCUMENTS_PARQUET.exists():
+        import pandas as pd
+
+        docs = pd.read_parquet(DOCUMENTS_PARQUET, columns=["n_vendedores", "sentimento"])
+        neg = docs["sentimento"] == "negativo"
+        multi = docs["n_vendedores"] >= 2
+        base["multivendedor"] = {
+            "documentos": int(multi.sum()),
+            "negativos_pct": round(float(neg[multi].mean()), 4),
+            "negativos_pct_base": round(float(neg.mean()), 4),
+        }
+        (REPORTS_DIR / "base_conhecimento.json").write_text(
+            json.dumps(base, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+    return base.get("multivendedor")
+
+
+def _citadas_por_insight(r: dict) -> dict[str, list[int]]:
+    """rótulo da evidência -> números dos insights que ela sustenta."""
+    mapa: dict[str, list[int]] = {}
+    for i, ins in enumerate((r.get("resposta") or {}).get("insights", []), 1):
+        for rot in ins["evidencias"]:
+            mapa.setdefault(rot, []).append(i)
+    return mapa
+
+
+def _tabela_evidencias(r: dict, com_relevancia: bool = False) -> list[str]:
+    mapa = _citadas_por_insight(r)
+    ev = [e for e in r.get("evidencias", []) if e["rotulo"] in mapa]
+    cab = "| id | sustenta o insight | review_id | nota |"
+    sep = "|---|---|---|---|"
+    if com_relevancia:
+        cab, sep = cab + " relevância |", sep + "---|"
+    linhas = [cab + " texto do cliente |", sep + "---|"]
+    for e in ev:
+        rel = f" {_n(e['relevancia'], 2)} |" if com_relevancia else ""
+        linhas.append(
+            f"| {e['rotulo']} | {', '.join(map(str, mapa[e['rotulo']]))} | `{e['review_id']}` | "
+            f"{e['nota']} |{rel} {_cel(e['texto'])} |")
+    return linhas
+
+
+def exemplo_inline(qid: str) -> str:
+    """Exemplo para o README: resposta e todas as evidências citadas, com o insight que cada
+    uma sustenta e o review_id completo."""
     registros = json.loads((REPORTS_DIR / "respostas_avaliacao.json").read_text(encoding="utf-8"))
     r = next(x for x in registros if x["id"] == qid)
     linhas = [f"**Pergunta:** {r['pergunta']}", ""]
     linhas += ["> " + ln if ln else ">" for ln in r["markdown"].splitlines()]
-    citadas = set()
-    for ins in (r.get("resposta") or {}).get("insights", []):
-        citadas.update(ins["evidencias"])
-    ev = [e for e in r["evidencias"] if e["rotulo"] in citadas][:n_evidencias]
-    linhas += ["", "| id | review_id | nota | texto do cliente |", "|---|---|---|---|"]
-    linhas += [f"| {e['rotulo']} | `{e['review_id']}` | {e['nota']} | {_cel(e['texto'])} |"
-               for e in ev]
+    linhas += [""] + _tabela_evidencias(r)
     return "\n".join(linhas)
 
 
@@ -220,7 +323,7 @@ def sincroniza_readme(tabelas: dict[str, str]) -> None:
     caminho.write_text(texto, encoding="utf-8")
 
 
-def gera_exemplos(max_evidencias: int = 5) -> str:
+def gera_exemplos() -> str:
     registros = json.loads((REPORTS_DIR / "respostas_avaliacao.json").read_text(encoding="utf-8"))
     por_id = {r["id"]: r for r in registros}
     linhas = [
@@ -230,7 +333,10 @@ def gera_exemplos(max_evidencias: int = 5) -> str:
         f"> `reports/respostas_avaliacao.json` (todas as {len(registros)} respostas estão lá, "
         "com análise da",
         "> pergunta, filtros, evidências e tempos). Cada evidência é rastreável pelo `review_id`",
-        "> na base da Olist.",
+        "> na base da Olist; a coluna \"sustenta o insight\" liga cada avaliação aos insights da",
+        "> resposta que a citam. \"Apoio: X de N\" diz quantas das N evidências do contexto o",
+        "> modelo listou como sustentação do insight (todas validadas por código; o texto mostra",
+        "> só as mais representativas entre colchetes).",
         "",
     ]
     for qid in EXEMPLOS:
@@ -256,21 +362,12 @@ def gera_exemplos(max_evidencias: int = 5) -> str:
             )
         linhas += ["", "**Resposta:**", ""]
         linhas += ["> " + ln if ln else ">" for ln in r["markdown"].splitlines()]
-        citadas = set()
-        if r.get("resposta"):
-            for ins in r["resposta"]["insights"]:
-                citadas.update(ins["evidencias"])
-        ev = [e for e in r.get("evidencias", []) if not citadas or e["rotulo"] in citadas]
-        if ev:
-            linhas += ["", "| id | review_id | nota | relevância | texto do cliente |",
-                       "|---|---|---|---|---|"]
-            for e in ev[:max_evidencias]:
-                linhas.append(
-                    f"| {e['rotulo']} | `{e['review_id'][:12]}…` | {e['nota']} | "
-                    f"{_n(e['relevancia'], 2)} | {_cel(e['texto'])} |"
-                )
-            if len(ev) > max_evidencias:
-                linhas.append(f"\n_+{len(ev) - max_evidencias} evidências no JSON completo._")
+        if _citadas_por_insight(r):
+            n = len(_citadas_por_insight(r))
+            linhas += ["", f"<details><summary><b>As {n} evidências citadas</b> (review_id "
+                       "completo e insight que cada uma sustenta)</summary>", ""]
+            linhas += _tabela_evidencias(r, com_relevancia=True)
+            linhas += ["", "</details>"]
         linhas.append("")
     texto = "\n".join(linhas)
     (REPORTS_DIR / "exemplos_perguntas_respostas.md").write_text(texto, encoding="utf-8")

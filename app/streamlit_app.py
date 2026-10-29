@@ -88,9 +88,12 @@ def estrelas(n: int) -> str:
     return "★" * int(n) + "☆" * (5 - int(n))
 
 
-def card(ev: pd.Series, citada: bool) -> str:
+def card(ev: pd.Series, citada: bool, insights: list[int]) -> str:
+    """Cartão da evidência; `insights` são os números dos insights que ela sustenta."""
     relev = f"{ev['relevancia']:.2f}".replace(".", ",")
     meta = [f"<b>{ev['rotulo']}</b>", estrelas(ev["nota"]), f"relevância {relev}"]
+    if insights:
+        meta.insert(1, f"<b>sustenta: insight {', '.join(map(str, insights))}</b>")
     if isinstance(ev.get("categoria"), str):
         meta.append(ev["categoria"])
     if isinstance(ev.get("entrega_status"), str):
@@ -189,6 +192,20 @@ with col_resp:
     st.subheader("Resposta")
     st.markdown(realca_citacoes(r.markdown), unsafe_allow_html=True)
 
+    # Rastreabilidade insight -> avaliações: cada insight abre as evidências que o sustentam.
+    sustenta: dict[str, list[int]] = {}
+    if r.gerada is not None and not r.evidencias.empty:
+        por_rotulo = r.evidencias.set_index("rotulo")
+        for i, ins in enumerate(r.gerada.insights, 1):
+            rots = [e for e in ins.evidencias if e in por_rotulo.index]
+            for e in rots:
+                sustenta.setdefault(e, []).append(i)
+            with st.expander(f"Evidências do insight {i}: {ins.titulo.strip()} ({len(rots)})"):
+                for e in rots:
+                    ev = por_rotulo.loc[e]
+                    st.markdown(f"**{e}** · nota {int(ev['nota'])} · `{ev['review_id']}`  \n"
+                                f"“{ev['texto']}”")
+
     if r.quadro is not None and not r.quadro.empty:
         st.subheader("Frequência dos temas no recorte")
         st.caption("Base completa do recorte (classificador de aspectos), não só a amostra.")
@@ -211,9 +228,11 @@ with col_ev:
     if not r.evidencias.empty:
         citadas = set(r.evidencias_citadas["rotulo"]) if r.gerada else set()
         st.subheader(f"Evidências ({len(r.evidencias)})")
-        st.caption("Borda azul: citada na resposta. Ordenadas por relevância.")
+        st.caption("Borda azul: citada na resposta, com os insights que sustenta. Na ordem do "
+                   "contexto enviado ao LLM (fusão RRF da busca híbrida, diversificada por MMR).")
         for _, ev in r.evidencias.iterrows():
-            st.markdown(card(ev, ev["rotulo"] in citadas), unsafe_allow_html=True)
+            st.markdown(card(ev, ev["rotulo"] in citadas, sustenta.get(ev["rotulo"], [])),
+                        unsafe_allow_html=True)
 
 # ------------------------------------------------------------------ rastro
 if mostrar_rastro and r.analise is not None:
@@ -224,7 +243,8 @@ if mostrar_rastro and r.analise is not None:
     with c1:
         st.markdown("**1. Análise da pergunta**")
         st.markdown(
-            f"- Escopo: `{a.escopo}` ({a.motivo_escopo})\n"
+            f"- Escopo: `{a.escopo}` (motivo dado pelo LLM, sem consultar a base: "
+            f"{a.motivo_escopo})\n"
             f"- Tipo: `{a.tipo}` · Polaridade: `{a.polaridade}`\n"
             f"- Filtros extraídos: `{a.filtros.descricao()}`"
         )

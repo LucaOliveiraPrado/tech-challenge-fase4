@@ -39,6 +39,21 @@ e o rastro de cada etapa do pipeline.*
 14. [Estrutura do repositório](#14-estrutura-do-repositório)
 15. [Vídeo](#15-vídeo)
 
+### Onde está cada requisito do enunciado
+
+| Requisito | Onde está a prova |
+|---|---|
+| Base de conhecimento: seleção, limpeza, ausentes, documentos, embeddings, indexação | [seção 4](#4-preparação-da-base-de-conhecimento), decisões D1 a D9, [notebook 01](notebooks/01_eda_avaliacoes.ipynb) |
+| Pipeline RAG: transformação da pergunta, recuperação, seleção, contexto, geração | [seção 5](#5-estratégia-do-pipeline-rag), [notebook 02](notebooks/02_pipeline_passo_a_passo.ipynb) (cada etapa executada e impressa) |
+| Respostas fundamentadas e evidências rastreáveis por avaliação | [seção 6](#6-respostas-fundamentadas-e-rastreabilidade), [`reports/respostas_avaliacao.json`](reports/respostas_avaliacao.json), [`tests/test_citations.py`](tests/test_citations.py) |
+| Abstenção: sem avaliações relevantes, evidência insuficiente, fora do escopo | [seção 7](#7-quando-o-sistema-não-responde), [`tests/test_pipeline_abstencao.py`](tests/test_pipeline_abstencao.py) |
+| Metadados (desafio adicional) com justificativa de ganho | [seção 8](#8-metadados-desafio-adicional), D18, [notebook 03](notebooks/03_avaliacao.ipynb) |
+| Recuperação relevante e coerência com as evidências (critério principal) | [seção 9](#9-avaliação-quantitativa), [`reports/avaliacao_recuperacao.json`](reports/avaliacao_recuperacao.json), [`reports/avaliacao_geracao.json`](reports/avaliacao_geracao.json) |
+| Exemplos de perguntas e respostas | [seção 10](#10-exemplos-de-perguntas-e-respostas), [`reports/exemplos_perguntas_respostas.md`](reports/exemplos_perguntas_respostas.md) |
+| Decisões técnicas justificadas | [seção 11](#11-principais-decisões-técnicas), [`reports/decisoes_tecnicas.md`](reports/decisoes_tecnicas.md) |
+| Instalação, execução e reprodução | [seção 13](#13-como-executar-e-reproduzir) |
+| Vídeo de até 7 minutos | [seção 15](#15-vídeo), [`reports/roteiro_video.md`](reports/roteiro_video.md) |
+
 ---
 
 ## 1. Problema de negócio
@@ -184,8 +199,10 @@ A interface mostra esse caminho para cada pergunta:
 
 A rastreabilidade não depende de o modelo obedecer ao prompt: **o código verifica cada citação**.
 Ids que não existem no contexto são removidos, insight sem evidência válida é descartado, e cada
-insight exibe o apoio ("apoio: 16 de 30 evidências"). Cada `[R#]` leva a um `review_id` real da
-Olist, mostrado na interface e salvo em `reports/respostas_avaliacao.json`.
+insight exibe o apoio ("apoio: 16 de 30 evidências": quantas das 30 avaliações do contexto o
+modelo listou como sustentação daquele insight, todas validadas por código). Cada `[R#]` leva a um
+`review_id` real da Olist, salvo em `reports/respostas_avaliacao.json`. Na interface, cada insight
+abre as avaliações que o sustentam, e cada cartão de evidência diz quais insights ela sustenta.
 
 ## 7. Quando o sistema não responde
 
@@ -197,6 +214,25 @@ Olist, mostrado na interface e salvo em `reports/respostas_avaliacao.json`.
 
 Cada camada é mais cara e mais fina que a anterior: abster cedo economiza chamadas, abster tarde
 pega o que um limiar numérico não vê (D15).
+
+Os três cenários do enunciado, medidos nas 13 perguntas que deveriam ser recusadas
+([`eval/perguntas.json`](eval/perguntas.json)): **fora do escopo** são Q29 a Q34; **sem avaliações
+relevantes** é Q44 (ar-condicionado); **evidências insuficientes** são Q35 (drone) e Q39 (painel
+solar), recuperadas mas recusadas na geração. Camada que efetivamente recusou cada uma:
+
+<!-- num:abstencao -->
+| Camada que recusou | Recusas | Perguntas |
+|---|---|---|
+| 1. Escopo (análise da pergunta, antes de buscar) | 10 | Q29, Q30, Q31, Q32, Q33, Q34, Q36, Q37, Q38, Q40 |
+| 2. Relevância (porteiro: menos de 3 evidências acima do limiar) | 1 | Q44 |
+| 3. Suficiência (geração: evidências não respondem) | 2 | Q35, Q39 |
+<!-- /num:abstencao -->
+
+Q36 (cashback), Q37 (criptomoedas), Q38 (iPhone 15) e Q40 (retirada em loja) foram escritas como
+"sem evidência", mas a análise da pergunta já as recusou por escopo. A decisão final está correta
+(nenhuma foi respondida), porém por uma camada mais cedo que a planejada; o motivo que o LLM dá
+nessa camada é escrito sem consultar a base, por isso a resposta ao usuário não o repete e ele
+fica só no rastro técnico (D15).
 
 ## 8. Metadados (desafio adicional)
 
@@ -224,17 +260,25 @@ Sem filtro, a busca acha o **tema** certo fora do **recorte** pedido (uma reclam
 pergunta sobre cama, mesa e banho), e essas avaliações ocupam vagas do contexto. Com o filtro, o
 recorte é respeitado por construção.
 
-As informações do pedido também revelam padrões que o texto sozinho não mostra: pedidos com
-itens de **mais de um vendedor** têm 61,3% de avaliações negativas, contra 25,7% na base de
-comentários (costumam chegar em partes, e o cliente reclama de "faltou item").
+As informações do pedido também revelam padrões que o texto sozinho não mostra:
+<!-- num:multivendedor -->
+pedidos com itens de **mais de um vendedor** (838 comentários) têm 61,3% de avaliações negativas, contra 25,7% na base de comentários
+<!-- /num:multivendedor -->
+(costumam chegar em partes, e o cliente reclama de "faltou item").
 
 ## 9. Avaliação quantitativa
 
 Detalhes, gráficos e leitura em [`notebooks/03_avaliacao.ipynb`](notebooks/03_avaliacao.ipynb).
 **44 perguntas** ([`eval/perguntas.json`](eval/perguntas.json)): 31 respondíveis (os cinco tipos de
 exploração do enunciado, as perguntas do problema de negócio e 11 com recorte por metadado), 6 fora
-do escopo (incluindo *prompt injection*) e 7 sem evidência na base. Relevância julgada por **pooling** (como no TREC) com um **LLM-juiz diferente do
-gerador**; julgamentos versionados em `eval/julgamentos_relevancia.csv`.
+do escopo (incluindo *prompt injection*) e 7 sem evidência na base. Relevância julgada por
+**pooling** (como no TREC) com um **LLM-juiz diferente do gerador**; julgamentos versionados em
+`eval/julgamentos_relevancia.csv`.
+
+> **Leitura correta dos números:** as 44 perguntas foram escritas pela equipe e usadas tanto para
+> escolher a configuração (sistema final, ordem RRF, limiar 0,30, prompts) quanto para medir.
+> São números de **desenvolvimento**, não de um conjunto retido: medem bem as diferenças entre
+> configurações, mas tendem a ser otimistas como estimativa absoluta (D23).
 
 **Ablação: o caminho até o sistema final** (31 perguntas respondíveis; P@10 = fração do top-10
 com evidência clara, relevância 2):
@@ -245,10 +289,25 @@ com evidência clara, relevância 2):
 | RAG ingênuo (pergunta crua, só vetor) | 0,548 | 0,561 | 0,619 | 0,691 | 0,839 |
 | + reescrita da pergunta | 0,723 | 0,703 | 0,723 | 0,789 | 0,806 |
 | + BM25 (busca híbrida, fusão RRF) | 0,723 | 0,713 | 0,728 | 0,793 | 0,839 |
-| **+ filtros de metadado, polaridade e reranker como porteiro (sistema final)** | 0,923 | 0,926 | 0,941 | 0,968 | 1,000 |
+| **+ filtros de metadado e polaridade (sistema final)** | 0,923 | 0,926 | 0,941 | 0,968 | 1,000 |
 <!-- /num:ablacao -->
 
 ![Ablação](images/avaliacao_ablacao.png)
+
+**De onde vem o salto da última linha.** O porteiro (limiar do reranker) não entra nessa medição:
+o top-10 é medido com limiar 0, e o porteiro atua na abstenção e no contexto final (tabela
+"Ponta a ponta"). Separando as perguntas, o ganho final vem todo das perguntas com recorte, em
+que o juiz zera avaliações fora do recorte pedido (seção 8); nas demais, o híbrido já estava no
+patamar do sistema final:
+
+<!-- num:ablacao_recorte -->
+| Etapa | P@10 sem recorte (20 perguntas) | P@10 com recorte (11 perguntas) |
+|---|---|---|
+| RAG ingênuo (pergunta crua, só vetor) | 0,755 | 0,209 |
+| + reescrita da pergunta | 0,925 | 0,300 |
+| + BM25 (busca híbrida, fusão RRF) | 0,955 | 0,273 |
+| + filtros de metadado e polaridade (sistema final) | 0,955 | 0,873 |
+<!-- /num:ablacao_recorte -->
 
 **Testado e descartado pelos dados.** Duas técnicas comuns em RAG pioraram o sistema completo e
 ficaram fora dele (continuam implementadas e reproduzíveis):
@@ -287,14 +346,20 @@ papel, o de porteiro de relevância, onde essa tolerância não atrapalha (D12, 
 | Perguntas respondíveis recusadas indevidamente | 0 de 31 |
 | Citações válidas (verificadas por código) | 100,0% de 669 |
 | Fidelidade dos insights (juiz; sustentado = 1, parcial = 0,5) | 0,96 em 98 insights |
+| Insights integralmente sustentados (critério estrito) | 90 de 98 (91,8%) |
+| Resumos sustentados pelas evidências citadas | 93,5% |
 | Precisão do contexto enviado ao LLM | 92,3% |
 | Extração correta dos filtros de metadado | 100% |
 | AUC do reranker contra o juiz | 0,707 |
 <!-- /num:geracao -->
 
-**O juiz é confiável?** Com a cota gratuita, a maior parte dos julgamentos ficou com o modelo de
-reserva (`gemini-3.1-flash-lite`). Uma amostra de 6 perguntas foi rejulgada por um modelo "flash"
-independente; kappa acima de 0,8 é considerado concordância quase perfeita:
+**O juiz é confiável?** O gerador é sempre o `gemini-3.5-flash-lite`. Com a cota gratuita, a
+maior parte dos julgamentos de relevância ficou com o modelo de reserva (`gemini-3.1-flash-lite`),
+e várias perguntas têm pares julgados por dois ou três modelos diferentes. Uma amostra de 6
+perguntas, escolhida à mão para cobrir os grupos (não sorteada), foi rejulgada por um modelo
+"flash" independente; kappa acima de 0,8 é considerado concordância quase perfeita. Essa
+concordância valida o **julgamento de relevância**; a **fidelidade** dos insights teve um único
+juiz (o de reserva), por isso a tabela acima mostra também o critério estrito (só "sustentado"):
 
 <!-- num:concordancia -->
 | Concordância entre juízes (626 pares rejulgados por `gemini-3.5-flash`) | Resultado |
@@ -343,18 +408,30 @@ as 44 respostas em [`reports/respostas_avaliacao.json`](reports/respostas_avalia
 >
 > *Limitações: Este relatório fundamenta a análise em uma amostra de 15 avaliações recuperadas por relevância a partir de um recorte de 14445 comentários, portanto a frequência observada vale apenas para esta amostra.*
 
-| id | review_id | nota | texto do cliente |
-|---|---|---|---|
-| R1 | `10467dc456e818c60bd750271b5d183e` | 1 | atraso na entrega da mercadoria,não cumpre prazo determinado. |
-| R2 | `a4f9f285b2ed89a616d93dea024eb31b` | 1 | Não cumpriu com o prazo e o produto não chegou. |
-| R3 | `48b3ce236ea9d35a4850ea94ca9ca38f` | 2 | Atraso. Produto não chegou no prazo |
+| id | sustenta o insight | review_id | nota | texto do cliente |
+|---|---|---|---|---|
+| R1 | 1 | `10467dc456e818c60bd750271b5d183e` | 1 | atraso na entrega da mercadoria,não cumpre prazo determinado. |
+| R2 | 2 | `a4f9f285b2ed89a616d93dea024eb31b` | 1 | Não cumpriu com o prazo e o produto não chegou. |
+| R3 | 1 | `48b3ce236ea9d35a4850ea94ca9ca38f` | 2 | Atraso. Produto não chegou no prazo |
+| R4 | 1, 2 | `1bfec3e913196c72c1ea06fc8816bd9c` | 1 | entrega atrasada. o prazo terminou e nao recebi meu produto |
+| R5 | 1, 2 | `9d6c1f490b2b4bfef33820b5679e2d82` | 1 | Atraso entrega. Não recebi o produto |
+| R6 | 2 | `986820c39b1a0f1c99bf0592080078bd` | 1 | Não cumpriram o prazo de entrega,ainda não recebi o produto |
+| R7 | 1 | `2389923a5e31e36c1184402742965903` | 1 | entrega atrasada,produto ainda não veio |
+| R8 | 1, 2 | `4a7118b1f9c3d06869e0cd9d5c1b4ccb` | 1 | meu produto nao chegou esta atrasado. |
+| R9 | 1, 2 | `6bb17113a061e2e8bb65b706278b4d75` | 2 | Prazo de entrega não foi cumprido. Encomenda ainda não chegou. |
+| R10 | 1 | `f6cdef6e564ca38cd4dcff3ddba22fe1` | 3 | Produto com o prazo de entrega atrasado |
+| R11 | 2 | `81a57c09af35f9736f760b6ae16af118` | 1 | Demora, produto nao entregue! |
+| R12 | 1, 2 | `a1e9b5056896b01638a5aa8e02673955` | 1 | demora na entrega (ainda nao chegou fora do prazo) |
+| R13 | 2 | `0b89db97b78e8a32cf537f263f4aeb65` | 1 | Não cumpre o prazo de entrega,até agora não recebi o meu produto. |
+| R14 | 2 | `1f3f5e3000ed6307fbda490057bfa59b` | 2 | Atraso na entrega. Ainda não recebi o produto. |
+| R15 | 1 | `85a391b84d8e864de7190a2afb6f82e4` | 1 | não cumpre prazo. Não cumpriram prazo de entrega e nem avisaram o atraso. |
 <!-- /num:exemplo -->
 
 </details>
 
 ## 11. Principais decisões técnicas
 
-Registro completo (22 decisões com problema, alternativas, escolha e evidência):
+Registro completo (23 decisões com problema, alternativas, escolha e evidência):
 [`reports/decisoes_tecnicas.md`](reports/decisoes_tecnicas.md).
 
 | # | Decisão | Evidência |
@@ -371,18 +448,24 @@ Registro completo (22 decisões com problema, alternativas, escolha e evidência
 | D18 | Metadados (inclusive pagamento, valor e vendedores) como filtro dentro da busca | conformidade ao recorte 30,9% → 95,5% |
 | D19 | Gemini no plano gratuito com papéis por modelo e fallback | cota de 20 req/dia por modelo "flash" |
 | D20 | Frequências relativas a quem comentou | nota 1 é 11% da base e 21% dos comentários |
+| D23 | Perguntas da avaliação tratadas como conjunto de desenvolvimento | mesmas 44 perguntas ajustaram e mediram; limite declarado |
 
 ## 12. Limitações
 
 - **Juiz automático:** a relevância e a fidelidade foram julgadas por LLM (diferente do gerador),
   sem dupla anotação humana em escala. A maior parte ficou com o modelo de reserva
   (`gemini-3.1-flash-lite`); a concordância com um segundo juiz independente é quase perfeita
-  (seção 9, D21), mas os dois são LLMs e podem compartilhar vieses. Para conferir com uma pessoa,
+  na relevância (seção 9, D21), mas os dois são LLMs e podem compartilhar vieses, e a fidelidade
+  teve um único juiz. Para conferir com uma pessoa,
   `uv run voc anotacao` sorteia 60 pares estratificados pela nota do juiz (sem mostrá-la) em
   [`eval/anotacao_humana.csv`](eval/anotacao_humana.csv), e `uv run voc avaliar --etapa humano`
   mede a concordância depois de preenchida a coluna `relevancia_humana`.
 - **Números do quadro com citação:** nos poucos insights julgados "parciais", o modelo anexou
   evidências individuais a um percentual da base completa; o juiz lê isso como extrapolação (D16).
+- **Mesmo conjunto para ajustar e medir:** as 44 perguntas foram escritas pela equipe e guiaram
+  as escolhas (configuração, limiar, prompts); alguns exemplos do prompt de análise coincidem
+  com temas do teste (drone, cashback, faturamento). Os números são de desenvolvimento; um
+  conjunto retido, rodado uma única vez, daria a estimativa sem viés (D23).
 - **Quem comenta não é todo cliente:** menos da metade das avaliações tem texto e os insatisfeitos
   comentam mais; os números descrevem os comentários.
 - **Frequências são estimativas:** o quadro vem de um classificador (micro-F1 0,79); aspectos raros
@@ -432,8 +515,16 @@ uv run voc ask "Quais são os principais problemas relatados pelos clientes?"
 ```
 
 ```bash
-uv run voc avaliar            # avaliação completa (reaproveita julgamentos e cache)
-uv run pytest                 # testes
+uv run voc avaliar --etapa geracao   # ponta a ponta: abstenção, citações, fidelidade
+uv run voc avaliar                   # avaliação completa (reaproveita julgamentos e cache)
+uv run pytest                        # testes
+```
+
+A comparação de embeddings da avaliação completa precisa dos índices dos outros dois modelos;
+sem eles, essas linhas são puladas com um aviso:
+
+```bash
+uv run voc build --modelo BAAI/bge-m3 --modelo intfloat/multilingual-e5-base --modelo sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2
 ```
 
 **Reprodutibilidade:** dependências travadas em `uv.lock`; semente 42; embeddings em cache alinhados

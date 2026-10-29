@@ -14,7 +14,15 @@
 | RAG ingênuo (pergunta crua, só vetor) | 0,548 | 0,561 | 0,619 | 0,691 | 0,839 |
 | + reescrita da pergunta | 0,723 | 0,703 | 0,723 | 0,789 | 0,806 |
 | + BM25 (busca híbrida, fusão RRF) | 0,723 | 0,713 | 0,728 | 0,793 | 0,839 |
-| **+ filtros de metadado, polaridade e reranker como porteiro (sistema final)** | 0,923 | 0,926 | 0,941 | 0,968 | 1,000 |
+| **+ filtros de metadado e polaridade (sistema final)** | 0,923 | 0,926 | 0,941 | 0,968 | 1,000 |
+
+<!-- ablacao_recorte -->
+| Etapa | P@10 sem recorte (20 perguntas) | P@10 com recorte (11 perguntas) |
+|---|---|---|
+| RAG ingênuo (pergunta crua, só vetor) | 0,755 | 0,209 |
+| + reescrita da pergunta | 0,925 | 0,300 |
+| + BM25 (busca híbrida, fusão RRF) | 0,955 | 0,273 |
+| + filtros de metadado e polaridade (sistema final) | 0,955 | 0,873 |
 
 <!-- descartadas -->
 | Técnica testada | P@10 com | P@10 sem | Decisão |
@@ -45,9 +53,21 @@
 | Perguntas respondíveis recusadas indevidamente | 0 de 31 |
 | Citações válidas (verificadas por código) | 100,0% de 669 |
 | Fidelidade dos insights (juiz; sustentado = 1, parcial = 0,5) | 0,96 em 98 insights |
+| Insights integralmente sustentados (critério estrito) | 90 de 98 (91,8%) |
+| Resumos sustentados pelas evidências citadas | 93,5% |
 | Precisão do contexto enviado ao LLM | 92,3% |
 | Extração correta dos filtros de metadado | 100% |
 | AUC do reranker contra o juiz | 0,707 |
+
+<!-- abstencao -->
+| Camada que recusou | Recusas | Perguntas |
+|---|---|---|
+| 1. Escopo (análise da pergunta, antes de buscar) | 10 | Q29, Q30, Q31, Q32, Q33, Q34, Q36, Q37, Q38, Q40 |
+| 2. Relevância (porteiro: menos de 3 evidências acima do limiar) | 1 | Q44 |
+| 3. Suficiência (geração: evidências não respondem) | 2 | Q35, Q39 |
+
+<!-- multivendedor -->
+pedidos com itens de **mais de um vendedor** (838 comentários) têm 61,3% de avaliações negativas, contra 25,7% na base de comentários
 
 <!-- latencia -->
 | Etapa (mediana, sem cache) | Segundos |
@@ -75,11 +95,23 @@
 >
 > *Limitações: Este relatório fundamenta a análise em uma amostra de 15 avaliações recuperadas por relevância a partir de um recorte de 14445 comentários, portanto a frequência observada vale apenas para esta amostra.*
 
-| id | review_id | nota | texto do cliente |
-|---|---|---|---|
-| R1 | `10467dc456e818c60bd750271b5d183e` | 1 | atraso na entrega da mercadoria,não cumpre prazo determinado. |
-| R2 | `a4f9f285b2ed89a616d93dea024eb31b` | 1 | Não cumpriu com o prazo e o produto não chegou. |
-| R3 | `48b3ce236ea9d35a4850ea94ca9ca38f` | 2 | Atraso. Produto não chegou no prazo |
+| id | sustenta o insight | review_id | nota | texto do cliente |
+|---|---|---|---|---|
+| R1 | 1 | `10467dc456e818c60bd750271b5d183e` | 1 | atraso na entrega da mercadoria,não cumpre prazo determinado. |
+| R2 | 2 | `a4f9f285b2ed89a616d93dea024eb31b` | 1 | Não cumpriu com o prazo e o produto não chegou. |
+| R3 | 1 | `48b3ce236ea9d35a4850ea94ca9ca38f` | 2 | Atraso. Produto não chegou no prazo |
+| R4 | 1, 2 | `1bfec3e913196c72c1ea06fc8816bd9c` | 1 | entrega atrasada. o prazo terminou e nao recebi meu produto |
+| R5 | 1, 2 | `9d6c1f490b2b4bfef33820b5679e2d82` | 1 | Atraso entrega. Não recebi o produto |
+| R6 | 2 | `986820c39b1a0f1c99bf0592080078bd` | 1 | Não cumpriram o prazo de entrega,ainda não recebi o produto |
+| R7 | 1 | `2389923a5e31e36c1184402742965903` | 1 | entrega atrasada,produto ainda não veio |
+| R8 | 1, 2 | `4a7118b1f9c3d06869e0cd9d5c1b4ccb` | 1 | meu produto nao chegou esta atrasado. |
+| R9 | 1, 2 | `6bb17113a061e2e8bb65b706278b4d75` | 2 | Prazo de entrega não foi cumprido. Encomenda ainda não chegou. |
+| R10 | 1 | `f6cdef6e564ca38cd4dcff3ddba22fe1` | 3 | Produto com o prazo de entrega atrasado |
+| R11 | 2 | `81a57c09af35f9736f760b6ae16af118` | 1 | Demora, produto nao entregue! |
+| R12 | 1, 2 | `a1e9b5056896b01638a5aa8e02673955` | 1 | demora na entrega (ainda nao chegou fora do prazo) |
+| R13 | 2 | `0b89db97b78e8a32cf537f263f4aeb65` | 1 | Não cumpre o prazo de entrega,até agora não recebi o meu produto. |
+| R14 | 2 | `1f3f5e3000ed6307fbda490057bfa59b` | 2 | Atraso na entrega. Ainda não recebi o produto. |
+| R15 | 1 | `85a391b84d8e864de7190a2afb6f82e4` | 1 | não cumpre prazo. Não cumpriram prazo de entrega e nem avisaram o atraso. |
 
 <!-- aspectos -->
 micro-F1 0,789 e macro-F1 0,744 em 600 rótulos de teste

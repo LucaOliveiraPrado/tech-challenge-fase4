@@ -70,6 +70,7 @@ class Resposta:
     citacoes: RelatorioCitacoes | None = None
     quadro: pd.DataFrame | None = None
     tempos: dict = field(default_factory=dict)
+    quadro_txt: str | None = None  # quadro exatamente como o gerador o recebeu
 
     @property
     def absteve(self) -> bool:
@@ -160,8 +161,10 @@ class VoCPipeline:
         tempos["analise_s"] = round(time.perf_counter() - t0, 3)
 
         if analise.escopo == "fora":
+            # O motivo do LLM fica só no rastro (análise): ele é escrito sem consultar a base
+            # e pode afirmar fatos que ela não sustenta ("a loja não tem cashback").
             md = (
-                f"**Fora do escopo da base de conhecimento.** {analise.motivo_escopo}\n\n"
+                "**Fora do escopo da base de conhecimento.**\n\n"
                 f"{ESCOPO_TEXTO} Não respondo com conhecimento externo para não "
                 "apresentar algo que os dados não sustentam."
             )
@@ -238,7 +241,12 @@ class VoCPipeline:
             status = "nao_respondida"
         else:
             md = render_markdown(gerada, len(evidencias))
+            if quadro_df is not None:
+                # Denominador dos percentuais escrito pelo código, não pelo modelo.
+                md += (f"\n\n*Percentuais: estimativa do classificador de aspectos sobre as "
+                       f"{_milhar(rec.n_universo)} avaliações com comentário do recorte "
+                       f"({recorte}).*")
             status = STATUS_RESPONDIDA
         tempos["total_s"] = round(time.perf_counter() - t0, 3)
         return Resposta(pergunta, status, md, analise, rec, evidencias, gerada, rel, quadro_df,
-                        tempos)
+                        tempos, quadro_txt)

@@ -3,7 +3,10 @@
 > Gerado automaticamente por `uv run voc avaliar` a partir de
 > `reports/respostas_avaliacao.json` (todas as 44 respostas estão lá, com análise da
 > pergunta, filtros, evidências e tempos). Cada evidência é rastreável pelo `review_id`
-> na base da Olist.
+> na base da Olist; a coluna "sustenta o insight" liga cada avaliação aos insights da
+> resposta que a citam. "Apoio: X de N" diz quantas das N evidências do contexto o
+> modelo listou como sustentação do insight (todas validadas por código; o texto mostra
+> só as mais representativas entre colchetes).
 
 ## Q01. Quais são os principais problemas relatados pelos clientes em suas avaliações?
 
@@ -25,15 +28,42 @@
 >
 > *Limitações: As análises numéricas refletem a base completa do recorte, ao passo que os exemplos qualitativos baseiam-se na amostra recuperada por relevância.*
 
-| id | review_id | nota | relevância | texto do cliente |
-|---|---|---|---|---|
-| R1 | `9d6c1f490b2b…` | 1 | 0,98 | Atraso entrega. Não recebi o produto |
-| R2 | `a04625605c0e…` | 1 | 0,98 | Até o momento não recebi o produto que está atrasado na entrega. |
-| R3 | `1bfec3e91319…` | 1 | 0,94 | entrega atrasada. o prazo terminou e nao recebi meu produto |
-| R4 | `a9d65ad284bb…` | 3 | 0,99 | O produto veiocom defeito. O produto veio com defeito e atraso na entrega. |
-| R5 | `83c4f54bd18d…` | 1 | 0,93 | Recebi o produto com defeito |
+<details><summary><b>As 30 evidências citadas</b> (review_id completo e insight que cada uma sustenta)</summary>
 
-_+25 evidências no JSON completo._
+| id | sustenta o insight | review_id | nota | relevância | texto do cliente |
+|---|---|---|---|---|---|
+| R1 | 1 | `9d6c1f490b2b4bfef33820b5679e2d82` | 1 | 0,98 | Atraso entrega. Não recebi o produto |
+| R2 | 1 | `a04625605c0ed62e208637697536eff9` | 1 | 0,98 | Até o momento não recebi o produto que está atrasado na entrega. |
+| R3 | 1 | `1bfec3e913196c72c1ea06fc8816bd9c` | 1 | 0,94 | entrega atrasada. o prazo terminou e nao recebi meu produto |
+| R4 | 2 | `a9d65ad284bb1c477d7473cd06272070` | 3 | 0,99 | O produto veiocom defeito. O produto veio com defeito e atraso na entrega. |
+| R5 | 2 | `83c4f54bd18decda21d563b5ddf5558a` | 1 | 0,93 | Recebi o produto com defeito |
+| R6 | 1 | `98eaf3a20ac997b34bf433ac0979f4e2` | 1 | 0,98 | Atraso na entrega, até o momento nao recebi o meu produto. |
+| R7 | 1 | `e99c29f0a950abd77239b15adaaa38b8` | 1 | 0,92 | Ainda nao recebi o produto e ja se encontra atrasado |
+| R8 | 1 | `8f9772ae7dec3db4af0418fd7fb1be4d` | 1 | 0,99 | Produto com entrega atrasada |
+| R9 | 1, 3 | `b5e71e87bfbbcd2a826b9610bac99680` | 1 | 0,87 | atraso na entrega. nao recebi meu produto e nem uma posição sobre o mesmo |
+| R10 | 1 | `4a7118b1f9c3d06869e0cd9d5c1b4ccb` | 1 | 0,91 | meu produto nao chegou esta atrasado. |
+| R11 | 1 | `2acb97b500b95b1205a5e4aea261a172` | 3 | 0,39 | Produto recebido é o correto, mas teve significativo atraso na entrega. |
+| R12 | 1 | `2389923a5e31e36c1184402742965903` | 1 | 0,85 | entrega atrasada,produto ainda não veio |
+| R13 | 1 | `b35041292c711e10c0589a676b4c88d6` | 3 | 0,98 | Recebi meu produto porem com certo atraso. |
+| R14 | 1 | `66b7b7c200a3fa372cbd01606bba551f` | 2 | 0,90 | Entrega atrasada. Até o momento não foi entregue o produto |
+| R15 | 2 | `801fb7f38a93205e682ef363234bd7dd` | 1 | 0,98 | a entrega demorou e o produto chegou com defeito |
+| R16 | 2 | `556e5259e2d5b0cbeec371d7a22bef5a` | 1 | 0,72 | O produto veio estragado |
+| R17 | 1 | `1f3f5e3000ed6307fbda490057bfa59b` | 2 | 0,93 | Atraso na entrega. Ainda não recebi o produto. |
+| R18 | 1 | `db64106aff6c7180cb841937f43f5f44` | 1 | 0,90 | Entrega atrasada. Ainda não recebi o produto... |
+| R19 | 1, 3 | `14ab06af2677555bfcf9ff2e64a1b203` | 1 | 0,67 | O produto não foi entregu. Sem satisfação sobre atraso na entrega |
+| R20 | 2 | `6298846cdf0eceb7ba5661c3810725b7` | 1 | 0,74 | Atrasado e com defeito. Produto chegou atrasado, mal embalado e faltando um Ilhós. |
+| R21 | 1 | `f6cdef6e564ca38cd4dcff3ddba22fe1` | 3 | 0,98 | Produto com o prazo de entrega atrasado |
+| R22 | 1 | `ac6bdc8a49173f8db773a6a97fc6d087` | 2 | 0,88 | Atraso no entrega. Acredito que tenha sido atraso dos correios , ainda não recebi o produto . |
+| R23 | 1 | `d5ec0edbe1505d4f8c80f52d9c19f98d` | 2 | 0,93 | demora na entrega, ainda não recebi o produto |
+| R24 | 1 | `d8bef0bbad507b83d991b958f50b33f3` | 1 | 0,75 | não recebi o produto no prazo previsto |
+| R25 | 1 | `4cc9dc519327a019f0193e75e34c851d` | 1 | 0,79 | Atraso. Ainda não recebi o produto. |
+| R26 | 1 | `4ff3c370099faa740e4ff1c3626b760b` | 1 | 0,76 | Produto nao entregue. Meu produto nao foi entrrgue |
+| R27 | 1 | `6f90ca0354205d409ba72f8fbdd2542e` | 2 | 0,81 | não tenho como avaliar. ainda nem recebi o produto, que esta com entrega atrasada. |
+| R28 | 2, 3 | `b0604d9692c6e66726898d64faa22da2` | 1 | 0,47 | produto estragado. liguei na central de vcs e não obtive o retorno |
+| R29 | 2, 3 | `db551ada5aa80d023f7529ca90bffee7` | 1 | 0,32 | O produto veio com defeito enviei email e nao obtive resposta |
+| R30 | 1 | `d1cb6e8ac59c40427069ffddd69e0346` | 1 | 0,40 | PRODUTO 3 DIAS DE ATRASO. PRODUTO COM 3 DIAS DE ATRASO NA ENTREGA |
+
+</details>
 
 ## Q04. O que os clientes relatam sobre problemas relacionados à entrega?
 
@@ -54,15 +84,26 @@ _+25 evidências no JSON completo._
 >
 > *Limitações: As informações apresentadas refletem exclusivamente a amostra recuperada de avaliações, não sendo possível extrapolar a proporção desses problemas para a base completa.*
 
-| id | review_id | nota | relevância | texto do cliente |
-|---|---|---|---|---|
-| R1 | `10467dc456e8…` | 1 | 1,00 | atraso na entrega da mercadoria,não cumpre prazo determinado. |
-| R2 | `a4f9f285b2ed…` | 1 | 1,00 | Não cumpriu com o prazo e o produto não chegou. |
-| R3 | `48b3ce236ea9…` | 2 | 1,00 | Atraso. Produto não chegou no prazo |
-| R4 | `1bfec3e91319…` | 1 | 0,97 | entrega atrasada. o prazo terminou e nao recebi meu produto |
-| R5 | `9d6c1f490b2b…` | 1 | 0,98 | Atraso entrega. Não recebi o produto |
+<details><summary><b>As 14 evidências citadas</b> (review_id completo e insight que cada uma sustenta)</summary>
 
-_+9 evidências no JSON completo._
+| id | sustenta o insight | review_id | nota | relevância | texto do cliente |
+|---|---|---|---|---|---|
+| R1 | 1 | `10467dc456e818c60bd750271b5d183e` | 1 | 1,00 | atraso na entrega da mercadoria,não cumpre prazo determinado. |
+| R2 | 2 | `a4f9f285b2ed89a616d93dea024eb31b` | 1 | 1,00 | Não cumpriu com o prazo e o produto não chegou. |
+| R3 | 1 | `48b3ce236ea9d35a4850ea94ca9ca38f` | 2 | 1,00 | Atraso. Produto não chegou no prazo |
+| R4 | 1 | `1bfec3e913196c72c1ea06fc8816bd9c` | 1 | 0,97 | entrega atrasada. o prazo terminou e nao recebi meu produto |
+| R5 | 2 | `9d6c1f490b2b4bfef33820b5679e2d82` | 1 | 0,98 | Atraso entrega. Não recebi o produto |
+| R6 | 2 | `986820c39b1a0f1c99bf0592080078bd` | 1 | 0,99 | Não cumpriram o prazo de entrega,ainda não recebi o produto |
+| R7 | 1 | `2389923a5e31e36c1184402742965903` | 1 | 1,00 | entrega atrasada,produto ainda não veio |
+| R8 | 1 | `6bb17113a061e2e8bb65b706278b4d75` | 2 | 1,00 | Prazo de entrega não foi cumprido. Encomenda ainda não chegou. |
+| R9 | 2 | `4a7118b1f9c3d06869e0cd9d5c1b4ccb` | 1 | 0,99 | meu produto nao chegou esta atrasado. |
+| R10 | 2 | `81a57c09af35f9736f760b6ae16af118` | 1 | 0,99 | Demora, produto nao entregue! |
+| R11 | 1 | `f6cdef6e564ca38cd4dcff3ddba22fe1` | 3 | 1,00 | Produto com o prazo de entrega atrasado |
+| R13 | 1 | `a1e9b5056896b01638a5aa8e02673955` | 1 | 0,99 | demora na entrega (ainda nao chegou fora do prazo) |
+| R14 | 2 | `1f3f5e3000ed6307fbda490057bfa59b` | 2 | 0,98 | Atraso na entrega. Ainda não recebi o produto. |
+| R15 | 2 | `0bb09618b24d6de1e9bf4fee647023ae` | 1 | 0,87 | demora e não entrega. péssimo |
+
+</details>
 
 ## Q08. Quais aspectos da experiência de compra são mais elogiados pelos clientes?
 
@@ -84,15 +125,42 @@ _+9 evidências no JSON completo._
 >
 > *Limitações: As conclusões combinam uma amostra de 30 avaliações recuperadas por relevância com os dados estatísticos da base completa de 27693 registros.*
 
-| id | review_id | nota | relevância | texto do cliente |
-|---|---|---|---|---|
-| R1 | `c6d38a0f9663…` | 5 | 1,00 | produto de excelente qualidade entrega super rapida adorei. |
-| R2 | `9eb82fb5f3e0…` | 5 | 0,99 | Adorei,produto ótimo e a entrega é super rápido |
-| R3 | `5ab5ace54529…` | 5 | 1,00 | Produto excelente e entrega ótima e rápida! |
-| R4 | `08b8ab4cd13b…` | 5 | 0,99 | Ótimo produto excelente qualidade entrega rápida. |
-| R5 | `b71e2b3cd969…` | 5 | 0,94 | Adorei! Excelente atendimento! 👏 |
+<details><summary><b>As 30 evidências citadas</b> (review_id completo e insight que cada uma sustenta)</summary>
 
-_+25 evidências no JSON completo._
+| id | sustenta o insight | review_id | nota | relevância | texto do cliente |
+|---|---|---|---|---|---|
+| R1 | 1, 2 | `c6d38a0f9663dc7d1cae7cf29e5c85b4` | 5 | 1,00 | produto de excelente qualidade entrega super rapida adorei. |
+| R2 | 1, 2 | `9eb82fb5f3e052a1feac474a6f49e417` | 5 | 0,99 | Adorei,produto ótimo e a entrega é super rápido |
+| R3 | 1, 2 | `5ab5ace545295c27446efb6d17f6fae3` | 5 | 1,00 | Produto excelente e entrega ótima e rápida! |
+| R4 | 1, 2 | `08b8ab4cd13b5ce55a4f6558ba1d1c87` | 5 | 0,99 | Ótimo produto excelente qualidade entrega rápida. |
+| R5 | 3 | `b71e2b3cd969864092bc35e61126b5ca` | 5 | 0,94 | Adorei! Excelente atendimento! 👏 |
+| R6 | 2, 3 | `5962f753a7cdb529f3793b9c47c6c563` | 5 | 0,99 | Excelente atendimento e entrega rápida!!! |
+| R7 | 1, 2 | `a90c2e509ee3c268059e0069e197cfa4` | 5 | 1,00 | Entrega super rápida produto ótimo amei e recomendo |
+| R8 | 1, 3 | `aa4c3c44ff9674915f652865b243ba31` | 5 | 0,98 | Produto excelente! Adorei! Estou feliz com o atendimento, o serviço prestado e o produto é ótimo. |
+| R9 | 1, 2 | `33dd60a4eab572eaab8cc5471ac412de` | 5 | 1,00 | Produto ótimo chegou super rápido amei |
+| R10 | 2, 3 | `0dc18463d185b23148ec7ceb0ac70b64` | 5 | 0,94 | Prazo de entrega excelente.Foi mais rápido do que eu esperava. Estão de parabéns pelo ótimo atendimento. |
+| R11 | 1, 2 | `f2f694e8f172b05cfe300f31a749bb01` | 5 | 0,99 | amei o produto muito bom , entregue super rapido |
+| R12 | 2, 3 | `76ebfe3c6a80a7924183178435de1399` | 5 | 0,99 | ótimo atendimento, entrega rápida. |
+| R13 | 1, 2 | `54415d54900580729f397d75fd35bc06` | 5 | 1,00 | Excelente produto, entrega super rápida |
+| R14 | 1, 2 | `bdaa916abe148098807f3a2e553a29a5` | 5 | 0,98 | Entrega super rápida ,produto excelente,minha filha adorou. |
+| R15 | 1, 2 | `3470d23da6843a4ece28cdac3892430a` | 5 | 0,99 | entrega super rápida e ótimo produto |
+| R16 | 1, 2 | `8a1d8ca4278233f4392523b32dd4f516` | 5 | 0,99 | ótimo produto e entrega super rápida. |
+| R17 | 1, 2 | `78b60d1794db558c6ae574d04f1e2a77` | 5 | 1,00 | Ótimo! Adorei o produto, tempo de entrega rápido. |
+| R18 | 1, 2 | `a0ba13e19e2a6f416f963ef97a0089b4` | 5 | 0,99 | Rápida entrega excelente produto |
+| R19 | 3 | `2987a2dcd950d0a74f3db048033291b7` | 4 | 0,96 | Excelente. Ótimo atendimento |
+| R20 | 1, 2 | `47581c0859ee6686c6a1aa71c2b9bd11` | 5 | 1,00 | Produto excelente e entrega super rápida. |
+| R21 | 1, 2 | `4e75eb63d1145397fad978c933de9dc6` | 5 | 1,00 | Produto ótimo, entrega super rápida |
+| R22 | 1, 2 | `76fe154d4cba8f87cc55433b3465fdc3` | 5 | 0,99 | Produto excelente chegou muito rápido recomendo |
+| R23 | 1, 2 | `90cfae6fc1efa4e0d4d4483f81ad75b1` | 4 | 1,00 | Ótimo. Produto excelente, entrega rápida |
+| R24 | 2, 3 | `8179eb34f345e70f71a4a3e7191f7ef9` | 5 | 0,96 | Ótimo atendimento. Muito bom o atendimento a entrega foi rápida e o produto foi entregue. |
+| R25 | 1, 2 | `6953c13980fc183745ea3fc0595c0d4e` | 5 | 1,00 | ótimo produto, entrega rápida. |
+| R26 | 1 | `02a8d9699a0dc9a726a7c530c70c839e` | 5 | 0,99 | Produto excelente e de ótima qualidade. Adorei. |
+| R27 | 1, 2 | `b3c4ba2611c68e6c17ea54055d729fc2` | 5 | 0,99 | Entrega super rápida, ótimo produto |
+| R28 | 3 | `0dc0fa5941a93260a51e03b73f743bd3` | 5 | 0,98 | Excelente Atendimento e extremamente rápido. |
+| R29 | 2, 3 | `fd896ad2cffd5956a819fcbb3f7d7044` | 5 | 0,96 | Super Recomendado. entrega rápida, e atendimento excelente |
+| R30 | 1, 2 | `d79c46a2a43217f5eab05683e580ce37` | 5 | 0,99 | Estraga rápida produto bom adorei excelente |
+
+</details>
 
 ## Q19. Quais avaliações sustentam a conclusão de que existem problemas recorrentes relacionados ao prazo de entrega?
 
@@ -113,15 +181,27 @@ _+25 evidências no JSON completo._
 >
 > *Limitações: Este relatório fundamenta a análise em uma amostra de 15 avaliações recuperadas por relevância a partir de um recorte de 14445 comentários, portanto a frequência observada vale apenas para esta amostra.*
 
-| id | review_id | nota | relevância | texto do cliente |
-|---|---|---|---|---|
-| R1 | `10467dc456e8…` | 1 | 1,00 | atraso na entrega da mercadoria,não cumpre prazo determinado. |
-| R2 | `a4f9f285b2ed…` | 1 | 1,00 | Não cumpriu com o prazo e o produto não chegou. |
-| R3 | `48b3ce236ea9…` | 2 | 1,00 | Atraso. Produto não chegou no prazo |
-| R4 | `1bfec3e91319…` | 1 | 0,98 | entrega atrasada. o prazo terminou e nao recebi meu produto |
-| R5 | `9d6c1f490b2b…` | 1 | 0,99 | Atraso entrega. Não recebi o produto |
+<details><summary><b>As 15 evidências citadas</b> (review_id completo e insight que cada uma sustenta)</summary>
 
-_+10 evidências no JSON completo._
+| id | sustenta o insight | review_id | nota | relevância | texto do cliente |
+|---|---|---|---|---|---|
+| R1 | 1 | `10467dc456e818c60bd750271b5d183e` | 1 | 1,00 | atraso na entrega da mercadoria,não cumpre prazo determinado. |
+| R2 | 2 | `a4f9f285b2ed89a616d93dea024eb31b` | 1 | 1,00 | Não cumpriu com o prazo e o produto não chegou. |
+| R3 | 1 | `48b3ce236ea9d35a4850ea94ca9ca38f` | 2 | 1,00 | Atraso. Produto não chegou no prazo |
+| R4 | 1, 2 | `1bfec3e913196c72c1ea06fc8816bd9c` | 1 | 0,98 | entrega atrasada. o prazo terminou e nao recebi meu produto |
+| R5 | 1, 2 | `9d6c1f490b2b4bfef33820b5679e2d82` | 1 | 0,99 | Atraso entrega. Não recebi o produto |
+| R6 | 2 | `986820c39b1a0f1c99bf0592080078bd` | 1 | 0,99 | Não cumpriram o prazo de entrega,ainda não recebi o produto |
+| R7 | 1 | `2389923a5e31e36c1184402742965903` | 1 | 1,00 | entrega atrasada,produto ainda não veio |
+| R8 | 1, 2 | `4a7118b1f9c3d06869e0cd9d5c1b4ccb` | 1 | 0,99 | meu produto nao chegou esta atrasado. |
+| R9 | 1, 2 | `6bb17113a061e2e8bb65b706278b4d75` | 2 | 1,00 | Prazo de entrega não foi cumprido. Encomenda ainda não chegou. |
+| R10 | 1 | `f6cdef6e564ca38cd4dcff3ddba22fe1` | 3 | 1,00 | Produto com o prazo de entrega atrasado |
+| R11 | 2 | `81a57c09af35f9736f760b6ae16af118` | 1 | 0,99 | Demora, produto nao entregue! |
+| R12 | 1, 2 | `a1e9b5056896b01638a5aa8e02673955` | 1 | 0,99 | demora na entrega (ainda nao chegou fora do prazo) |
+| R13 | 2 | `0b89db97b78e8a32cf537f263f4aeb65` | 1 | 0,99 | Não cumpre o prazo de entrega,até agora não recebi o meu produto. |
+| R14 | 2 | `1f3f5e3000ed6307fbda490057bfa59b` | 2 | 0,98 | Atraso na entrega. Ainda não recebi o produto. |
+| R15 | 1 | `85a391b84d8e864de7190a2afb6f82e4` | 1 | 0,93 | não cumpre prazo. Não cumpriram prazo de entrega e nem avisaram o atraso. |
+
+</details>
 
 ## Q22. O que os clientes mais elogiam na categoria cama, mesa e banho?
 
@@ -144,15 +224,33 @@ _+10 evidências no JSON completo._
 >
 > *Limitações: As análises combinam percentuais gerais do quadro de frequências da base completa com uma amostra qualitativa restrita de 30 avaliações selecionadas por relevância.*
 
-| id | review_id | nota | relevância | texto do cliente |
-|---|---|---|---|---|
-| R1 | `d29b7015c197…` | 5 | 0,88 | Produto de excelente qualidade, tecido macio e confortável. Recomendo |
-| R2 | `a1a020107703…` | 5 | 0,87 | Produto muito bom adorei o tecido e entregue no prazo |
-| R3 | `4dfe75c40bfc…` | 5 | 0,91 | Excelente produto, parece ser resistente e ficou lindo na cama, dá pena colocar lençol em cima. Amei! |
-| R4 | `15fa2777d5ba…` | 5 | 0,64 | Jogo de cama. Excelente produto. Recomendo a todos |
-| R5 | `33e9e4a3b2e1…` | 5 | 0,55 | Jogo de lençol muito lindo...macio e aconchegante...ficou linda a minha cama.. |
+<details><summary><b>As 21 evidências citadas</b> (review_id completo e insight que cada uma sustenta)</summary>
 
-_+16 evidências no JSON completo._
+| id | sustenta o insight | review_id | nota | relevância | texto do cliente |
+|---|---|---|---|---|---|
+| R1 | 1 | `d29b7015c1970a48ebd84998398336fb` | 5 | 0,88 | Produto de excelente qualidade, tecido macio e confortável. Recomendo |
+| R2 | 1, 4 | `a1a020107703479332a3174ccbf3c039` | 5 | 0,87 | Produto muito bom adorei o tecido e entregue no prazo |
+| R3 | 1, 2 | `4dfe75c40bfc9e9622bd023678bf4366` | 5 | 0,91 | Excelente produto, parece ser resistente e ficou lindo na cama, dá pena colocar lençol em cima. Amei! |
+| R4 | 3 | `15fa2777d5ba15537d0cfea3fc458b35` | 5 | 0,64 | Jogo de cama. Excelente produto. Recomendo a todos |
+| R5 | 1, 2 | `33e9e4a3b2e109d14a0ee690fb198a7c` | 5 | 0,55 | Jogo de lençol muito lindo...macio e aconchegante...ficou linda a minha cama.. |
+| R6 | 2 | `aef781f1cdf68558187a2d2b042179cd` | 5 | 0,32 | Lindo e de qualidade. O tamanho é excelente e a cama ficou muito nobre. Recomendo. |
+| R7 | 1 | `f559465cc5ef632af3bfc8ef12501b9d` | 4 | 0,75 | Ótimo produto e tem uma boa qualidade, tecido e costura muito bem feita. |
+| R8 | 1 | `2e6df755486ec2fa17bebd038f7d0f90` | 5 | 0,88 | Adorei a qualidade e o acabamento. |
+| R10 | 1 | `3dc34dca59e105526f4529f762ce596d` | 5 | 0,93 | Excelente tecido !!!! Recomendo! |
+| R11 | 2 | `c4840b4b962b68618ddf9dc656882bfe` | 5 | 0,79 | Roupa de cama de muito boa qualidade. Deixa o quarto lindo. |
+| R12 | 1 | `f66479352b04e33b4009139f5c6fa147` | 5 | 0,78 | Lençol de ótima qualidade! Cor um pouco mais clara do que na foto. |
+| R13 | 3 | `7c61cf4990b780ec18f2fcf6ab4c6ff5` | 5 | 0,69 | Adorei o produto...ótima qualidade!! Recomendo. |
+| R16 | 1 | `221894cf48eac99ea8e784c52e9be004` | 5 | 0,68 | Excelente produto. Adorei o cobertor. Muito confortável e bom custo benefício. |
+| R18 | 2, 3 | `f75113128c5c1962af7b554ccddb9c92` | 5 | 0,31 | Atendeu minhas espectativas! Produto muito bom. Ficou ótimo na minha cama. Compraria novamente. |
+| R19 | 2 | `54d9494c037eafacb61d86b6da1b143b` | 5 | 0,43 | Linda cortina. Adorei o tecido |
+| R20 | 3 | `5630abc53f149bdca0caecf5add198b0` | 5 | 0,60 | material do tecido muito. preço otimo,e material muito bom,eu recomendo |
+| R22 | 2, 4 | `0dfc8a64244f7f559f792e2e326434b6` | 5 | 0,39 | produto lindo,bem grande e otimo tecido entrega muito rapida estou muito satisfeita |
+| R23 | 1 | `0720c7613ace9b12d61f2b08805d11c6` | 5 | 0,78 | produto muito bom,confortavel. |
+| R26 | 2 | `651fd497cbd50edc1a7d19a3f1b87bd5` | 5 | 0,57 | É exatamente o que eu esperva,amei essa saia para cama excelente produto. |
+| R27 | 1, 3, 4 | `5b54c52e7c7594250c4fc80280ba1d92` | 5 | 0,76 | Super Recomendo. Lençol e fronhas de ótima qualidade ,já lavei inclusive e não houve problemas na coloração ou encolhimento. Entrega feita antes do prazo. |
+| R29 | 2 | `1678e11e7efd5ca53f73c6a465bf3f22` | 5 | 0,97 | Amei! Lindo o Lençol! |
+
+</details>
 
 ## Q26. O que disseram os clientes que deram nota 1 em compras de 2018?
 
@@ -175,15 +273,41 @@ _+16 evidências no JSON completo._
 >
 > *Limitações: As análises baseiam-se em uma amostra recuperada por relevância de avaliações de nota 1 do ano de 2018, cujas menções refletem os aspectos mais recorrentes reportados pelos clientes.*
 
-| id | review_id | nota | relevância | texto do cliente |
-|---|---|---|---|---|
-| R1 | `373cbeecea82…` | 1 | 0,99 | Não chegou meu produto. Péssimo |
-| R2 | `9f642a55932d…` | 1 | 0,94 | Pessimo. Não entrega o produto |
-| R3 | `95ba29208d51…` | 1 | 0,96 | Produto não entregue. Péssima empresa, não entregam os produtos. |
-| R4 | `e0837ec10457…` | 1 | 0,96 | O produto não chegou está muito atrasado. Pessima essa loja |
-| R5 | `9d6c1f490b2b…` | 1 | 0,97 | Atraso entrega. Não recebi o produto |
+<details><summary><b>As 29 evidências citadas</b> (review_id completo e insight que cada uma sustenta)</summary>
 
-_+24 evidências no JSON completo._
+| id | sustenta o insight | review_id | nota | relevância | texto do cliente |
+|---|---|---|---|---|---|
+| R1 | 1 | `373cbeecea8286a2b66c97b1b157ec46` | 1 | 0,99 | Não chegou meu produto. Péssimo |
+| R2 | 1 | `9f642a55932d21d42cb4681ee0aff6cb` | 1 | 0,94 | Pessimo. Não entrega o produto |
+| R3 | 1 | `95ba29208d5172ce9f9890946cd6e30a` | 1 | 0,96 | Produto não entregue. Péssima empresa, não entregam os produtos. |
+| R4 | 3 | `e0837ec1045787e50e4a7be51779035b` | 1 | 0,96 | O produto não chegou está muito atrasado. Pessima essa loja |
+| R5 | 3 | `9d6c1f490b2b4bfef33820b5679e2d82` | 1 | 0,97 | Atraso entrega. Não recebi o produto |
+| R6 | 3 | `4a7118b1f9c3d06869e0cd9d5c1b4ccb` | 1 | 0,98 | meu produto nao chegou esta atrasado. |
+| R7 | 3 | `2389923a5e31e36c1184402742965903` | 1 | 0,97 | entrega atrasada,produto ainda não veio |
+| R8 | 3 | `b28bfbd00dfd0c6d80e9cb524e0f205e` | 1 | 0,95 | Produto não chegou está com 2 dias de atraso |
+| R9 | 3 | `170b122d01f94b40e901a7a1d22cf67a` | 1 | 0,94 | Não recebi. O produto não chegou ainda, está em atraso. |
+| R10 | 3 | `6cc69853b87354bdb75c227a85cde581` | 1 | 0,72 | Não entregaram o produto. Loja péssima, não cumpre com seus prazos! |
+| R11 | 4 | `d4469da4ea0680551bd2f446a5e45a28` | 1 | 0,99 | pessimo. produto com defeito. |
+| R12 | 4 | `190b01af91fb754443307e59209136d6` | 1 | 0,96 | produto insatisfatorio. demora na entrega e produto de baixa qualidade |
+| R13 | 4 | `6298846cdf0eceb7ba5661c3810725b7` | 1 | 0,57 | Atrasado e com defeito. Produto chegou atrasado, mal embalado e faltando um Ilhós. |
+| R14 | 1 | `51beaf6a397e57bb1880f4f49cb0535f` | 1 | 0,97 | produto não entregue |
+| R15 | 2 | `ea98ee7eb77ad3f059f74548a87feb3a` | 1 | 0,87 | Péssimo atendimento o produto chegou mais não demorou um pouco |
+| R16 | 2 | `237ec2d8031fa4fc3d6eb3c1825273ed` | 1 | 0,93 | Entrega e Atendimento. Péssimo atendimento! |
+| R17 | 2 | `2e1d71fce98b42bf6cbdd5e06798c286` | 1 | 0,33 | Zero. O produto chegou com defeito é o site da lannister é péssimo pra trocas, suporte péssimo !!!! |
+| R19 | 1 | `93058d6f2eb8fcf4174efcf87a42b2db` | 1 | 0,96 | Meu produto não foi entregue |
+| R20 | 2, 3 | `4b25ec9d7825fbb69b4815c7ab4d94fa` | 1 | 0,40 | Entrega. Péssimo atendimento. Nao me deram nem explicações para este 1 MÊS de atraso. Nunca mais faço compras pela lannister. |
+| R21 | 1 | `f142abf096ae70fa061c66fe2d36786b` | 1 | 0,99 | Meu produto não chegou. |
+| R22 | 3 | `4d2d379325d0b5d7e92ea25ac8d289c4` | 1 | 0,97 | Meu produto está atrasado e ainda não chegou |
+| R23 | 1 | `a4f9f285b2ed89a616d93dea024eb31b` | 1 | 0,96 | Não cumpriu com o prazo e o produto não chegou. |
+| R24 | 2 | `ed8017eaaea74d271affe463beb1256d` | 1 | 0,67 | Péssimo atendimento péssima entrega. Sequer tive retorno de minha compra cadê o produto porque o PGTO já foi recebido. |
+| R25 | 2 | `07df55457e11d32f632ba70fb0257406` | 1 | 0,47 | Zero. Atendimento péssimo |
+| R26 | 4 | `9eb2e56b505c2cec094833032f94d3e1` | 1 | 0,43 | Não funciona, mais uma vez meu produto chegou com defeito! |
+| R27 | 2 | `ced0560b692ae389904d584f03f4d8bf` | 1 | 0,45 | produto com defeito. estou desde o dia 22 tentando resolver o problema do produto ter vindo com defeito, mas só me atendem no atendimento eletrônico. |
+| R28 | 3 | `cf6506ccf9e5680269e733ff320d514d` | 1 | 0,71 | Péssima entrega. Até agora não recebi meu produto. Minha esposa está tendo prejuízo financeiro por conta desse atraso, pois ela é nutricionista e está dependo disso para atender sua clientela. |
+| R29 | 3 | `d1cb6e8ac59c40427069ffddd69e0346` | 1 | 0,32 | PRODUTO 3 DIAS DE ATRASO. PRODUTO COM 3 DIAS DE ATRASO NA ENTREGA |
+| R30 | 4 | `d03d0d6dd3bfa65212e1f12ae7c0de8e` | 1 | 0,43 | Produto com defeito. O produto veio com defeito e não foi possível trocar, pois não havia como repor. |
+
+</details>
 
 ## Q42. Quais problemas aparecem em pedidos com produtos de mais de um vendedor?
 
@@ -204,15 +328,31 @@ _+24 evidências no JSON completo._
 >
 > *Limitações: A análise é baseada em uma amostra de avaliações recuperadas por relevância, refletindo os principais problemas relatados sem abranger a totalidade da base.*
 
-| id | review_id | nota | relevância | texto do cliente |
-|---|---|---|---|---|
-| R1 | `c84049c42940…` | 2 | 0,69 | Recebi pedido incompleto. Foi entregue somente parte do pedido, sendo que os produtos eram da mesma loja |
-| R2 | `ee36eb06005e…` | 1 | 0,99 | Pedido entregue incompleto. |
-| R3 | `ea367d520c1e…` | 1 | 0,61 | Nao recebi um dos produtos. o pedido veio incompleto! |
-| R4 | `96b9f6a6bda6…` | 3 | 0,50 | Pedido Incompleto. Meu produto foi entregue parcialmente, falta 01 produto e consta no status que foi entregue. |
-| R5 | `c7c623cd6435…` | 1 | 0,32 | entrega incompleta. Comprei dois produtos da mesma loja porem recebia apenas não recebi nenhum retorno da loja ate agora |
+<details><summary><b>As 19 evidências citadas</b> (review_id completo e insight que cada uma sustenta)</summary>
 
-_+14 evidências no JSON completo._
+| id | sustenta o insight | review_id | nota | relevância | texto do cliente |
+|---|---|---|---|---|---|
+| R1 | 1 | `c84049c42940addc4d9b725ee5456da6` | 2 | 0,69 | Recebi pedido incompleto. Foi entregue somente parte do pedido, sendo que os produtos eram da mesma loja |
+| R2 | 1 | `ee36eb06005e20daece65976bd9990e4` | 1 | 0,99 | Pedido entregue incompleto. |
+| R3 | 1 | `ea367d520c1e07a970c0452a97496afe` | 1 | 0,61 | Nao recebi um dos produtos. o pedido veio incompleto! |
+| R4 | 1 | `96b9f6a6bda6908a59c0a0c9a6141d2c` | 3 | 0,50 | Pedido Incompleto. Meu produto foi entregue parcialmente, falta 01 produto e consta no status que foi entregue. |
+| R5 | 2 | `c7c623cd643523c4f570e2358dec9e61` | 1 | 0,32 | entrega incompleta. Comprei dois produtos da mesma loja porem recebia apenas não recebi nenhum retorno da loja ate agora |
+| R6 | 2 | `fc61dfc1eae7e8444cbd745a0344da5f` | 2 | 0,60 | Produtos vieram incompletos,estou aguardando entrarem em contato comigo |
+| R7 | 1 | `7e4dbfbeef349260ecb3422379692204` | 2 | 0,49 | Pedido atendido parcialmente. Comprei três produtos, mas somente um dos itens foi entregue . |
+| R8 | 2 | `8cbd43b45179c8a12c3485edb697c56f` | 1 | 0,46 | Pedido veio incompleto. Vieram faltando produtos e até agora ninguém respondeu meus e-mails. |
+| R9 | 1 | `bcf1f7d1fdf796f91d59cdfab8798d7a` | 1 | 0,40 | Produto entregue faltando encomendas |
+| R10 | 1 | `2e56674aa72757a9c730a5886e3b210a` | 3 | 0,50 | Não entendo no mesmo pedido não entregarem a mercadoria completa |
+| R11 | 1 | `e70c3511b7dcbe1966bec2a3b9f959d7` | 1 | 0,37 | O pedido veio somente um produto e faltando outro. |
+| R12 | 1 | `bfcf782c80320e7e799e5f18381b5f35` | 1 | 0,44 | Ainda está no prazo, produto está incompleto |
+| R13 | 1 | `b18340cf01849bf97d176b4b011dc7c0` | 1 | 0,89 | Não foi enviado o pedido completo, somente uma parte |
+| R14 | 1 | `ff73170d8a9deb95aa4814ddbec217b4` | 2 | 0,75 | entregou faltando um produto |
+| R15 | 2 | `5148ad2bdca65375e9504355d79c6ad4` | 1 | 0,32 | Entrega incompleta. Realizei um pedido com dois itens e apenas 1 deles foi entregue. Fiz algumas reclamações e até agora ninguém entrou em contato comigo pra entregar o outro produto ou para devolver o dinheiro. |
+| R16 | 1 | `2376f556b8d5c24003acef73ab11f636` | 3 | 0,42 | Foi entregue apenas parte do pedido |
+| R17 | 1 | `d765064065d3c324c90f7e24ed6e0d12` | 1 | 0,31 | Entrega incompleta. Comprei 2 itens...uma rede de dormir e mesa com 2 cadeiras infantis .Só recebi a rede. |
+| R18 | 1 | `b8a5fabf78dad94a57610e6835fc9dd1` | 1 | 0,54 | Um dos produtos marcado como entregue não foi recebido. |
+| R19 | 1 | `06ed69462b99956d9e41146accb7f291` | 2 | 0,86 | Falta entregar um dos produtos |
+
+</details>
 
 ## Q29. Qual foi o faturamento da Olist em 2018?
 
@@ -241,16 +381,6 @@ _+14 evidências no JSON completo._
 **Resposta:**
 
 > **As evidências recuperadas não sustentam uma resposta.** As evidências recuperadas não trazem informações sobre entregas feitas por drone, abordando apenas aspectos gerais de prazos e recebimentos [R1][R3][R7]. Portanto, não é possível responder ao que os clientes acharam desse método específico de entrega.
-
-| id | review_id | nota | relevância | texto do cliente |
-|---|---|---|---|---|
-| R1 | `e10c873dd7f4…` | 5 | 0,38 | Entrega feita. Td certo com a entrega |
-| R2 | `63a5d53b4f2c…` | 4 | 0,61 | Produto entregue, |
-| R3 | `d71825799ddb…` | 5 | 0,90 | entregue. entrega rápida e eficiente |
-| R4 | `d2482a794ec9…` | 5 | 0,66 | entrega bem rapida |
-| R5 | `fe65d131efb9…` | 3 | 0,35 | entrega produto. bom |
-
-_+10 evidências no JSON completo._
 
 ## Q37. Quais reclamações existem sobre pagamento com criptomoedas?
 

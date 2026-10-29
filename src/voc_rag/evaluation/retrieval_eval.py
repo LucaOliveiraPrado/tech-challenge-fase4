@@ -113,8 +113,15 @@ COM_CONTEXTO = ["A5_metadados_polaridade", "F1_final_so_reescrita", "F2_final_mu
 
 
 def _configs() -> dict[str, RetrievalConfig]:
+    from voc_rag.indexing.vector_store import VectorStore
+
     cfgs = dict(ABLACAO) | dict(VARIANTES)
     for nome, modelo in EMBEDDINGS.items():
+        # Os modelos da comparação só existem após `voc build --modelo ...` (seção 13 do
+        # README); sem o índice, a configuração é pulada em vez de derrubar a avaliação.
+        if not VectorStore(modelo).exists():
+            log.warning("índice de %s ausente: %s fora da comparação", modelo, nome)
+            continue
         cfgs[nome] = replace(ABLACAO["A1_reescrita"], modelo_embedding=modelo)
     return cfgs
 

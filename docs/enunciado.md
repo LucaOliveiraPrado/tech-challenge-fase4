@@ -2,7 +2,7 @@
 
 > Conversão do PDF oficial `[IAST] - Tech Challenge - Fase 4.pdf` (12 páginas)
 > para Markdown. Conteúdo do enunciado preservado; a seção final
-> ("Checklist de entrega") é nossa, derivada dos requisitos.
+> ("Onde cada requisito é atendido") é nossa e aponta para o README.
 
 ---
 
@@ -108,23 +108,23 @@ recuperação: **escolha da equipe**.
 Processar o conteúdo textual das avaliações. **Definir e justificar** as
 estratégias de:
 
-- [ ] seleção dos dados;
-- [ ] limpeza e preparação dos textos;
-- [ ] tratamento de valores ausentes;
-- [ ] organização dos documentos usados pela solução;
-- [ ] criação dos embeddings;
-- [ ] armazenamento e indexação das informações.
+- seleção dos dados;
+- limpeza e preparação dos textos;
+- tratamento de valores ausentes;
+- organização dos documentos usados pela solução;
+- criação dos embeddings;
+- armazenamento e indexação das informações.
 
 ### 2. Implementação do Pipeline RAG
 
 Pipeline que recupera informação relevante a partir da pergunta do usuário.
 **Demonstrar** como ocorre:
 
-- [ ] a transformação da pergunta;
-- [ ] a recuperação semântica das avaliações;
-- [ ] a seleção dos conteúdos mais relevantes;
-- [ ] a construção do contexto enviado ao modelo de linguagem;
-- [ ] a geração da resposta final.
+- a transformação da pergunta;
+- a recuperação semântica das avaliações;
+- a seleção dos conteúdos mais relevantes;
+- a construção do contexto enviado ao modelo de linguagem;
+- a geração da resposta final.
 
 Estratégias diferentes de recuperação e enriquecimento são permitidas, desde que
 **justificadas tecnicamente**.
@@ -143,9 +143,9 @@ Estratégias diferentes de recuperação e enriquecimento são permitidas, desde
 O sistema deve reconhecer suas limitações e **não gerar informação sem suporte
 nos dados** quando:
 
-- [ ] não existem avaliações relevantes para a pergunta;
-- [ ] as evidências recuperadas são insuficientes;
-- [ ] a pergunta está fora do escopo da base de conhecimento.
+- não existem avaliações relevantes para a pergunta;
+- as evidências recuperadas são insuficientes;
+- a pergunta está fora do escopo da base de conhecimento.
 
 ---
 
@@ -187,16 +187,16 @@ qualidade da recuperação**.
 
 Conteúdo mínimo:
 
-- [ ] código-fonte da solução;
-- [ ] instruções de instalação e execução;
-- [ ] `README.md` explicando o projeto;
-- [ ] descrição da arquitetura;
-- [ ] tecnologias e bibliotecas utilizadas;
-- [ ] estratégia de construção do pipeline RAG;
-- [ ] explicação da preparação da base;
-- [ ] justificativa das principais decisões técnicas;
-- [ ] exemplos de perguntas e respostas;
-- [ ] informações para reproduzir a solução.
+- código-fonte da solução;
+- instruções de instalação e execução;
+- `README.md` explicando o projeto;
+- descrição da arquitetura;
+- tecnologias e bibliotecas utilizadas;
+- estratégia de construção do pipeline RAG;
+- explicação da preparação da base;
+- justificativa das principais decisões técnicas;
+- exemplos de perguntas e respostas;
+- informações para reproduzir a solução.
 
 **Organização e clareza do repositório também contam na nota.**
 
@@ -204,14 +204,14 @@ Conteúdo mínimo:
 
 Demonstrar de forma objetiva:
 
-- [ ] o problema de negócio;
-- [ ] a arquitetura proposta;
-- [ ] a estratégia do pipeline RAG;
-- [ ] como ocorre a recuperação das avaliações relevantes;
-- [ ] demonstração prática da solução;
-- [ ] exemplos de perguntas;
-- [ ] as evidências recuperadas que fundamentam as respostas;
-- [ ] os principais desafios e decisões técnicas da equipe.
+- o problema de negócio;
+- a arquitetura proposta;
+- a estratégia do pipeline RAG;
+- como ocorre a recuperação das avaliações relevantes;
+- demonstração prática da solução;
+- exemplos de perguntas;
+- as evidências recuperadas que fundamentam as respostas;
+- os principais desafios e decisões técnicas da equipe.
 
 O vídeo deve mostrar **o raciocínio técnico** por trás da solução, não só o
 funcionamento da aplicação.
@@ -220,27 +220,16 @@ funcionamento da aplicação.
 
 Um RAG eficiente **não** é avaliado só pela qualidade textual. A solução deve:
 
-- [ ] recuperar conteúdos relevantes;
-- [ ] construir contexto adequado para o modelo;
-- [ ] gerar respostas coerentes com as evidências;
-- [ ] evitar informações não fundamentadas;
-- [ ] permitir a rastreabilidade dos insights;
-- [ ] reconhecer quando não há informação suficiente para responder.
+- recuperar conteúdos relevantes;
+- construir contexto adequado para o modelo;
+- gerar respostas coerentes com as evidências;
+- evitar informações não fundamentadas;
+- permitir a rastreabilidade dos insights;
+- reconhecer quando não há informação suficiente para responder.
 
 ---
 
-## Checklist de entrega (nosso, para nota máxima)
+## Onde cada requisito é atendido
 
-Mapeamento requisito → onde fica a prova no repositório. Preenchido conforme o
-projeto avança.
-
-| Requisito | Prova no repositório |
-|---|---|
-| Base de conhecimento justificada (6 itens) | _a definir_ |
-| Pipeline RAG demonstrado (5 etapas) | _a definir_ |
-| Evidências rastreáveis por avaliação | _a definir_ |
-| Abstenção (3 cenários) | _a definir_ |
-| Metadados (bônus) com justificativa de ganho | _a definir_ |
-| Avaliação quantitativa (recuperação + fidelidade + abstenção) | _a definir_ |
-| README com os 10 itens mínimos | _a definir_ |
-| Vídeo até 7 min com os 8 tópicos | _a definir_ |
+O mapa requisito → prova no repositório fica no README, logo após o sumário:
+[Onde está cada requisito do enunciado](../README.md#onde-está-cada-requisito-do-enunciado).

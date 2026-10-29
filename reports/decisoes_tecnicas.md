@@ -200,6 +200,12 @@ criptomoeda, "iPhone 15" e retirada em loja), 1 por falta de evidência relevant
 ar-condicionado, relevância máxima 0,01) e 2 pela geração (drone, painel solar), em que a
 recuperação trouxe avaliações sobre "entrega" e "instalação" e o LLM reconheceu que elas não
 tratam do assunto perguntado (`reports/avaliacao_geracao.json`).
+**Desvio conhecido:** cashback, criptomoeda, iPhone 15 e retirada em loja foram escritas para
+testar a camada de relevância, mas a análise da pergunta as recusou antes, por escopo. A decisão
+final está certa, porém o motivo que o LLM escreve nessa camada não consulta a base e pode
+afirmar fatos sem suporte ("a loja não tem programa de cashback"). Por isso a resposta ao usuário
+traz um texto neutro sobre o escopo da base, e o motivo do LLM aparece só no rastro técnico,
+identificado como tal. A camada de relevância ficou exercitada por uma única pergunta (Q44).
 
 ### D16: Saída estruturada e citações verificadas por código
 
@@ -283,7 +289,7 @@ esgotou no primeiro dia: `GenerateRequestsPerDayPerProjectPerModel-FreeTier = 20
 |---|---|---|---|
 | Análise da pergunta e geração | `gemini-3.5-flash-lite` | `gemini-3.1-flash-lite` | cota diária compatível com uso e avaliação; JSON estável e ~2 s na análise |
 | Rotulagem de aspectos | `gemini-3.5-flash-lite` | n/a | tarefa simples em lote |
-| Juiz da avaliação | `gemini-3.6-flash` | `gemini-3.7-flash`, `gemini-3.8-flash` | modelo diferente (e mais forte) que o gerador, reduz autoaprovação |
+| Juiz da avaliação | `gemini-3.6-flash` | `gemini-3.7-flash`, `gemini-3.8-flash`, `gemini-3.1-flash-lite` | modelo diferente do gerador, reduz autoaprovação; o último da lista é o juiz de reserva quando a cota dos "flash" acaba |
 
 **Engenharia em torno da cota:** 429 de cota **diária** falha rápido (não adianta repetir) e passa
 ao próximo modelo da lista; 429 por minuto e 503 fazem retry com backoff; cache em disco por hash
@@ -315,15 +321,20 @@ ou a categoria e zerava avaliações corretas. Nas perguntas com recorte ele pas
 cada avaliação, e os julgamentos foram refeitos.
 **Juízes efetivos:** a cota gratuita dos modelos "flash" acaba no meio de cada rodada; dos 5.102
 pares, 3.758 foram julgados pelo `gemini-3.1-flash-lite`, 663 pelo `gemini-3.6-flash`, 355 pelo
-`gemini-3.7-flash` e 326 pelo `gemini-3.8-flash`. Cada par é julgado uma vez e reaproveitado; as
-configurações de uma pergunta são medidas sobre os mesmos julgamentos.
-**Concordância entre juízes:** 6 perguntas (626 pares) rejulgadas pelo `gemini-3.5-flash`:
+`gemini-3.7-flash` e 326 pelo `gemini-3.8-flash`; 22 das 37 perguntas julgadas têm pares de dois
+ou três modelos. Cada par é julgado uma vez e reaproveitado; as configurações de uma pergunta são
+medidas sobre os mesmos julgamentos, então a comparação entre configurações é justa mesmo com
+juízes mistos.
+**Concordância entre juízes:** 6 perguntas (626 pares), escolhidas à mão para cobrir os grupos
+(não sorteadas), rejulgadas pelo `gemini-3.5-flash`:
 concordância exata de 90,4% na escala 0/1/2 (kappa ponderado 0,887) e de 96,0% na decisão
 "evidência clara", a usada na P@10 (kappa 0,916). Kappa acima de 0,8 é concordância quase
 perfeita: o juiz de reserva mede o mesmo que um modelo "flash"
 (`reports/concordancia_juizes.json`).
 **Limite:** os juízes são LLMs e podem compartilhar vieses; não houve dupla anotação humana em
-escala.
+escala. A concordância acima vale para a **relevância**; a **fidelidade** dos insights teve um
+único juiz (o de reserva, `gemini-3.1-flash-lite`), por isso o README reporta também o critério
+estrito (insights integralmente sustentados) ao lado do escore com meio ponto para "parcial".
 
 ### D22: Reprodutibilidade
 
@@ -338,3 +349,18 @@ limpo, em CPU e sem chave: as perguntas da avaliação reproduzem as mesmas deci
 fora de escopo, sem evidência) a partir do cache. Alternativas descartadas: versionar o índice
 no git (1,2 GB) e publicar o ChromaDB pronto (amarrado à versão do Chroma e aos três modelos da
 comparação de embeddings).
+
+### D23: Conjunto de perguntas: desenvolvimento, não teste retido
+
+**Problema:** não existe um conjunto público de perguntas de gestores com respostas esperadas
+para esta base.
+**Decisão:** 44 perguntas escritas pela equipe (`eval/perguntas.json`): os cinco tipos do
+enunciado, as perguntas do problema de negócio, 11 com recorte por metadado, 6 fora do escopo e
+7 sem evidência, cada respondível com um critério de relevância escrito à mão.
+**Limite assumido:** o mesmo conjunto guiou as escolhas (sistema final, ordem RRF, limiar 0,30,
+redação dos prompts) e mediu o resultado, e alguns exemplos do prompt de análise coincidem com
+temas do teste (drone, cashback, faturamento). Os números são, portanto, de desenvolvimento:
+comparam bem as configurações entre si (todas medidas sobre os mesmos julgamentos), mas tendem a
+ser otimistas como estimativa absoluta. Com 13 recusas esperadas, "13 de 13" tem intervalo de
+confiança de Wilson de 95% entre 0,77 e 1,00. A forma correta de estimar sem viés é um conjunto
+retido, escrito depois de congelado o sistema e rodado uma única vez.
