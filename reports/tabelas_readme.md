@@ -12,58 +12,59 @@
 | Etapa | P@5 | P@10 | nDCG@10 | MRR | Hit@5 |
 |---|---|---|---|---|---|
 | RAG ingênuo (pergunta crua, só vetor) | 0,548 | 0,561 | 0,619 | 0,691 | 0,839 |
-| + reescrita da pergunta | 0,723 | 0,703 | 0,723 | 0,789 | 0,806 |
-| + BM25 (busca híbrida, fusão RRF) | 0,723 | 0,713 | 0,728 | 0,793 | 0,839 |
-| **+ filtros de metadado e polaridade (sistema final)** | 0,923 | 0,926 | 0,941 | 0,968 | 1,000 |
+| + reescrita da pergunta | 0,736 | 0,713 | 0,733 | 0,795 | 0,839 |
+| + BM25 (busca híbrida, fusão RRF) | 0,690 | 0,703 | 0,713 | 0,760 | 0,774 |
+| **+ filtros de metadado e polaridade (sistema final)** | 0,942 | 0,929 | 0,950 | 0,984 | 1,000 |
 
 <!-- ablacao_recorte -->
 | Etapa | P@10 sem recorte (20 perguntas) | P@10 com recorte (11 perguntas) |
 |---|---|---|
 | RAG ingênuo (pergunta crua, só vetor) | 0,755 | 0,209 |
-| + reescrita da pergunta | 0,925 | 0,300 |
-| + BM25 (busca híbrida, fusão RRF) | 0,955 | 0,273 |
-| + filtros de metadado e polaridade (sistema final) | 0,955 | 0,873 |
+| + reescrita da pergunta | 0,955 | 0,273 |
+| + BM25 (busca híbrida, fusão RRF) | 0,960 | 0,236 |
+| + filtros de metadado e polaridade (sistema final) | 0,945 | 0,900 |
 
 <!-- descartadas -->
-| Técnica testada | P@10 com | P@10 sem | Decisão |
-|---|---|---|---|
-| multi-query + HyDE no sistema completo | 0,903 | 0,926 | descartada |
-| reranker ordenando o resultado da busca híbrida | 0,648 | 0,703 | descartada |
-| reranker contra a consulta principal (em vez do máximo) | 0,668 | 0,703 | descartada |
-| sistema completo ordenado pelo reranker | 0,871 | 0,926 | descartada |
+| Técnica testada | P@10 com | P@10 sem | Diferença (IC 95%) | Decisão |
+|---|---|---|---|---|
+| multi-query + HyDE no sistema completo | 0,916 | 0,929 | -0,013 [-0,061; +0,035] (empate) | descartada |
+| reranker ordenando o resultado da busca híbrida | 0,655 | 0,703 | -0,048 [-0,106; +0,006] (empate) | descartada |
+| reranker contra a consulta principal (em vez do máximo) | 0,674 | 0,703 | -0,029 [-0,084; +0,029] (empate) | descartada |
+| sistema completo ordenado pelo reranker | 0,861 | 0,929 | -0,068 [-0,129; -0,013] | descartada |
 
 <!-- embeddings -->
-| Modelo de embedding | P@10 | nDCG@10 | MRR |
-|---|---|---|---|
-| paraphrase-multilingual-MiniLM-L12-v2 | 0,632 | 0,664 | 0,758 |
-| multilingual-e5-base | 0,671 | 0,686 | 0,762 |
-| **bge-m3 (escolhido)** | 0,703 | 0,723 | 0,789 |
+| Modelo de embedding | P@10 | nDCG@10 | MRR | P@10 contra o bge-m3 (IC 95%) |
+|---|---|---|---|---|
+| paraphrase-multilingual-MiniLM-L12-v2 | 0,632 | 0,645 | 0,715 | -0,081 [-0,145; -0,026] |
+| multilingual-e5-base | 0,632 | 0,651 | 0,743 | -0,081 [-0,148; -0,023] |
+| **bge-m3 (escolhido)** | 0,713 | 0,733 | 0,795 | referência |
 
 <!-- metadados -->
 | 11 perguntas com recorte por metadado | Sem filtros | Com filtros (sistema final) |
 |---|---|---|
-| Conformidade ao recorte (top-10) | 30,9% | **95,5%** |
-| P@10 (juiz vê os metadados) | 0,273 | **0,873** |
+| Conformidade ao recorte (top-10) | 27,3% | **98,2%** |
+| P@10 (juiz vê os metadados) | 0,236 | **0,900** |
 
 <!-- geracao -->
 | Métrica | Resultado |
 |---|---|
 | Decisão responder x abster correta | 100,0% (44 de 44) |
-| Abstenções corretas (fora de escopo + sem evidência) | 13 de 13 |
+| Abstenções corretas (fora de escopo + sem evidência) | 13 de 13 (IC 95% [0,77; 1,00]) |
 | Perguntas respondíveis recusadas indevidamente | 0 de 31 |
-| Citações válidas (verificadas por código) | 100,0% de 669 |
-| Fidelidade dos insights (juiz; sustentado = 1, parcial = 0,5) | 0,96 em 98 insights |
-| Insights integralmente sustentados (critério estrito) | 90 de 98 (91,8%) |
-| Resumos sustentados pelas evidências citadas | 93,5% |
-| Precisão do contexto enviado ao LLM | 92,3% |
+| Citações válidas (verificadas por código) | 100,0% de 714 |
+| Avaliações citadas que o juiz marcou como evidência clara (relacionadas) | 93,2% (98,7%) de 632 julgadas |
+| Fidelidade dos insights (juiz; sustentado = 1, parcial = 0,5) | 0,99 em 103 insights |
+| Insights integralmente sustentados (critério estrito) | 101 de 103 (98,1%) |
+| Resumos sustentados pelas evidências citadas | 96,8% |
+| Precisão do contexto enviado ao LLM | 91,6% |
 | Extração correta dos filtros de metadado | 100% |
-| AUC do reranker contra o juiz | 0,707 |
+| AUC do reranker contra o juiz | 0,833 |
 
 <!-- abstencao -->
 | Camada que recusou | Recusas | Perguntas |
 |---|---|---|
-| 1. Escopo (análise da pergunta, antes de buscar) | 10 | Q29, Q30, Q31, Q32, Q33, Q34, Q36, Q37, Q38, Q40 |
-| 2. Relevância (porteiro: menos de 3 evidências acima do limiar) | 1 | Q44 |
+| 1. Escopo (análise da pergunta, antes de buscar) | 7 | Q29, Q30, Q31, Q32, Q33, Q34, Q38 |
+| 2. Relevância (porteiro: menos de 3 evidências acima do limiar) | 4 | Q36, Q37, Q40, Q44 |
 | 3. Suficiência (geração: evidências não respondem) | 2 | Q35, Q39 |
 
 <!-- multivendedor -->
@@ -88,30 +89,33 @@ pedidos com itens de **mais de um vendedor** (838 comentários) têm 61,3% de av
 <!-- exemplo -->
 **Pergunta:** Quais avaliações sustentam a conclusão de que existem problemas recorrentes relacionados ao prazo de entrega?
 
-> As 15 avaliações recuperadas sustentam a conclusão de que existem problemas recorrentes com o prazo de entrega, evidenciados pelo descumprimento de prazos [R1][R2][R3][R4] e pelo não recebimento das mercadorias [R5][R6][R7][R8]. Os clientes relatam atrasos significativos e falta de aviso prévio por parte da empresa [R9][R10][R15].
+> O problema de prazo de entrega é corroborado pelo quadro de frequências, que aponta atraso na entrega em 21,2% e produto não recebido em 33,0% das 14445 avaliações do recorte. Todas as 15 avaliações recuperadas sustentam essa conclusão, evidenciando falhas no cumprimento de datas prometidas [R1][R5][R10][R15]. Os clientes relatam insatisfação com a demora e com a falta de entrega dos itens [R2][R6][R11].
 >
-> - **Atrasos recorrentes nas entregas**: Os consumidores apontam o descumprimento sistemático dos prazos estabelecidos para o envio das mercadorias [R1][R3][R4][R10]. Também há menção sobre a falta de comunicação e aviso prévio a respeito da demora [R15]. *(apoio: 10 de 15 evidências)*
-> - **Produtos não entregues após o prazo**: Várias avaliações destacam que os produtos não chegaram aos destinatários mesmo após o término do prazo determinado [R2][R4][R6][R11]. Ocorrem situações de demora extrema e pedidos não entregues [R11][R13][R14]. *(apoio: 10 de 15 evidências)*
+> - **Descumprimento de prazos de entrega**: Os clientes relatam recorrentemente que a loja não cumpre os prazos estabelecidos para a entrega das mercadorias [R1][R2][R5][R6]. Há queixas explícitas sobre o não cumprimento das datas prometidas no momento da compra [R3][R8][R10][R13]. *(apoio: 8 de 15 evidências)*
+> - **Atrasos prolongados e produtos não entregues**: Várias avaliações apontam que os produtos estão atrasados e não chegaram aos endereços dos consumidores [R4][R7][R9][R11]. Também são relatados prazos longos e a ausência de recebimento definitivo dos itens [R12][R14]. *(apoio: 6 de 15 evidências)*
+> - **Falta de comunicação sobre o atraso**: Os consumidores destacam a ausência de aviso prévio sobre os problemas de atraso na entrega [R13]. Além disso, é apontada a falta de satisfação ou justificativas por parte da empresa quanto à demora [R15]. *(apoio: 2 de 15 evidências)*
 >
-> *Limitações: Este relatório fundamenta a análise em uma amostra de 15 avaliações recuperadas por relevância a partir de um recorte de 14445 comentários, portanto a frequência observada vale apenas para esta amostra.*
+> *Limitações: O quadro de frequências indica a proporção na base completa de 14445 avaliações do recorte, enquanto as 15 evidências representam apenas uma amostra recuperada por relevância.*
+>
+> *Percentuais: estimativa do classificador de aspectos sobre as 14.445 avaliações com comentário do recorte (nota de 1 a 3).*
 
 | id | sustenta o insight | review_id | nota | texto do cliente |
 |---|---|---|---|---|
 | R1 | 1 | `10467dc456e818c60bd750271b5d183e` | 1 | atraso na entrega da mercadoria,não cumpre prazo determinado. |
-| R2 | 2 | `a4f9f285b2ed89a616d93dea024eb31b` | 1 | Não cumpriu com o prazo e o produto não chegou. |
+| R2 | 1 | `a4f9f285b2ed89a616d93dea024eb31b` | 1 | Não cumpriu com o prazo e o produto não chegou. |
 | R3 | 1 | `48b3ce236ea9d35a4850ea94ca9ca38f` | 2 | Atraso. Produto não chegou no prazo |
-| R4 | 1, 2 | `1bfec3e913196c72c1ea06fc8816bd9c` | 1 | entrega atrasada. o prazo terminou e nao recebi meu produto |
-| R5 | 1, 2 | `9d6c1f490b2b4bfef33820b5679e2d82` | 1 | Atraso entrega. Não recebi o produto |
-| R6 | 2 | `986820c39b1a0f1c99bf0592080078bd` | 1 | Não cumpriram o prazo de entrega,ainda não recebi o produto |
-| R7 | 1 | `2389923a5e31e36c1184402742965903` | 1 | entrega atrasada,produto ainda não veio |
-| R8 | 1, 2 | `4a7118b1f9c3d06869e0cd9d5c1b4ccb` | 1 | meu produto nao chegou esta atrasado. |
-| R9 | 1, 2 | `6bb17113a061e2e8bb65b706278b4d75` | 2 | Prazo de entrega não foi cumprido. Encomenda ainda não chegou. |
-| R10 | 1 | `f6cdef6e564ca38cd4dcff3ddba22fe1` | 3 | Produto com o prazo de entrega atrasado |
-| R11 | 2 | `81a57c09af35f9736f760b6ae16af118` | 1 | Demora, produto nao entregue! |
-| R12 | 1, 2 | `a1e9b5056896b01638a5aa8e02673955` | 1 | demora na entrega (ainda nao chegou fora do prazo) |
-| R13 | 2 | `0b89db97b78e8a32cf537f263f4aeb65` | 1 | Não cumpre o prazo de entrega,até agora não recebi o meu produto. |
-| R14 | 2 | `1f3f5e3000ed6307fbda490057bfa59b` | 2 | Atraso na entrega. Ainda não recebi o produto. |
-| R15 | 1 | `85a391b84d8e864de7190a2afb6f82e4` | 1 | não cumpre prazo. Não cumpriram prazo de entrega e nem avisaram o atraso. |
+| R4 | 2 | `4a7118b1f9c3d06869e0cd9d5c1b4ccb` | 1 | meu produto nao chegou esta atrasado. |
+| R5 | 1 | `f2a8882c104b38310adaf0a9a521b42f` | 1 | Produto atrasado, loja não cumpre o q promete. |
+| R6 | 1 | `7a37e297352c8a7b1652f721c861dcd6` | 1 | Não cumpriu o prazo de entrega. |
+| R7 | 2 | `1bfec3e913196c72c1ea06fc8816bd9c` | 1 | entrega atrasada. o prazo terminou e nao recebi meu produto |
+| R8 | 1 | `6bb17113a061e2e8bb65b706278b4d75` | 2 | Prazo de entrega não foi cumprido. Encomenda ainda não chegou. |
+| R9 | 2 | `b28bfbd00dfd0c6d80e9cb524e0f205e` | 1 | Produto não chegou está com 2 dias de atraso |
+| R10 | 1 | `986820c39b1a0f1c99bf0592080078bd` | 1 | Não cumpriram o prazo de entrega,ainda não recebi o produto |
+| R11 | 2 | `4d2d379325d0b5d7e92ea25ac8d289c4` | 1 | Meu produto está atrasado e ainda não chegou |
+| R12 | 2 | `170b122d01f94b40e901a7a1d22cf67a` | 1 | Não recebi. O produto não chegou ainda, está em atraso. |
+| R13 | 1, 3 | `85a391b84d8e864de7190a2afb6f82e4` | 1 | não cumpre prazo. Não cumpriram prazo de entrega e nem avisaram o atraso. |
+| R14 | 2 | `8b592f04ffb1115da4b08205a4f0f3b1` | 1 | prazo longo de entrega e não chegou no prazo |
+| R15 | 3 | `c3039a71818e8c4ebe2f1a905ab1f863` | 1 | Demora muito e eles não dão satisfação pelo motivo do atraso |
 
 <!-- aspectos -->
 micro-F1 0,789 e macro-F1 0,744 em 600 rótulos de teste

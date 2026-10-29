@@ -6,7 +6,7 @@
     │ 2. recuperação híbrida + reranker + seleção
     ├── recorte vazio / nenhuma evidência relevante ─► abstém
     ├── poucas evidências relevantes ────────────────► mostra evidências, sem generalizar
-    │ 3. quadro de frequências (perguntas de panorama)
+    │ 3. quadro de frequências (perguntas de panorama e de evidência)
     │ 4. geração (LLM) com contexto numerado
     ├── LLM declara evidência insuficiente ──────────► abstém
     │ 5. validação das citações (código)
@@ -111,6 +111,10 @@ def render_markdown(g: RespostaGerada, n_evidencias: int) -> str:
     return "\n".join(linhas).strip()
 
 
+def _qtd(n: int, singular: str, plural: str) -> str:
+    return f"{n} {singular if n == 1 else plural}"
+
+
 def _milhar(n: int) -> str:
     return f"{n:,}".replace(",", ".")
 
@@ -143,7 +147,9 @@ class VoCPipeline:
 
     # ---------------------------------------------------------------- etapas
     def _quadro(self, analise: AnalisePergunta, rec: ResultadoRecuperacao):
-        if not self.usar_quadro or analise.tipo != "panorama":
+        # "Evidência" também recebe o quadro: pedir provas de um problema "recorrente" é
+        # pedir frequência, e o top-k não conta.
+        if not self.usar_quadro or analise.tipo not in ("panorama", "evidencia"):
             return None, None
         from voc_rag.themes.taxonomy import quadro_frequencias
 
@@ -200,10 +206,11 @@ class VoCPipeline:
 
         if rec.n_relevantes < self.cfg.min_evidencias:
             md = (
-                f"**Evidência insuficiente para apontar um padrão.** Encontrei apenas "
-                f"{rec.n_relevantes} avaliação(ões) relevante(s) no recorte ({recorte}), "
-                f"abaixo do mínimo de {self.cfg.min_evidencias}. Seguem as evidências, "
-                f"sem generalização:\n\n{_lista_evidencias(evidencias)}"
+                f"**Evidência insuficiente para apontar um padrão.** Só "
+                f"{_qtd(rec.n_relevantes, 'avaliação passou', 'avaliações passaram')} pelo "
+                f"limiar de relevância no recorte ({recorte}), abaixo do mínimo de "
+                f"{self.cfg.min_evidencias}. Não generalizo; seguem para conferência, sem "
+                f"verificação de que tratam do tema:\n\n{_lista_evidencias(evidencias)}"
             )
             tempos["total_s"] = round(time.perf_counter() - t0, 3)
             return Resposta(pergunta, "evidencia_insuficiente", md, analise, rec, evidencias,

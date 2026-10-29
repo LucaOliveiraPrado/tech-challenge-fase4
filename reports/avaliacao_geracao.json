@@ -39,27 +39,28 @@
         "respondida": 3
       },
       "sem_evidencia": {
-        "fora_escopo": 4,
+        "evidencia_insuficiente": 3,
         "nao_respondida": 2,
+        "fora_escopo": 1,
         "sem_evidencia": 1
       }
     }
   },
   "citacoes": {
     "respostas_com_citacao": 33,
-    "citacoes_total": 669,
+    "citacoes_total": 714,
     "citacoes_validas_pct": 1.0,
-    "insights_total": 98,
+    "insights_total": 103,
     "insights_descartados_sem_evidencia": 0
   },
   "fidelidade": {
-    "insights_julgados": 98,
+    "insights_julgados": 103,
     "distribuicao": {
-      "sustentado": 90,
-      "parcial": 8
+      "sustentado": 101,
+      "parcial": 2
     },
-    "escore_fidelidade": 0.9592,
-    "resumos_sustentados_pct": 0.9355
+    "escore_fidelidade": 0.9903,
+    "resumos_sustentados_pct": 0.9677
   },
   "extracao_filtros": {
     "perguntas": 11,
@@ -113,7 +114,7 @@
   },
   "latencia": {
     "total_mediana_s_respondidas": 0.32,
-    "recuperacao_mediana_s": 0.3,
+    "recuperacao_mediana_s": 0.307,
     "geracao_mediana_s": 0.0,
     "analise_mediana_s": 0.0
   },
@@ -126,18 +127,18 @@
     "por_etapa": {
       "analise_pergunta": {
         "chamadas": 44,
-        "tokens_entrada": 66226,
-        "tokens_saida": 11970
+        "tokens_entrada": 78766,
+        "tokens_saida": 13402
       },
       "geracao": {
         "chamadas": 33,
-        "tokens_entrada": 74285,
-        "tokens_saida": 17685
+        "tokens_entrada": 72625,
+        "tokens_saida": 18051
       },
       "geracao_reforco": {
         "chamadas": 3,
-        "tokens_entrada": 8260,
-        "tokens_saida": 1522
+        "tokens_entrada": 6605,
+        "tokens_saida": 1898
       }
     }
   }

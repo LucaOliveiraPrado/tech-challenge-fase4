@@ -43,7 +43,8 @@ situação da entrega virou metadado de cada documento e filtro de busca."
 
 "O pipeline tem cinco etapas. (mostrar o diagrama do README)
 
-Um: um LLM analisa a pergunta. Ele decide se está no escopo, extrai filtros como 'nota baixa' ou
+Um: um LLM analisa a pergunta. Ele responde se a pergunta é sobre experiência de compra, e o
+código decide o escopo a partir disso; ele também extrai filtros como 'nota baixa' ou
 'cama, mesa e banho' e reescreve a pergunta no vocabulário do cliente. Isso importa porque o
 gestor pergunta 'quais reclamações aparecem com mais frequência' e o cliente escreve 'comprei dia
 10 e até hoje nada'.
@@ -58,7 +59,7 @@ vizinhos e piorou a precisão. Então a ordem final é a da fusão, e o reranker
 decide se há evidência relevante o bastante.
 
 Quatro: o contexto. Evidências numeradas, com nota, atraso e categoria de cada uma. Em perguntas
-de panorama entra também um quadro de frequências, porque o top-k mostra as avaliações mais
+de panorama, e nas que pedem evidência de algo recorrente, entra também um quadro de frequências, porque o top-k mostra as avaliações mais
 relevantes, mas não conta: um classificador de aspectos estima a frequência de cada tema na base
 inteira.
 
@@ -99,16 +100,16 @@ escopo e sete sem evidência na base. A relevância foi julgada por pooling, com
 busca, com um LLM juiz diferente do que gera as respostas.
 
 A ablação mostra o caminho: o RAG ingênuo, com a pergunta crua contra o vetor, coloca 56% de
-evidência clara no top-10; a reescrita sobe para 70%; com os filtros de metadado, o sistema final
-chega a 93%. E medir mudou o sistema: multi-query, HyDE e a reordenação pelo reranker pioraram o
-sistema completo e ficaram de fora. Isso só aparece porque medimos.
+evidência clara no top-10; a reescrita sobe para 71%; com os filtros de metadado, o sistema final
+chega a 93%. E medir mudou o sistema: multi-query e HyDE não trouxeram ganho e a reordenação pelo
+reranker piorou a precisão; ficaram de fora. Isso só aparece porque medimos.
 
 Nas perguntas com recorte, inclusive pagamento, valor e número de vendedores, os metadados levam a
-conformidade ao recorte de 31% para 96%, e a precisão de 0,27 para 0,87. E revelam padrão: pedidos
+conformidade ao recorte de 27% para 98%, e a precisão de 0,24 para 0,90. E revelam padrão: pedidos
 com mais de um vendedor têm 61% de avaliações negativas, contra 26% no geral.
 
 Ponta a ponta: 44 de 44 decisões corretas entre responder e abster, 100% das citações válidas e
-fidelidade de 0,96 nos insights, auditada por um modelo diferente do que gera. Como as perguntas
+fidelidade de 0,99 nos insights, auditada por um modelo diferente do que gera. Como as perguntas
 são nossas e guiaram as escolhas, tratamos esses números como de desenvolvimento."
 
 *(Visuais: `avaliacao_ablacao.png`, tabelas do README, notebook 03.)*

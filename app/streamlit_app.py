@@ -243,8 +243,10 @@ if mostrar_rastro and r.analise is not None:
     with c1:
         st.markdown("**1. Análise da pergunta**")
         st.markdown(
-            f"- Escopo: `{a.escopo}` (motivo dado pelo LLM, sem consultar a base: "
-            f"{a.motivo_escopo})\n"
+            f"- Escopo: `{a.escopo}` ("
+            + (a.motivo_escopo if a.motivo_escopo.startswith("regra:") else
+               f"motivo dado pelo LLM, sem consultar a base: {a.motivo_escopo}")
+            + ")\n"
             f"- Tipo: `{a.tipo}` · Polaridade: `{a.polaridade}`\n"
             f"- Filtros extraídos: `{a.filtros.descricao()}`"
         )

@@ -33,6 +33,60 @@ def _pct(x: float, casas: int = 1) -> str:
     return f"{100 * x:.{casas}f}%".replace(".", ",")
 
 
+def ic_diferenca(pp: dict, com: str, sem: str, n_boot: int = 10_000) -> tuple[float, float, float]:
+    """Diferença média de P@10 (com - sem) e IC 95% por bootstrap pareado nas perguntas."""
+    import numpy as np
+
+    qids = [q for q in pp if com in pp[q] and sem in pp[q]]
+    d = np.array([pp[q][com]["p@10"] - pp[q][sem]["p@10"] for q in qids])
+    rng = np.random.default_rng(42)
+    medias = d[rng.integers(0, len(d), size=(n_boot, len(d)))].mean(axis=1)
+    return float(d.mean()), float(np.percentile(medias, 2.5)), float(np.percentile(medias, 97.5))
+
+
+def _wilson(k: int, n: int, z: float = 1.96) -> str:
+    """Intervalo de Wilson para uma proporção (adequado a n pequeno e a 100%)."""
+    if n == 0:
+        return "n/a"
+    p = k / n
+    centro = (p + z * z / (2 * n)) / (1 + z * z / n)
+    meia = z * ((p * (1 - p) / n + z * z / (4 * n * n)) ** 0.5) / (1 + z * z / n)
+    return f"[{_n(max(0.0, centro - meia), 2)}; {_n(min(1.0, centro + meia), 2)}]"
+
+
+def _ic_txt(pp: dict, com: str, sem: str) -> str:
+    m, lo, hi = ic_diferenca(pp, com, sem)
+    def s(x: float) -> str:
+        return ("+" if x > 0 else "") + _n(x)
+    empate = " (empate)" if lo <= 0 <= hi else ""
+    return f"{s(m)} [{s(lo)}; {s(hi)}]{empate}"
+
+
+def precisao_citacoes(registros: list[dict]) -> dict | None:
+    """Fração das avaliações citadas que o juiz de relevância marcou como evidência clara (2),
+    entre as citadas que foram julgadas para aquela pergunta."""
+    import pandas as pd
+
+    from voc_rag.config import EVAL_DIR
+
+    caminho = EVAL_DIR / "julgamentos_relevancia.csv"
+    if not caminho.exists():
+        return None
+    julg = pd.read_csv(caminho).set_index(["qid", "review_id"])["relevancia"].to_dict()
+    graus = []
+    for r in registros:
+        mapa = _citadas_por_insight(r)
+        for e in r.get("evidencias", []):
+            if e["rotulo"] in mapa and (r["id"], e["review_id"]) in julg:
+                graus.append(julg[(r["id"], e["review_id"])])
+    n_cit = sum(len(_citadas_por_insight(r)) for r in registros)
+    if not graus:
+        return None
+    return {"julgadas": len(graus), "citadas": n_cit,
+            "clara": sum(g == 2 for g in graus) / len(graus),
+            "relacionada": sum(g >= 1 for g in graus) / len(graus)}
+
+
 def gera_tabelas_readme() -> dict[str, str]:
     """Tabelas do README geradas dos JSON (o teste test_readme_numeros garante a cópia fiel)."""
     rec = json.loads((REPORTS_DIR / "avaliacao_recuperacao.json").read_text(encoding="utf-8"))
@@ -101,20 +155,24 @@ def gera_tabelas_readme() -> dict[str, str]:
         ("sistema completo ordenado pelo reranker", "A5_metadados_polaridade",
          "F1_final_so_reescrita"),
     ]
-    linhas = ["| Técnica testada | P@10 com | P@10 sem | Decisão |", "|---|---|---|---|"]
+    linhas = ["| Técnica testada | P@10 com | P@10 sem | Diferença (IC 95%) | Decisão |",
+              "|---|---|---|---|---|"]
     for nome, com, sem in testes:
         linhas.append(f"| {nome} | {_n(cfg[com]['p@10'])} | {_n(cfg[sem]['p@10'])} | "
-                      "descartada |")
+                      f"{_ic_txt(pp, com, sem)} | descartada |")
     t["descartadas"] = "\n".join(linhas)
 
     emb = [("E_minilm", "paraphrase-multilingual-MiniLM-L12-v2"),
            ("E_e5_base", "multilingual-e5-base"), ("E_bge_m3", "**bge-m3 (escolhido)**")]
-    linhas = ["| Modelo de embedding | P@10 | nDCG@10 | MRR |", "|---|---|---|---|"]
+    linhas = ["| Modelo de embedding | P@10 | nDCG@10 | MRR | P@10 contra o bge-m3 (IC 95%) |",
+              "|---|---|---|---|---|"]
     for k, nome in emb:
         if k not in cfg:  # índice do modelo ausente nesta execução (retrieval_eval._configs)
             continue
         c = cfg[k]
-        linhas.append(f"| {nome} | {_n(c['p@10'])} | {_n(c['ndcg@10'])} | {_n(c['mrr'])} |")
+        ic = "referência" if k == "E_bge_m3" else _ic_txt(pp, k, "E_bge_m3")
+        linhas.append(f"| {nome} | {_n(c['p@10'])} | {_n(c['ndcg@10'])} | {_n(c['mrr'])} | "
+                      f"{ic} |")
     t["embeddings"] = "\n".join(linhas)
 
     sem_f, com_f = cfg["V1_hibrido_so_reescrita"], cfg["F1_final_so_reescrita"]
@@ -130,6 +188,11 @@ def gera_tabelas_readme() -> dict[str, str]:
     ])
 
     ab, ci, fi = ger["abstencao"], ger["citacoes"], ger["fidelidade"]
+    n_abster = ab["matriz"]["abstencao_correta"] + ab["matriz"]["resposta_indevida"]
+    resp_path = REPORTS_DIR / "respostas_avaliacao.json"
+    registros = (json.loads(resp_path.read_text(encoding="utf-8"))
+                 if resp_path.exists() else [])
+    pc = precisao_citacoes(registros)
     m = ab["matriz"]
     cal = rec["calibracao_limiar"]
     t["geracao"] = "\n".join([
@@ -138,11 +201,14 @@ def gera_tabelas_readme() -> dict[str, str]:
         f"| Decisão responder x abster correta | {_pct(ab['acuracia'])} "
         f"({m['resposta_correta'] + m['abstencao_correta']} de {ger['n_perguntas']}) |",
         f"| Abstenções corretas (fora de escopo + sem evidência) | {m['abstencao_correta']} de "
-        f"{m['abstencao_correta'] + m['resposta_indevida']} |",
+        f"{n_abster} (IC 95% {_wilson(m['abstencao_correta'], n_abster)}) |",
         f"| Perguntas respondíveis recusadas indevidamente | {m['abstencao_indevida']} de "
         f"{m['abstencao_indevida'] + m['resposta_correta']} |",
         f"| Citações válidas (verificadas por código) | {_pct(ci['citacoes_validas_pct'])} "
         f"de {ci['citacoes_total']} |",
+        *([f"| Avaliações citadas que o juiz marcou como evidência clara (relacionadas) | "
+           f"{_pct(pc['clara'])} ({_pct(pc['relacionada'])}) de {pc['julgadas']} julgadas |"]
+          if pc else []),
         f"| Fidelidade dos insights (juiz; sustentado = 1, parcial = 0,5) | "
         f"{_n(fi['escore_fidelidade'], 2)} em {fi['insights_julgados']} insights |",
         f"| Insights integralmente sustentados (critério estrito) | "
@@ -156,10 +222,8 @@ def gera_tabelas_readme() -> dict[str, str]:
         f"| AUC do reranker contra o juiz | {_n(cal['auc_reranker_vs_juiz'])} |",
     ])
 
-    resp_path = REPORTS_DIR / "respostas_avaliacao.json"
-    if resp_path.exists():
-        t["abstencao"] = tabela_abstencao(
-            json.loads(resp_path.read_text(encoding="utf-8")))
+    if registros:
+        t["abstencao"] = tabela_abstencao(registros)
 
     mv = multivendedor(base)
     if mv:

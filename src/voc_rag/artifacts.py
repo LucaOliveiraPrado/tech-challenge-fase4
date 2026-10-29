@@ -22,7 +22,7 @@ from voc_rag.config import CACHE_DIR, INDEX_DIR, PROCESSED_DIR, ROOT
 log = logging.getLogger(__name__)
 
 URL_PADRAO = ("https://github.com/LucaOliveiraPrado/tech-challenge-fase4/releases/download/"
-              "artefatos-v1/artefatos.zip")
+              "artefatos-v2/artefatos.zip")
 PREFIXOS = ("data/processed/", "index/embeddings/baai-bge-m3.", ".cache/llm/")
 
 
