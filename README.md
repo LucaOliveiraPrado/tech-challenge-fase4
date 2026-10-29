@@ -377,7 +377,10 @@ Registro completo (22 decisões com problema, alternativas, escolha e evidência
 - **Juiz automático:** a relevância e a fidelidade foram julgadas por LLM (diferente do gerador),
   sem dupla anotação humana em escala. A maior parte ficou com o modelo de reserva
   (`gemini-3.1-flash-lite`); a concordância com um segundo juiz independente é quase perfeita
-  (seção 9, D21), mas os dois são LLMs e podem compartilhar vieses.
+  (seção 9, D21), mas os dois são LLMs e podem compartilhar vieses. Para conferir com uma pessoa,
+  `uv run voc anotacao` sorteia 60 pares estratificados pela nota do juiz (sem mostrá-la) em
+  [`eval/anotacao_humana.csv`](eval/anotacao_humana.csv), e `uv run voc avaliar --etapa humano`
+  mede a concordância depois de preenchida a coluna `relevancia_humana`.
 - **Números do quadro com citação:** nos poucos insights julgados "parciais", o modelo anexou
   evidências individuais a um percentual da base completa; o juiz lê isso como extrapolação (D16).
 - **Quem comenta não é todo cliente:** menos da metade das avaliações tem texto e os insatisfeitos
@@ -402,6 +405,20 @@ reranker; sem ela tudo roda em CPU, mais devagar).
 uv sync
 cp .env.example .env          # e preencha GEMINI_API_KEY
 ```
+
+**Atalho sem GPU (recomendado para avaliar):** a release
+[`artefatos-v1`](https://github.com/LucaOliveiraPrado/tech-challenge-fase4/releases/tag/artefatos-v1)
+traz a base processada, os embeddings `bge-m3` já calculados e o cache das respostas do LLM
+(120 MB). Com ela não é preciso baixar do Kaggle nem calcular embeddings, e as 44 perguntas da
+avaliação e as da demo rodam **sem chave do Gemini e sem gastar cota**, inclusive em CPU:
+
+```bash
+uv run voc baixar             # baixa e extrai os artefatos
+uv run voc build              # só monta ChromaDB + BM25 (~1 min, sem GPU)
+uv run voc ask "O que os clientes relatam sobre problemas relacionados à entrega?"
+```
+
+**Do zero:**
 
 ```bash
 uv run voc prepare            # baixa o dataset do Kaggle e constrói a base (~1 min)
@@ -440,7 +457,8 @@ tech-challenge-fase4/
 │   ├── themes/                    # taxonomia e classificador de aspectos
 │   ├── evaluation/                # juiz, recuperação, geração, relatórios
 │   ├── pipeline.py                # orquestração e abstenção
-│   └── cli.py                     # `voc prepare | build | aspectos | ask | avaliar`
+│   ├── artifacts.py               # pacote de artefatos da release (`voc baixar`)
+│   └── cli.py                     # `voc prepare | build | baixar | aspectos | ask | avaliar`
 ├── notebooks/
 │   ├── 01_eda_avaliacoes.ipynb
 │   ├── 02_pipeline_passo_a_passo.ipynb

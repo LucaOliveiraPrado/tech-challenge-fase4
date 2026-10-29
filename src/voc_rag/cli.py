@@ -63,12 +63,19 @@ def aspectos(
 def avaliar(
     etapa: str = typer.Option(
         "tudo",
-        help="recuperacao | geracao | fidelidade | exemplos | concordancia | latencia | tudo"),
+        help="recuperacao | geracao | fidelidade | exemplos | concordancia | humano | latencia"
+             " | tudo"),
 ) -> None:
     """Avaliação quantitativa (recuperação, geração, abstenção) e exemplos."""
     _logging(True)
     from voc_rag.evaluation import generation_eval, report, retrieval_eval
 
+    if etapa == "humano":
+        from voc_rag.evaluation import agreement
+
+        console.print_json(json.dumps(agreement.run_humano(), ensure_ascii=False, default=str))
+        report.gera_tabelas_readme()
+        return
     if etapa == "concordancia":
         from voc_rag.evaluation import agreement
 
@@ -97,6 +104,41 @@ def avaliar(
         report.gera_exemplos()
         report.gera_tabelas_readme()
         console.print("reports/exemplos_perguntas_respostas.md e tabelas_readme.md atualizados")
+
+
+@app.command()
+def anotacao(
+    por_nota: int = typer.Option(20, help="Pares sorteados por nota do juiz (0, 1 e 2)"),
+    sobrescrever: bool = typer.Option(False, help="Substitui uma amostra já existente"),
+) -> None:
+    """Gera eval/anotacao_humana.csv para validar o juiz com anotação humana."""
+    from voc_rag.evaluation import agreement
+
+    n = agreement.gera_amostra_humana(por_nota, sobrescrever)
+    console.print(f"{n} pares em {agreement.ANOTACAO_CSV}; preencha relevancia_humana e rode "
+                  "`uv run voc avaliar --etapa humano`")
+
+
+@app.command()
+def artefatos(
+    destino: Path = typer.Option(Path("artefatos.zip"), help="Arquivo .zip a gerar"),
+) -> None:
+    """Empacota base processada, embeddings bge-m3 e cache do LLM para a release."""
+    from voc_rag.artifacts import empacota
+
+    console.print_json(json.dumps(empacota(destino), ensure_ascii=False))
+
+
+@app.command()
+def baixar(
+    url: str = typer.Option(None, help="URL do artefatos.zip (padrão: release do repositório)"),
+    zip_path: Path | None = typer.Option(None, "--zip", help="artefatos.zip já baixado"),
+) -> None:
+    """Baixa e extrai os artefatos prontos: dispensa `voc prepare` e a GPU no `voc build`."""
+    _logging(True)
+    from voc_rag.artifacts import URL_PADRAO, extrai
+
+    console.print_json(json.dumps(extrai(zip_path, url or URL_PADRAO), ensure_ascii=False))
 
 
 @app.command()
