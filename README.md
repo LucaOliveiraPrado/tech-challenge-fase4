@@ -16,8 +16,9 @@ quando a base não tem evidência suficiente.
 
 ![Aplicação respondendo com evidências](images/app_resposta.png)
 
-*A interface mostra a resposta, as evidências citadas (borda azul), a frequência dos temas na base
-e o rastro de cada etapa do pipeline.*
+*A resposta cita as avaliações `[R#]`; cada cartão à direita traz o `review_id` e diz qual insight
+sustenta (borda azul: citada). Abaixo da resposta ficam as evidências de cada insight, a frequência
+dos temas na base e o rastro de cada etapa do pipeline.*
 
 ---
 
@@ -205,6 +206,8 @@ insight exibe o apoio ("apoio: 16 de 30 evidências": quantas das 30 avaliaçõe
 modelo listou como sustentação daquele insight, todas validadas por código). Cada `[R#]` leva a um
 `review_id` real da Olist, salvo em `reports/respostas_avaliacao.json`. Na interface, cada insight
 abre as avaliações que o sustentam, e cada cartão de evidência diz quais insights ela sustenta.
+
+![Um insight aberto com as avaliações que o sustentam e a frequência dos temas no recorte](images/app_insight.png)
 
 ## 7. Quando o sistema não responde
 
