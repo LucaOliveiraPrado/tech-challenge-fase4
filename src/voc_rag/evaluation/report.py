@@ -225,6 +225,11 @@ def gera_tabelas_readme() -> dict[str, str]:
     if registros:
         t["abstencao"] = tabela_abstencao(registros)
 
+    ret_path = REPORTS_DIR / "avaliacao_retida.json"
+    if ret_path.exists():
+        t["retidas"] = tabela_retidas(json.loads(ret_path.read_text(encoding="utf-8")),
+                                      cfg["F1_final_so_reescrita"], ger)
+
     mv = multivendedor(base)
     if mv:
         t["multivendedor"] = (
@@ -246,6 +251,8 @@ def gera_tabelas_readme() -> dict[str, str]:
             f"{_n(m['recuperacao_s'], 1)} |",
             f"| Geração (LLM) | {_n(m['geracao_s'], 1)} |",
             f"| **Total por pergunta** | **{_n(m['total_s'], 1)}** |",
+            f"| Perguntas inéditas respondidas nesta medição | "
+            f"{sum(p['status'] == 'respondida' for p in lat['por_pergunta'])} de {lat['n']} |",
         ])
 
     conc_path = REPORTS_DIR / "concordancia_juizes.json"
@@ -312,6 +319,42 @@ def tabela_abstencao(registros: list[dict]) -> str:
         qids = sorted(por_camada[camada])
         linhas.append(f"| {camada} | {len(qids)} | {', '.join(qids)} |")
     return "\n".join(linhas)
+
+
+def tabela_retidas(ret: dict, final: dict, ger: dict) -> str:
+    """Desenvolvimento x conjunto retido, lado a lado (D23)."""
+    m = ger["abstencao"]["matriz"]
+    n_dev = ger["n_perguntas"]
+    certas_dev = m["resposta_correta"] + m["abstencao_correta"]
+    n_abster_dev = m["abstencao_correta"] + m["resposta_indevida"]
+    dec, rr, ci, fi = ret["decisoes"], ret["recuperacao"], ret["citacoes"], ret["fidelidade"]
+    erros_abster = sum(e["esperado"] == "abster" for e in dec["erros"])
+    recusas = ret["n_abster"] - erros_abster
+    fd = ger["extracao_filtros"]
+    fr = ret["extracao_filtros"]
+    fid_dev = ger["fidelidade"]
+    return "\n".join([
+        f"| Métrica | Desenvolvimento ({n_dev} perguntas) | "
+        f"**Retidas ({dec['total']} perguntas, rodadas uma vez)** |",
+        "|---|---|---|",
+        f"| Decisão responder x abster correta | {certas_dev} de {n_dev} "
+        f"(IC 95% {_wilson(certas_dev, n_dev)}) | **{dec['corretas']} de {dec['total']}** "
+        f"(IC 95% {_wilson(dec['corretas'], dec['total'])}) |",
+        f"| Recusas corretas | {m['abstencao_correta']} de {n_abster_dev} | "
+        f"**{recusas} de {ret['n_abster']}** |",
+        f"| P@10 | {_n(final['p@10'])} | **{_n(rr['p@10'])}** |",
+        f"| Hit@5 | {_n(final['hit@5'])} | **{_n(rr['hit@5'])}** |",
+        f"| Conformidade ao recorte (top-10) | {_pct(final['metadados_conformidade@10'])} | "
+        f"**{_pct(rr['conformidade@10'])}** |",
+        f"| Citações válidas | {_pct(ger['citacoes']['citacoes_validas_pct'])} de "
+        f"{ger['citacoes']['citacoes_total']} | **{_pct(ci['validas_pct'])} de {ci['total']}** |",
+        f"| Insights integralmente sustentados (juiz) | "
+        f"{fid_dev['distribuicao'].get('sustentado', 0)} de {fid_dev['insights_julgados']} | "
+        f"**{fi['sustentados']} de {fi['insights_julgados']}** |",
+        f"| Filtros de metadado extraídos corretamente | "
+        f"{round(fd['acerto_pct'] * fd['perguntas'])} de {fd['perguntas']} | "
+        f"**{fr['corretas']} de {fr['perguntas']}** |",
+    ])
 
 
 def multivendedor(base: dict) -> dict | None:

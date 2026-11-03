@@ -64,12 +64,19 @@ def avaliar(
     etapa: str = typer.Option(
         "tudo",
         help="recuperacao | geracao | fidelidade | exemplos | concordancia | humano | latencia"
-             " | tudo"),
+             " | retidas | tudo"),
 ) -> None:
     """Avaliação quantitativa (recuperação, geração, abstenção) e exemplos."""
     _logging(True)
     from voc_rag.evaluation import generation_eval, report, retrieval_eval
 
+    if etapa == "retidas":
+        # Fora de "tudo" de propósito: o conjunto retido não participa do desenvolvimento.
+        from voc_rag.evaluation import holdout
+
+        console.print_json(json.dumps(holdout.run(), ensure_ascii=False, default=str))
+        report.gera_tabelas_readme()
+        return
     if etapa == "humano":
         from voc_rag.evaluation import agreement
 
