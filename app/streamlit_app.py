@@ -149,11 +149,13 @@ with st.sidebar:
     st.header("Filtros manuais (opcional)")
     st.caption("Somam-se aos filtros que o sistema extrai da pergunta.")
     notas = st.slider("Nota", 1, 5, (1, 5))
-    cats = st.multiselect("Categoria", categorias)
-    entrega = st.multiselect("Entrega", list(ROTULO_ENTREGA), format_func=ROTULO_ENTREGA.get)
-    regioes = st.multiselect("Região", ["Norte", "Nordeste", "Centro-Oeste", "Sudeste", "Sul"])
+    cats = st.multiselect("Categoria", categorias, placeholder="Todas")
+    entrega = st.multiselect("Entrega", list(ROTULO_ENTREGA), format_func=ROTULO_ENTREGA.get,
+                             placeholder="Todas")
+    regioes = st.multiselect("Região", ["Norte", "Nordeste", "Centro-Oeste", "Sudeste", "Sul"],
+                             placeholder="Todas")
     pagamentos = st.multiselect("Pagamento", list(ROTULO_PAGAMENTO),
-                                format_func=ROTULO_PAGAMENTO.get)
+                                format_func=ROTULO_PAGAMENTO.get, placeholder="Todos")
     valor_min = st.number_input("Valor mínimo dos itens (R$)", min_value=0, value=0, step=50)
     multi = st.checkbox("Só pedidos com mais de um vendedor")
     mostrar_rastro = st.toggle("Mostrar rastro do pipeline", value=True)
@@ -213,7 +215,8 @@ with col_resp:
             pct_txt=lambda d: d["pct"].map(lambda v: f"{v:.1f}%".replace(".", ","))
         )
         base = alt.Chart(q).encode(
-            y=alt.Y("rotulo:N", sort="-x", title=None, axis=alt.Axis(labelLimit=260)),
+            y=alt.Y("rotulo:N", sort="-x", title=None,
+                    axis=alt.Axis(labelLimit=260, labelOverlap=False)),
             x=alt.X("avaliacoes:Q", title="avaliações (estimativa)", axis=alt.Axis(format="d")),
             tooltip=[alt.Tooltip("rotulo:N", title="aspecto"),
                      alt.Tooltip("avaliacoes:Q", title="avaliações"),

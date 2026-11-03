@@ -3,7 +3,8 @@
 > Público: banca técnica da pós. O enunciado pede o **raciocínio técnico**, não só o
 > funcionamento: cada bloco mostra uma decisão e a evidência que a sustenta. Tela dividida entre o
 > apresentador e o material indicado entre parênteses (app em `uv run streamlit run
-> app/streamlit_app.py`, notebooks e imagens de `images/`).
+> app/streamlit_app.py`, notebooks e imagens de `images/`). A apresentação em slides segue os
+> mesmos blocos, com notas do apresentador em cada slide.
 
 ---
 
@@ -110,7 +111,8 @@ com mais de um vendedor têm 61% de avaliações negativas, contra 26% no geral.
 
 Ponta a ponta: 44 de 44 decisões corretas entre responder e abster, 100% das citações válidas e
 fidelidade de 0,99 nos insights, auditada por um modelo diferente do que gera. Como as perguntas
-são nossas e guiaram as escolhas, tratamos esses números como de desenvolvimento."
+são nossas e guiaram as escolhas, congelamos o sistema e rodamos uma única vez 19 perguntas novas:
+19 de 19 decisões corretas e precisão de 0,93. O patamar se mantém."
 
 *(Visuais: `avaliacao_ablacao.png`, tabelas do README, notebook 03.)*
 
@@ -118,16 +120,16 @@ são nossas e guiaram as escolhas, tratamos esses números como de desenvolvimen
 
 **Fala:**
 
-"Três desafios. O primeiro foi a distância entre a linguagem do gestor e a do cliente,
-resolvida com a reescrita da pergunta. O segundo foi medir com honestidade: o juiz precisou ver
-os metadados nas perguntas com recorte, senão zerava respostas certas. O terceiro foi a cota gratuita do Gemini, de 20 requisições por dia por modelo: papéis separados por
-modelo, fallback automático, cache e julgamentos salvos a cada pergunta, e a avaliação aborta se
-o LLM cair, para nunca medir um sistema diferente do real."
+"Quatro desafios. A distância entre a linguagem do gestor e a do cliente, resolvida com a
+reescrita da pergunta. O LLM que recusava temas só ausentes da base com fatos sem suporte: o
+escopo passou a ser derivado em código. Medir com honestidade: o juiz precisou ver os metadados,
+senão zerava respostas certas. E a cota gratuita do Gemini: papéis por modelo, fallback, cache e
+avaliação retomável."
 
 ## Bloco 7: Fecho (6:40 a 6:50)
 
 **Fala:** "Código, avaliação, os julgamentos e as 23 decisões técnicas estão no repositório,
-reproduzíveis com quatro comandos. Obrigado."
+reproduzíveis com poucos comandos. Obrigado."
 
 ---
 

@@ -41,6 +41,19 @@ def acerto_filtros(esperado: dict, extraido: dict) -> bool:
     return True
 
 
+def material_auditoria(r, pergunta: str) -> dict:
+    """O que o auditor de fidelidade recebe: o mesmo que o gerador viu, isto é, texto e
+    metadados de cada evidência (sem isso, "pagos com boleto" parecia extrapolação) e o quadro
+    com denominador e ressalvas."""
+    return {
+        "pergunta": pergunta, "resumo": r.gerada.resumo,
+        "insights": [i.model_dump() for i in r.gerada.insights],
+        "evidencias": {e["rotulo"]: f"({fmt_meta(e)}) {e['texto']}"
+                       for _, e in r.evidencias.iterrows()},
+        "quadro": r.quadro_txt,
+    }
+
+
 def run(llm: LLMClient | None = None) -> dict:
     perguntas = carrega_perguntas()
     pipe = VoCPipeline(llm=llm)
@@ -57,16 +70,7 @@ def run(llm: LLMClient | None = None) -> dict:
         # Material da auditoria de fidelidade guardado junto da resposta: a auditoria pode
         # ser concluída depois (`voc avaliar --etapa fidelidade`) sem refazer o pipeline.
         if r.gerada is not None and r.gerada.insights:
-            d["auditoria"] = {
-                "pergunta": d["pergunta"], "resumo": r.gerada.resumo,
-                "insights": [i.model_dump() for i in r.gerada.insights],
-                # O auditor vê o mesmo que o gerador viu: texto e metadados de cada
-                # evidência (sem isso, "pagos com boleto" parecia extrapolação).
-                "evidencias": {e["rotulo"]: f"({fmt_meta(e)}) {e['texto']}"
-                               for _, e in r.evidencias.iterrows()},
-                # O quadro com denominador e ressalvas, igual ao que o gerador recebeu.
-                "quadro": r.quadro_txt,
-            }
+            d["auditoria"] = material_auditoria(r, d["pergunta"])
 
     salva_registros(registros)
     completa_fidelidade(registros)
@@ -114,9 +118,11 @@ def carrega_registros() -> list[dict]:
     return json.loads((REPORTS_DIR / "respostas_avaliacao.json").read_text(encoding="utf-8"))
 
 
-def completa_fidelidade(registros: list[dict], lote: int = 3, rodadas: int = 4) -> int:
+def completa_fidelidade(registros: list[dict], lote: int = 3, rodadas: int = 4,
+                        salvar=None) -> int:
     """Audita as respostas ainda sem veredito, em lotes, salvando a cada lote.
     Devolve quantas continuam pendentes (juiz indisponível em todas as rodadas)."""
+    salvar = salvar or salva_registros
     llm_juiz = juiz()
     for rodada in range(rodadas):
         pendentes = [d for d in registros if d.get("auditoria") and "fidelidade" not in d]
@@ -136,7 +142,7 @@ def completa_fidelidade(registros: list[dict], lote: int = 3, rodadas: int = 4) 
                 if f is not None:
                     d["fidelidade"] = f.model_dump()
                     d["fidelidade"]["juiz"] = llm_juiz.ultimo_modelo
-            salva_registros(registros)
+            salvar(registros)
         if falhou and rodada < rodadas - 1:
             log.warning("nova rodada de auditoria em %s s", 60 * (rodada + 1))
             time.sleep(60 * (rodada + 1))

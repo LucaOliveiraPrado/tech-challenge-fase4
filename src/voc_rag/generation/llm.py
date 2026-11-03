@@ -26,6 +26,8 @@ log = logging.getLogger(__name__)
 
 T = TypeVar("T", bound=BaseModel)
 
+TIMEOUT_MS = 180_000  # bem acima da geração mais lenta medida (~30 s)
+
 
 class LLMIndisponivel(RuntimeError):
     """Sem chave configurada ou API fora do ar após as tentativas."""
@@ -103,8 +105,12 @@ class LLMClient:
             if not self._api_key:
                 raise LLMIndisponivel("GEMINI_API_KEY não configurada no .env")
             from google import genai
+            from google.genai import types
 
-            self._client = genai.Client(api_key=self._api_key)
+            # Sem tempo limite, uma chamada sem resposta trava a avaliação indefinidamente.
+            self._client = genai.Client(
+                api_key=self._api_key, http_options=types.HttpOptions(timeout=TIMEOUT_MS)
+            )
         return self._client
 
     # ------------------------------------------------------------------ cache
@@ -142,6 +148,7 @@ class LLMClient:
     def _chama_modelo(self, modelo: str, system: str, prompt: str,
                       schema: type[BaseModel] | None, temperatura: float,
                       pensamento: str) -> tuple[str, int, int]:
+        import httpx
         from google.genai import errors, types
 
         config = types.GenerateContentConfig(
@@ -174,6 +181,13 @@ class LLMClient:
                 if not transitorio or tentativa == tentativas - 1:
                     raise LLMIndisponivel(f"Gemini falhou ({e.code}): {e}") from e
                 log.warning("Gemini %s (%s), nova tentativa em %.0fs", e.code, modelo, espera)
+                time.sleep(espera)
+                espera = min(espera * 2, 90)
+            except httpx.TransportError as e:
+                # Sem resposta (tempo limite ou conexão): trata como sobrecarga.
+                if tentativa == tentativas - 1:
+                    raise LLMIndisponivel(f"Gemini sem resposta ({modelo}): {e!r}") from e
+                log.warning("Gemini sem resposta (%s), nova tentativa em %.0fs", modelo, espera)
                 time.sleep(espera)
                 espera = min(espera * 2, 90)
         raise LLMIndisponivel("Gemini indisponível")

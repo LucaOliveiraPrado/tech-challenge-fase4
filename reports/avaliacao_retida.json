@@ -1,0 +1,156 @@
+{
+  "n_perguntas": 19,
+  "n_respondiveis": 12,
+  "n_abster": 7,
+  "decisoes": {
+    "corretas": 19,
+    "total": 19,
+    "erros": []
+  },
+  "status_por_pergunta": {
+    "R01": "respondida",
+    "R02": "respondida",
+    "R03": "respondida",
+    "R04": "respondida",
+    "R05": "respondida",
+    "R06": "respondida",
+    "R07": "respondida",
+    "R08": "respondida",
+    "R09": "respondida",
+    "R10": "respondida",
+    "R11": "respondida",
+    "R12": "respondida",
+    "R13": "fora_escopo",
+    "R14": "fora_escopo",
+    "R15": "fora_escopo",
+    "R16": "fora_escopo",
+    "R17": "sem_evidencia",
+    "R18": "nao_respondida",
+    "R19": "sem_evidencia"
+  },
+  "recuperacao": {
+    "p@5": 0.95,
+    "p@10": 0.9333,
+    "p@10_leniente": 1.0,
+    "mrr": 0.9583,
+    "hit@5": 1.0,
+    "conformidade@10": 1.0
+  },
+  "citacoes": {
+    "total": 277,
+    "validas_pct": 1.0
+  },
+  "fidelidade": {
+    "insights_julgados": 38,
+    "sustentados": 38,
+    "escore": 1.0
+  },
+  "extracao_filtros": {
+    "perguntas": 5,
+    "corretas": 5
+  },
+  "n_julgamentos": 242,
+  "por_pergunta": {
+    "R01": {
+      "p@5": 1.0,
+      "p@10": 1.0,
+      "p@10_leniente": 1.0,
+      "ndcg@10": 1.0,
+      "mrr": 1.0,
+      "hit@5": 1.0
+    },
+    "R02": {
+      "p@5": 1.0,
+      "p@10": 1.0,
+      "p@10_leniente": 1.0,
+      "ndcg@10": 1.0,
+      "mrr": 1.0,
+      "hit@5": 1.0
+    },
+    "R03": {
+      "p@5": 1.0,
+      "p@10": 1.0,
+      "p@10_leniente": 1.0,
+      "ndcg@10": 1.0,
+      "mrr": 1.0,
+      "hit@5": 1.0
+    },
+    "R04": {
+      "p@5": 1.0,
+      "p@10": 1.0,
+      "p@10_leniente": 1.0,
+      "ndcg@10": 1.0,
+      "mrr": 1.0,
+      "hit@5": 1.0
+    },
+    "R05": {
+      "p@5": 1.0,
+      "p@10": 0.8,
+      "p@10_leniente": 1.0,
+      "ndcg@10": 0.91,
+      "mrr": 1.0,
+      "hit@5": 1.0
+    },
+    "R06": {
+      "p@5": 1.0,
+      "p@10": 1.0,
+      "p@10_leniente": 1.0,
+      "ndcg@10": 1.0,
+      "mrr": 1.0,
+      "hit@5": 1.0
+    },
+    "R07": {
+      "p@5": 1.0,
+      "p@10": 1.0,
+      "p@10_leniente": 1.0,
+      "ndcg@10": 1.0,
+      "mrr": 1.0,
+      "hit@5": 1.0
+    },
+    "R08": {
+      "p@5": 0.8,
+      "p@10": 0.9,
+      "p@10_leniente": 1.0,
+      "ndcg@10": 0.853,
+      "mrr": 0.5,
+      "hit@5": 1.0,
+      "conformidade@10": 1.0
+    },
+    "R09": {
+      "p@5": 1.0,
+      "p@10": 1.0,
+      "p@10_leniente": 1.0,
+      "ndcg@10": 1.0,
+      "mrr": 1.0,
+      "hit@5": 1.0,
+      "conformidade@10": 1.0
+    },
+    "R10": {
+      "p@5": 1.0,
+      "p@10": 1.0,
+      "p@10_leniente": 1.0,
+      "ndcg@10": 1.0,
+      "mrr": 1.0,
+      "hit@5": 1.0,
+      "conformidade@10": 1.0
+    },
+    "R11": {
+      "p@5": 0.6,
+      "p@10": 0.5,
+      "p@10_leniente": 1.0,
+      "ndcg@10": 0.722,
+      "mrr": 1.0,
+      "hit@5": 1.0,
+      "conformidade@10": 1.0
+    },
+    "R12": {
+      "p@5": 1.0,
+      "p@10": 1.0,
+      "p@10_leniente": 1.0,
+      "ndcg@10": 1.0,
+      "mrr": 1.0,
+      "hit@5": 1.0,
+      "conformidade@10": 1.0
+    }
+  }
+}
