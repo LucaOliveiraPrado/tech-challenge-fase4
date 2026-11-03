@@ -376,8 +376,9 @@ cache do LLM; `voc baixar` extrai só os caminhos esperados.
 `voc build`. Num clone limpo, 2 das 44 perguntas perdiam o cache: o grafo HNSW do ChromaDB não é
 determinístico na construção, então um índice reconstruído devolve vizinhos ligeiramente
 diferentes, muda a seleção de evidências e, com ela, a chave do cache. Com o índice avaliado no
-pacote, um clone limpo sem chave reproduz as 44 decisões a partir do cache na GPU; em CPU, 40 de
-44 (diferenças numéricas de CPU x GPU mudam a seleção em 4 respondíveis, que então precisam de
+pacote, um clone limpo sem chave reproduz na GPU as decisões das 63 perguntas (44 de
+desenvolvimento e 19 retidas) a partir do cache, sem nenhuma chamada ao LLM; em CPU, 40 das 44 de
+desenvolvimento (diferenças numéricas de CPU x GPU mudam a seleção em 4 respondíveis, que então precisam de
 chave). Alternativa descartada: versionar o índice no git (1,2 GB com os três modelos).
 
 ### D23: Conjunto de desenvolvimento e conjunto retido

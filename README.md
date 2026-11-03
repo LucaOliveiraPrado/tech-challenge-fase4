@@ -560,8 +560,9 @@ cp .env.example .env          # e preencha GEMINI_API_KEY
 (310 MB) traz a base processada, o **índice exatamente como foi avaliado** (ChromaDB com a coleção
 `bge-m3` e BM25) e o cache das respostas do LLM. Não é preciso baixar do Kaggle, calcular
 embeddings nem rodar `voc build`, e as perguntas da avaliação rodam **sem chave do Gemini e sem
-gastar cota**. Validado num clone limpo, sem chave: com GPU, as 44 perguntas reproduzem as mesmas
-decisões a partir do cache; em CPU, 40 de 44 (em 4 respondíveis, diferenças numéricas de CPU x
+gastar cota**. Validado num clone limpo, sem chave: com GPU, as 63 perguntas (44 de desenvolvimento
+e 19 retidas) reproduzem as mesmas decisões a partir do cache, sem nenhuma chamada ao LLM; em CPU,
+40 das 44 de desenvolvimento (em 4 respondíveis, diferenças numéricas de CPU x
 GPU mudam a seleção de evidências e a geração precisa de chave; as perguntas da demo estão entre
 as 40):
 
