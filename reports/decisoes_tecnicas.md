@@ -380,7 +380,7 @@ pacote, um clone limpo sem chave reproduz as 44 decisões a partir do cache na G
 44 (diferenças numéricas de CPU x GPU mudam a seleção em 4 respondíveis, que então precisam de
 chave). Alternativa descartada: versionar o índice no git (1,2 GB com os três modelos).
 
-### D23: Conjunto de perguntas: desenvolvimento, não teste retido
+### D23: Conjunto de desenvolvimento e conjunto retido
 
 **Problema:** não existe um conjunto público de perguntas de gestores com respostas esperadas
 para esta base.
@@ -395,5 +395,16 @@ ajustado três vezes olhando estas 44 perguntas (escopo em código, recorte fora
 números são, portanto, de desenvolvimento:
 comparam bem as configurações entre si (todas medidas sobre os mesmos julgamentos), mas tendem a
 ser otimistas como estimativa absoluta. Com 13 recusas esperadas, "13 de 13" tem intervalo de
-confiança de Wilson de 95% entre 0,77 e 1,00. A forma correta de estimar sem viés é um conjunto
-retido, escrito depois de congelado o sistema e rodado uma única vez.
+confiança de Wilson de 95% entre 0,77 e 1,00.
+**Conjunto retido:** para estimar sem esse viés, 19 perguntas novas (12 respondíveis, 5 delas com
+recorte; 7 a recusar) foram escritas com o sistema congelado, com o gabarito conferido na base
+(temas respondíveis com centenas de menções; Pix, provador virtual e realidade aumentada com
+zero) e versionadas no commit `8c42b45` antes da primeira execução, fora da etapa `tudo` da
+avaliação. Resultado, reportado como saiu: 19 de 19 decisões corretas (IC 95% de 0,83 a 1,00),
+P@10 0,933, conformidade ao recorte de 100%, 277 citações válidas e 38 de 38 insights
+sustentados (`reports/avaliacao_retida.json`). O patamar se mantém. Ressalvas: amostra pequena,
+perguntas escritas pela mesma equipe e julgadas por LLM.
+**Interrupção e robustez:** a execução travou numa chamada ao Gemini que nunca respondeu (o
+cliente não tinha tempo limite). A chamada ganhou um tempo limite de 3 minutos, com nova tentativa e
+passagem ao modelo seguinte, e a execução foi retomada do cache. Essa é a única mudança depois do
+congelamento e não altera prompts, configuração nem decisões.

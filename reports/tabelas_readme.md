@@ -67,16 +67,29 @@
 | 2. Relevância (porteiro: menos de 3 evidências acima do limiar) | 4 | Q36, Q37, Q40, Q44 |
 | 3. Suficiência (geração: evidências não respondem) | 2 | Q35, Q39 |
 
+<!-- retidas -->
+| Métrica | Desenvolvimento (44 perguntas) | **Retidas (19 perguntas, rodadas uma vez)** |
+|---|---|---|
+| Decisão responder x abster correta | 44 de 44 (IC 95% [0,92; 1,00]) | **19 de 19** (IC 95% [0,83; 1,00]) |
+| Recusas corretas | 13 de 13 | **7 de 7** |
+| P@10 | 0,929 | **0,933** |
+| Hit@5 | 1,000 | **1,000** |
+| Conformidade ao recorte (top-10) | 98,2% | **100,0%** |
+| Citações válidas | 100,0% de 714 | **100,0% de 277** |
+| Insights integralmente sustentados (juiz) | 101 de 103 | **38 de 38** |
+| Filtros de metadado extraídos corretamente | 11 de 11 | **5 de 5** |
+
 <!-- multivendedor -->
 pedidos com itens de **mais de um vendedor** (838 comentários) têm 61,3% de avaliações negativas, contra 25,7% na base de comentários
 
 <!-- latencia -->
 | Etapa (mediana, sem cache) | Segundos |
 |---|---|
-| Análise da pergunta (LLM) | 9,9 |
-| Recuperação (embeddings, ChromaDB, BM25, reranker; GPU) | 0,6 |
-| Geração (LLM) | 13,2 |
-| **Total por pergunta** | **22,4** |
+| Análise da pergunta (LLM) | 1,8 |
+| Recuperação (embeddings, ChromaDB, BM25, reranker; GPU) | 1,4 |
+| Geração (LLM) | 12,2 |
+| **Total por pergunta** | **15,4** |
+| Perguntas inéditas respondidas nesta medição | 5 de 5 |
 
 <!-- concordancia -->
 | Concordância entre juízes (626 pares rejulgados por `gemini-3.5-flash`) | Resultado |

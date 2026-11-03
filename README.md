@@ -48,7 +48,7 @@ e o rastro de cada etapa do pipeline.*
 | Respostas fundamentadas e evidências rastreáveis por avaliação | [seção 6](#6-respostas-fundamentadas-e-rastreabilidade), [`reports/respostas_avaliacao.json`](reports/respostas_avaliacao.json), [`tests/test_citations.py`](tests/test_citations.py) |
 | Abstenção: sem avaliações relevantes, evidência insuficiente, fora do escopo | [seção 7](#7-quando-o-sistema-não-responde), [`tests/test_pipeline_abstencao.py`](tests/test_pipeline_abstencao.py) |
 | Metadados (desafio adicional) com justificativa de ganho | [seção 8](#8-metadados-desafio-adicional), D18, [notebook 03](notebooks/03_avaliacao.ipynb) |
-| Recuperação relevante e coerência com as evidências (critério principal) | [seção 9](#9-avaliação-quantitativa), [`reports/avaliacao_recuperacao.json`](reports/avaliacao_recuperacao.json), [`reports/avaliacao_geracao.json`](reports/avaliacao_geracao.json) |
+| Recuperação relevante e coerência com as evidências (critério principal) | [seção 9](#9-avaliação-quantitativa), [`reports/avaliacao_recuperacao.json`](reports/avaliacao_recuperacao.json), [`reports/avaliacao_geracao.json`](reports/avaliacao_geracao.json), [`reports/avaliacao_retida.json`](reports/avaliacao_retida.json) |
 | Exemplos de perguntas e respostas | [seção 10](#10-exemplos-de-perguntas-e-respostas), [`reports/exemplos_perguntas_respostas.md`](reports/exemplos_perguntas_respostas.md) |
 | Decisões técnicas justificadas | [seção 11](#11-principais-decisões-técnicas), [`reports/decisoes_tecnicas.md`](reports/decisoes_tecnicas.md) |
 | Instalação, execução e reprodução | [seção 13](#13-como-executar-e-reproduzir) |
@@ -291,8 +291,9 @@ do escopo (incluindo *prompt injection*) e 7 sem evidência na base. Relevância
 
 > **Leitura correta dos números:** as 44 perguntas foram escritas pela equipe e usadas tanto para
 > escolher a configuração (sistema final, ordem RRF, limiar 0,30, prompts) quanto para medir.
-> São números de **desenvolvimento**, não de um conjunto retido: medem bem as diferenças entre
-> configurações, mas tendem a ser otimistas como estimativa absoluta (D23).
+> São números de **desenvolvimento**: medem bem as diferenças entre configurações, mas tendem a
+> ser otimistas como estimativa absoluta. Por isso há também um **conjunto retido**, com perguntas
+> que não guiaram nenhum ajuste; ele confirma o patamar (fim desta seção, D23).
 
 **Ablação: o caminho até o sistema final** (31 perguntas respondíveis; P@10 = fração do top-10
 com evidência clara, relevância 2):
@@ -403,17 +404,44 @@ micro-F1 0,789 e macro-F1 0,744 em 600 rótulos de teste
 ([`reports/metricas_aspectos.json`](reports/metricas_aspectos.json)).
 
 **Tempo de resposta** (5 perguntas inéditas, `reports/latencia.json`). O tempo é dominado pelas
-duas chamadas ao LLM no plano gratuito, que inclui um intervalo mínimo entre chamadas para
-respeitar o limite por minuto; a recuperação inteira roda em menos de 1 segundo:
+chamadas ao LLM no plano gratuito, que inclui um intervalo mínimo entre chamadas para respeitar o
+limite por minuto; a recuperação é a menor parte:
 
 <!-- num:latencia -->
 | Etapa (mediana, sem cache) | Segundos |
 |---|---|
-| Análise da pergunta (LLM) | 9,9 |
-| Recuperação (embeddings, ChromaDB, BM25, reranker; GPU) | 0,6 |
-| Geração (LLM) | 13,2 |
-| **Total por pergunta** | **22,4** |
+| Análise da pergunta (LLM) | 1,8 |
+| Recuperação (embeddings, ChromaDB, BM25, reranker; GPU) | 1,4 |
+| Geração (LLM) | 12,2 |
+| **Total por pergunta** | **15,4** |
+| Perguntas inéditas respondidas nesta medição | 5 de 5 |
 <!-- /num:latencia -->
+
+**Conjunto retido: perguntas que não guiaram nenhum ajuste.** Com o sistema congelado, foram
+escritas perguntas novas ([`eval/perguntas_retidas.json`](eval/perguntas_retidas.json)): 12
+respondíveis (5 com recorte por metadado) e 7 a recusar (3 fora do escopo, 4 sem evidência, com o
+gabarito conferido na base). Elas foram versionadas no commit [`8c42b45`](https://github.com/LucaOliveiraPrado/tech-challenge-fase4/commit/8c42b4547625ae8b9e44b99b92b54c2437a9bec2) **antes** da primeira
+execução e rodadas uma única vez, sem nenhum ajuste depois; a mesma medição do desenvolvimento,
+com o resultado reportado como saiu ([`reports/avaliacao_retida.json`](reports/avaliacao_retida.json)):
+
+<!-- num:retidas -->
+| Métrica | Desenvolvimento (44 perguntas) | **Retidas (19 perguntas, rodadas uma vez)** |
+|---|---|---|
+| Decisão responder x abster correta | 44 de 44 (IC 95% [0,92; 1,00]) | **19 de 19** (IC 95% [0,83; 1,00]) |
+| Recusas corretas | 13 de 13 | **7 de 7** |
+| P@10 | 0,929 | **0,933** |
+| Hit@5 | 1,000 | **1,000** |
+| Conformidade ao recorte (top-10) | 98,2% | **100,0%** |
+| Citações válidas | 100,0% de 714 | **100,0% de 277** |
+| Insights integralmente sustentados (juiz) | 101 de 103 | **38 de 38** |
+| Filtros de metadado extraídos corretamente | 11 de 11 | **5 de 5** |
+<!-- /num:retidas -->
+
+O patamar se mantém fora das perguntas usadas para ajustar o sistema. A ressalva é o tamanho da
+amostra (veja os intervalos de confiança) e que as perguntas também foram escritas pela equipe e
+julgadas por LLM. A execução foi interrompida uma vez por uma chamada ao Gemini sem resposta e
+retomada do cache; a única mudança depois do congelamento foi o tempo limite dessa chamada, que
+não altera prompts nem decisões.
 
 ## 10. Exemplos de perguntas e respostas
 
@@ -477,7 +505,7 @@ Registro completo (23 decisões com problema, alternativas, escolha e evidência
 | D18 | Metadados (inclusive pagamento, valor e vendedores) como filtro dentro da busca | conformidade ao recorte 27,3% → 98,2% |
 | D19 | Gemini no plano gratuito com papéis por modelo e fallback | cota de 20 req/dia por modelo "flash" |
 | D20 | Frequências relativas a quem comentou | nota 1 é 11% da base e 21% dos comentários |
-| D23 | Perguntas da avaliação tratadas como conjunto de desenvolvimento | mesmas 44 perguntas ajustaram e mediram; limite declarado |
+| D23 | Conjunto de desenvolvimento + conjunto retido congelado antes de rodar | as 44 perguntas ajustaram e mediram; as retidas só mediram e confirmam o patamar |
 
 ## 12. Limitações
 
@@ -496,8 +524,11 @@ Registro completo (23 decisões com problema, alternativas, escolha e evidência
 - **Mesmo conjunto para ajustar e medir:** as 44 perguntas foram escritas pela equipe e guiaram
   as escolhas (configuração, limiar, prompts); os exemplos do prompt que coincidiam com temas
   do teste foram trocados na rodada final, mas o prompt foi ajustado olhando estas 44 perguntas.
-  Os números são de desenvolvimento; um
-  conjunto retido, rodado uma única vez, daria a estimativa sem viés (D23).
+  Esses números são de desenvolvimento; o conjunto retido (seção 9, D23) confirma o patamar, mas
+  tem só 19 perguntas, escritas pela mesma equipe.
+- **"Produto não recebido" conta o relato, não a situação do pedido:** muitos clientes avaliam
+  antes de o pedido constar como entregue. Por isso o aspecto aparece com frequência alta até em
+  pedidos que constam como entregues com atraso (Q23).
 - **Quem comenta não é todo cliente:** menos da metade das avaliações tem texto e os insatisfeitos
   comentam mais; os números descrevem os comentários.
 - **Frequências são estimativas:** o quadro vem de um classificador (micro-F1 0,79); aspectos raros
@@ -553,6 +584,7 @@ uv run voc ask "Quais são os principais problemas relatados pelos clientes?"
 ```bash
 uv run voc avaliar --etapa geracao   # ponta a ponta: abstenção, citações, fidelidade
 uv run voc avaliar                   # avaliação completa (reaproveita julgamentos e cache)
+uv run voc avaliar --etapa retidas   # conjunto retido (reaproveita julgamentos e cache)
 uv run pytest                        # testes
 ```
 
