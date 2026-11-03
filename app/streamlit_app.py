@@ -215,7 +215,8 @@ with col_resp:
             pct_txt=lambda d: d["pct"].map(lambda v: f"{v:.1f}%".replace(".", ","))
         )
         base = alt.Chart(q).encode(
-            y=alt.Y("rotulo:N", sort="-x", title=None, axis=alt.Axis(labelLimit=260, labelOverlap=False)),
+            y=alt.Y("rotulo:N", sort="-x", title=None,
+                    axis=alt.Axis(labelLimit=260, labelOverlap=False)),
             x=alt.X("avaliacoes:Q", title="avaliações (estimativa)", axis=alt.Axis(format="d")),
             tooltip=[alt.Tooltip("rotulo:N", title="aspecto"),
                      alt.Tooltip("avaliacoes:Q", title="avaliações"),
