@@ -14,6 +14,7 @@ load_dotenv(ROOT / ".env")
 # Windows sem modo desenvolvedor não cria symlinks no cache do Hugging Face;
 # o cache funciona mesmo assim, o aviso só polui a saída.
 os.environ.setdefault("HF_HUB_DISABLE_SYMLINKS_WARNING", "1")
+os.environ.setdefault("HF_HUB_VERBOSITY", "error")  # modelos públicos dispensam HF_TOKEN
 os.environ.setdefault("TOKENIZERS_PARALLELISM", "false")
 
 RAW_DIR = ROOT / "data" / "raw"
