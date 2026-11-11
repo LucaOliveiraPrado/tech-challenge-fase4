@@ -1,146 +1,144 @@
 # Roteiro do Vídeo de Apresentação (até 7 minutos)
 
-> Público: banca técnica da pós. O enunciado pede o **raciocínio técnico**, não só o
-> funcionamento: cada bloco mostra uma decisão e a evidência que a sustenta. Tela dividida entre o
-> apresentador e o material indicado entre parênteses (app em `uv run streamlit run
-> app/streamlit_app.py`, notebooks e imagens de `images/`). A apresentação em slides segue os
-> mesmos blocos, com notas do apresentador em cada slide.
+Uma história contada do primeiro ao último slide: o problema, a decisão de construir o sistema, o
+que os dados mostraram, os tropeços, o app funcionando de verdade, os números e o agradecimento. A
+linguagem é a de uma conversa profissional; a parte técnica detalhada fica no repositório. As falas
+também estão nas notas dos slides.
 
----
+## Como gravar a voz
 
-## Bloco 1: O problema (0:00 a 0:35)
+1. Lugar silencioso, sempre com o mesmo microfone e a mesma distância (uns 20 cm).
+2. Leia o texto como está escrito, no seu ritmo natural. O tempo final é ajustado na edição.
+3. Em cada ⏸, faça uma pausa de 2 segundos: é por ela que a edição encaixa a troca de slide e as
+   cenas do app.
+4. Errou uma frase? Pare um instante e repita a partir do último ⏸; a edição fica com a última
+   versão.
+5. Pode ser um arquivo só ou vários (um por slide, por exemplo), em qualquer formato de áudio.
 
-**Fala:**
+## A história, bloco por bloco
 
-"Um e-commerce recebe milhares de avaliações. A nota diz se o cliente ficou satisfeito; o
-comentário diz por quê. Só que ninguém lê 42 mil comentários, e um painel de notas não responde
-'o que os clientes insatisfeitos relatam?' nem 'que evidências mostram que o prazo de entrega é um
-problema recorrente?'.
+*Na tela* descreve a cena do app que entra no vídeo junto com a fala; nos outros blocos, aparece o
+slide indicado.
 
-Construímos um sistema de RAG sobre as avaliações da Olist que responde perguntas em linguagem
-natural, mostra quais avaliações sustentam cada afirmação e se recusa a responder quando a base
-não tem evidência."
+### O começo: o problema e por que a gente decidiu fazer
 
-*(Visual: `images/app_resposta.png`.)*
+**1. O problema** (slide 1)
 
-## Bloco 2: A base de conhecimento (0:35 a 1:20)
+> Oi, pessoal, tudo bem? Meu nome é Luca, do Grupo 110. Toda loja online recebe uma montanha de avaliações, e ninguém consegue ler tudo. Hoje a gente conta como transformou 42 mil comentários da Olist em respostas com prova, e o que deu errado no caminho. ⏸
 
-**Fala:**
+**2. A decisão** (slide 2)
 
-"Partimos de 99 mil linhas de avaliações. Menos da metade tem comentário: são 42 mil documentos.
-Decisão número um: uma avaliação é um documento, sem chunking, porque a mediana é de 9 palavras e
-a avaliação é a unidade que o gestor quer ver citada.
+> Tudo começou com uma pergunta simples: por que o cliente está insatisfeito? A nota avisa, mas quem conta o motivo é o comentário. Então a gente decidiu: e se desse pra simplesmente perguntar? Com três promessas: achar as avaliações certas, mostrar a prova e, quando não souber, admitir. ⏸
 
-A análise exploratória mudou o projeto em dois pontos. Primeiro, quem comenta é mais crítico: a
-nota 1 é 11% das avaliações e 21% dos comentários; então todo número que o sistema mostra é
-relativo aos comentários. Segundo, o atraso na entrega multiplica a insatisfação: por isso a
-situação da entrega virou metadado de cada documento e filtro de busca."
+### A construção: cada decisão, na ordem em que aconteceu
 
-*(Visuais: `eda_comentario_por_nota.png`, `eda_entrega_negativas.png`.)*
+**3. O primeiro passo** (slide 3)
 
-## Bloco 3: A arquitetura e o pipeline (1:20 a 2:55)
+> O primeiro passo foi abrir os dados. Das 99 mil linhas, só 42 mil tinham comentário, e curtinho, umas 9 palavras, tipo “Atraso. Produto não chegou no prazo”. Por isso a gente decidiu não picotar nada: cada avaliação inteira é uma evidência. ⏸
 
-**Fala:**
+**4. O que os dados contaram** (slide 4)
 
-"O pipeline tem cinco etapas. (mostrar o diagrama do README)
+> E os dados já contaram duas coisas. Quando a entrega atrasa, as avaliações negativas vão de 9 pra 62%, então a entrega virou filtro de busca. E quem comenta é mais crítico, então todo percentual aqui vale só pra quem comentou. ⏸
 
-Um: um LLM analisa a pergunta. Ele responde se a pergunta é sobre experiência de compra, e o
-código decide o escopo a partir disso; ele também extrai filtros como 'nota baixa' ou
-'cama, mesa e banho' e reescreve a pergunta no vocabulário do cliente. Isso importa porque o
-gestor pergunta 'quais reclamações aparecem com mais frequência' e o cliente escreve 'comprei dia
-10 e até hoje nada'.
+**5. O plano** (slide 5)
 
-Dois: busca híbrida. Um índice vetorial com bge-m3 no ChromaDB, com filtro de metadado dentro da
-consulta, e um BM25 com stemming em português em que o 'não' não é stopword, porque 'não chegou'
-e 'chegou' são opiniões opostas. As listas são fundidas por RRF.
+> Com isso, a gente desenhou o caminho de uma pergunta. O sistema entende o pedido, busca por significado e por palavra exata, separa o que importa, escreve a resposta só com o que encontrou, e no fim o código confere cada citação. ⏸
 
-Três: seleção. Um reranker cross-encoder avalia cada candidato contra a consulta reescrita. A
-hipótese era usar ele para reordenar, mas a avaliação mostrou o contrário: ele confunde temas
-vizinhos e piorou a precisão. Então a ordem final é a da fusão, e o reranker virou porteiro: só
-decide se há evidência relevante o bastante.
+**6. O primeiro tombo** (slide 6)
 
-Quatro: o contexto. Evidências numeradas, com nota, atraso e categoria de cada uma. Em perguntas
-de panorama, e nas que pedem evidência de algo recorrente, entra também um quadro de frequências, porque o top-k mostra as avaliações mais
-relevantes, mas não conta: um classificador de aspectos estima a frequência de cada tema na base
-inteira.
+> Aí veio o primeiro tombo. Na versão mais simples, só 56% do que vinha era evidência clara. O gestor pergunta “quais reclamações aparecem mais?”, e o cliente escreve “comprei o produto na black friday e até hoje não recebi”. Então a gente decidiu traduzir a pergunta pras palavras do cliente, e subiu pra 71%. ⏸
 
-Cinco: a geração devolve JSON, e o código verifica cada citação. Citação que não existe é
-removida e insight sem evidência é descartado."
+**7. A surpresa** (slide 7)
 
-*(Visuais: diagrama mermaid do README; `images/app_rastro.png`; notebook 02, etapas 1 e 4.)*
+> Depois veio a surpresa. A gente colocou um segundo modelo pra reorganizar os resultados, achando que ia melhorar, e caiu de 70 pra 65%, porque ele confunde temas parecidos. Virou só um porteiro. Daí nasceu a regra: só fica o que o teste aprova. ⏸
 
-## Bloco 4: Demonstração (2:55 a 4:45)
+**8. O grande salto** (slide 8)
 
-**Ação na tela (app) e fala de cada pergunta:**
+> E o grande salto veio dos filtros. Sem eles, a busca achava o tema certo, mas fora do que foi pedido. Com eles, o respeito ao pedido foi de 27 pra 98%. E ainda apareceu um padrão: pedido com mais de um vendedor tem 61% de negativas, contra 26% no geral. ⏸
 
-1. "Quais reclamações relacionadas à entrega aparecem com maior frequência?" Mostrar a resposta,
-   o gráfico de frequência e as evidências com borda azul; abrir "Evidências do insight 1".
-   **Fala:** "Cada insight abre as avaliações que o sustentam, com o `review_id` da Olist. O
-   percentual não vem das 30 evidências: vem do classificador de aspectos sobre todos os
-   comentários do recorte, e a resposta diz qual é esse denominador."
-2. "O que os clientes mais elogiam na categoria cama, mesa e banho?" Abrir "Como a resposta foi
-   construída". **Fala:** "O filtro de categoria e o de nota saíram da própria pergunta. O funil
-   mostra o recorte, as candidatas da busca híbrida, as que passaram no porteiro e as que foram
-   para o contexto."
-3. "Quais avaliações sustentam a conclusão de que existem problemas recorrentes relacionados ao
-   prazo de entrega?" **Fala:** "Aqui o gestor pede a prova: cada citação aponta uma avaliação
-   real, e a legenda mostra que nenhuma citação inválida passou pela verificação do código."
-4. "Qual foi o faturamento da Olist em 2018?" Recusa por escopo.
-5. "O que os clientes acharam das entregas feitas por drone?" As avaliações recuperadas falam de
-   entrega, mas nenhuma de drone: a geração recusa e explica por quê.
+**9. O que faltava** (slide 9)
 
-**Fala (durante 4 e 5):** "Responder é fácil; o difícil é saber quando não responder. São três
-camadas: escopo na análise da pergunta, relevância no porteiro e suficiência na geração."
+> Só que achar não é contar. Se o gestor pergunta o que aparece mais, 30 avaliações não respondem. Ler as 42 mil com IA gastaria cota demais, então a IA etiquetou 3 mil, e essas ensinaram um classificador a estimar o resto. ⏸
 
-## Bloco 5: Como sabemos que funciona (4:45 a 6:05)
+### O sistema funcionando: o app de verdade, respondendo e recusando
 
-**Fala:**
+**10. O sistema funcionando** (app)
 
-"Medimos. Montamos 44 perguntas: os cinco tipos do enunciado, onze com metadados, seis fora do
-escopo e sete sem evidência na base. A relevância foi julgada por pooling, como em avaliações de
-busca, com um LLM juiz diferente do que gera as respostas.
+*Na tela: O app aberto; o cursor clica na pergunta de exemplo sobre entrega e a resposta aparece.*
 
-A ablação mostra o caminho: o RAG ingênuo, com a pergunta crua contra o vetor, coloca 56% de
-evidência clara no top-10; a reescrita sobe para 71%; com os filtros de metadado, o sistema final
-chega a 93%. E medir mudou o sistema: multi-query e HyDE não trouxeram ganho e a reordenação pelo
-reranker piorou a precisão; ficaram de fora. Isso só aparece porque medimos.
+> Agora, o sistema funcionando. Eu pergunto: quais reclamações de entrega aparecem mais? ⏸
 
-Nas perguntas com recorte, inclusive pagamento, valor e número de vendedores, os metadados levam a
-conformidade ao recorte de 27% para 98%, e a precisão de 0,24 para 0,90. E revelam padrão: pedidos
-com mais de um vendedor têm 61% de avaliações negativas, contra 26% no geral.
+**11. O sistema funcionando** (app)
 
-Ponta a ponta: 44 de 44 decisões corretas entre responder e abster, 100% das citações válidas e
-fidelidade de 0,99 nos insights, auditada por um modelo diferente do que gera. Como as perguntas
-são nossas e guiaram as escolhas, congelamos o sistema e rodamos uma única vez 19 perguntas novas:
-19 de 19 decisões corretas e precisão de 0,93. O patamar se mantém."
+*Na tela: A tela desce até o gráfico de frequência dos temas.*
 
-*(Visuais: `avaliacao_ablacao.png`, tabelas do README, notebook 03.)*
+> Produto não recebido lidera, com 33%, e atraso vem depois, com 21%. E esse número olha os 14 mil comentários, não só as 30 avaliações da tela. ⏸
 
-## Bloco 6: Desafios e decisões (6:05 a 6:40)
+**12. O sistema funcionando** (app)
 
-**Fala:**
+*Na tela: O cursor abre as evidências do primeiro insight.*
 
-"Quatro desafios. A distância entre a linguagem do gestor e a do cliente, resolvida com a
-reescrita da pergunta. O LLM que recusava temas só ausentes da base com fatos sem suporte: o
-escopo passou a ser derivado em código. Medir com honestidade: o juiz precisou ver os metadados,
-senão zerava respostas certas. E a cota gratuita do Gemini: papéis por modelo, fallback, cache e
-avaliação retomável."
+> E cada conclusão abre as avaliações que a sustentam, com o código de cada uma na Olist. ⏸
 
-## Bloco 7: Fecho (6:40 a 6:50)
+**13. Sem caixa-preta** (app)
 
-**Fala:** "Código, avaliação, os julgamentos e as 23 decisões técnicas estão no repositório,
-reproduzíveis com poucos comandos. Obrigado."
+*Na tela: O cursor clica na pergunta de elogios em cama, mesa e banho.*
 
----
+> Agora um elogio, em cama, mesa e banho, sem marcar filtro nenhum. ⏸
 
-## Checklist de gravação
+**14. Sem caixa-preta** (app)
 
-- [ ] Até 7 minutos: a fala soma ~840 palavras (~5,6 min a 150 palavras por minuto); com ~1 min
-      de cliques e digitação na demonstração, o total fica perto de 6:50. Ensaiar com cronômetro;
-      se passar de 6:45, encurtar o bloco 3 (é o mais longo, ~1:30 de fala);
-- [ ] Os oito itens do enunciado: problema, arquitetura, estratégia do RAG, recuperação,
-      demonstração prática, exemplos de perguntas, evidências recuperadas, desafios e decisões;
-- [ ] App já aberto e aquecido antes de gravar (primeira pergunta carrega os modelos);
-- [ ] Perguntas da demonstração já feitas uma vez (cache do LLM: resposta instantânea e sem gastar
-      cota na gravação);
-- [ ] Publicar o vídeo (asset do release ou YouTube não listado) e pôr o link no README.
+*Na tela: A tela desce até “Como a resposta foi construída”.*
+
+> E aqui embaixo ele mostra o caminho: tirou a categoria e a nota da própria pergunta, e de 2.741 avaliações chegou nas 30 que usou. ⏸
+
+**15. O mais difícil** (app)
+
+*Na tela: O cursor clica em “Qual foi o faturamento da Olist em 2018?” e a recusa aparece.*
+
+> Mas o mais difícil foi ensinar o sistema a dizer não. Faturamento da Olist? Fora do assunto: ele nem busca. ⏸
+
+**16. O mais difícil** (app)
+
+*Na tela: O cursor clica na pergunta sobre entrega por drone e a recusa aparece.*
+
+> Entrega por drone é mais traiçoeira: ele acha avaliações de entrega, mas nenhuma fala de drone, então recusa e explica por quê. ⏸
+
+**17. O mais difícil** (slide 12)
+
+> Na avaliação, foram 13 recusas certas em 13, até uma tentativa de manipular o sistema, e nenhuma pergunta válida recusada. ⏸
+
+### A prova e o fim: os números, o que deu trabalho e o agradecimento
+
+**18. A pergunta que importa** (slide 13)
+
+> Aí veio a pergunta que importa: dá pra confiar? A gente montou 44 perguntas, com outra IA julgando. A evidência clara foi de 56 pra 93%, as 44 decisões deram certo, as 714 citações são reais e 101 das 103 conclusões se sustentam. ⏸
+
+**19. A prova real** (slide 14)
+
+> Só que essas perguntas ajudaram a ajustar o sistema, né? Então a gente congelou tudo, escreveu 19 perguntas novas e rodou uma vez só. Deu 19 de 19, com os mesmos 93%. ⏸
+
+**20. O que deu trabalho** (slide 15)
+
+> Nem tudo foi tranquilo. A IA inventava motivo pra recusar, e essa decisão passou pro código. O juiz reprovava resposta certa porque não via os dados do pedido. A cota grátis acabava no meio da avaliação. E teve chamada que travou tudo. ⏸
+
+**21. O que ainda falta** (slide 16)
+
+> E ainda falta coisa: quem julgou foi uma IA, 19 perguntas são poucas e os percentuais são estimativas. ⏸
+
+**22. Obrigado** (slide 17)
+
+> Voltando lá pro começo: agora quem cuida do cliente sabe o motivo da insatisfação e sabe em que confiar. Responder é fácil; o trabalho é saber quando não responder. A parte técnica está toda no GitHub. Muito obrigado! ⏸
+
+## O que o enunciado pede e onde aparece
+
+| Item do enunciado | Blocos |
+|---|---|
+| Problema de negócio | 1 e 2 |
+| Arquitetura proposta | 5 |
+| Estratégia do pipeline RAG | 5, 6, 7 e 9 |
+| Recuperação das avaliações relevantes | 5, 6, 7, 8 e 14 |
+| Demonstração prática (app rodando) | 10 a 16 |
+| Exemplos de perguntas | 10, 13, 15 e 16 |
+| Evidências que fundamentam as respostas | 12 e 14 |
+| Desafios e decisões técnicas | 3, 4, 7, 9 e 20 |
