@@ -127,7 +127,8 @@ separada") e o porteiro reconhece 53 relevantes.
 **Regra de fidelidade:** as variações não podem generalizar o assunto. Sem ela, "entregas por
 drone" virava "entrega rápida drone" e recuperava elogios genéricos de entrega com relevância
 0,99.
-**Evidência:** a reescrita é o maior ganho isolado do projeto: P@10 de **0,561 → 0,713** e
+**Evidência:** a reescrita é o maior ganho entre as técnicas de consulta (o maior do projeto vem dos
+filtros de metadado, D18): P@10 de **0,561 → 0,713** e
 nDCG@10 de 0,619 → 0,733 (pergunta crua contra consulta reescrita, mesma busca vetorial). No
 espaço vetorial, o cosseno médio com 200 reclamações de entrega sobe de 0,51 para 0,65
 (notebook 02). Já **multi-query e HyDE não trazem ganho**: isolados, empatam (0,713 → 0,713); no

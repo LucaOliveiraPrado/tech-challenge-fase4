@@ -165,7 +165,8 @@ Uma chamada ao LLM com saída JSON converte a pergunta em: escopo (dentro/fora),
 tema, evidência), polaridade (problemas/elogios), filtros explícitos de metadado e a **consulta
 reescrita no vocabulário do cliente**. A pergunta do gestor é analítica ("quais reclamações
 aparecem com maior frequência?"); o documento é coloquial ("comprei dia 10 e até hoje nada"); a
-reescrita aproxima os dois e é o **maior ganho isolado do projeto** (P@10 de 0,56 para 0,71, D10).
+reescrita aproxima os dois e é o **maior ganho entre as técnicas de consulta** (P@10 de 0,56 para
+0,71, D10); o maior ganho do projeto vem dos filtros de metadado (0,70 para 0,93, D18).
 O módulo também gera variações (multi-query) e uma avaliação hipotética (HyDE); ambas foram
 medidas: não trazem ganho isoladas e empatam no sistema completo (seção 9), custando chamadas a
 mais, então ficam desligadas por padrão.
@@ -640,4 +641,6 @@ tech-challenge-fase4/
 Roteiro em [`reports/roteiro_video.md`](reports/roteiro_video.md).
 
 <!-- VIDEO_LINK -->
-**Vídeo:** link adicionado após a gravação.
+**Vídeo (4:57):** [tech-challenge-fase4-video.mp4](https://github.com/LucaOliveiraPrado/tech-challenge-fase4/releases/download/v1.0/tech-challenge-fase4-video.mp4)
+(release [v1.0](https://github.com/LucaOliveiraPrado/tech-challenge-fase4/releases/tag/v1.0)).
+Slides usados no vídeo: [apresentacao-tech-challenge-fase4.pdf](https://github.com/LucaOliveiraPrado/tech-challenge-fase4/releases/download/v1.0/apresentacao-tech-challenge-fase4.pdf).
